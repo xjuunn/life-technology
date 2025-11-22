@@ -43,13 +43,15 @@
             <div tabindex="0" role="button"
               class="btn btn-ghost btn-circle btn-sm md:btn-md md:w-auto md:px-3 md:rounded-full hover:bg-base-content/5">
               <Icon name="heroicons:language" class="w-5 h-5" />
-              <span class="hidden md:inline text-xs font-bold ml-1">CN</span>
+              <span class="hidden md:inline text-xs font-bold ml-1">
+                {{ currentLocaleShort() }}
+              </span>
             </div>
             <ul tabindex="0"
               class="dropdown-content z-1 menu p-2 shadow-xl bg-base-100 border border-base-content/5 rounded-xl w-32 mt-4 backdrop-blur-md">
-              <li><a class="active:bg-primary active:text-primary-content">简体中文</a></li>
-              <li><a>繁体中文</a></li>
-              <li><a>English</a></li>
+              <li><a @click="changeLocale('zh-CN')">简体中文</a></li>
+              <li><a @click="changeLocale('zh-TW')">繁体中文</a></li>
+              <li><a @click="changeLocale('en')">English</a></li>
             </ul>
           </div>
           <button ref="themeBtnRef"
@@ -91,7 +93,7 @@
 
 <script setup>
 import { animate, stagger } from 'animejs'
-const { t } = useAppI18n();
+const { changeLocale, currentLocaleShort } = useAppI18n()
 
 const { y } = useWindowScroll()
 const isScrolled = computed(() => y.value > 20)
