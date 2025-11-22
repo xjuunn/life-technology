@@ -90,9 +90,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
-import { useWindowScroll } from '@vueuse/core'
 import { animate, stagger } from 'animejs'
+const { t } = useAppI18n();
 
 const { y } = useWindowScroll()
 const isScrolled = computed(() => y.value > 20)

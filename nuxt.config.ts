@@ -8,7 +8,8 @@ export default defineNuxtConfig({
   css: ["~/assets/css/app.css"],
   imports: {
     dirs: [
-      'stores/**'
+      'stores/**',
+      'utils/**'
     ]
   },
   app: {
@@ -17,6 +18,16 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/png', href: '/favicon.png' }
       ]
     }
+  },
+  i18n: {
+    strategy: 'prefix_except_default',
+    defaultLocale: 'zh-CN',
+    langDir: 'locales/',
+    locales: [
+      { code: 'zh-CN', name: '简体中文', file: 'zh-CN.json' },
+      { code: 'zh-TW', name: '繁體中文', file: 'zh-TW.json' },
+      { code: 'en', name: 'English', file: 'en.json' }
+    ]
   },
   modules: [
     '@nuxt/icon',
