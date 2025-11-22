@@ -1,20 +1,43 @@
-import { useI18n, useSwitchLocalePath } from '#imports'
 
 export function useAppI18n() {
-  const { t, locale, setLocale, locales } = useI18n()
-  const switchLocalePath = useSwitchLocalePath()
+  const { t, locale, locales, setLocale } = useI18n()
+  const STORAGE_KEY = 'app-locale'
+  type LocaleType = 'zh-CN' | 'zh-TW' | 'en'
+  const isValidLocale = (v: string | null): v is LocaleType => {
+    return v === 'zh-CN' || v === 'zh-TW' || v === 'en'
+  }
+  if (import.meta.client) {
+    const saved = localStorage.getItem(STORAGE_KEY)
 
-  function changeLocale(code: 'zh-CN' | 'zh-TW' | 'en') {
+    if (isValidLocale(saved)) {
+      setLocale(saved)
+    } else {
+      let system: LocaleType =
+        navigator.language === 'zh-TW'
+          ? 'zh-TW'
+          : navigator.language.startsWith('en')
+            ? 'en'
+            : 'zh-CN'
+
+      setLocale(system)
+      localStorage.setItem(STORAGE_KEY, system)
+    }
+  }
+  function changeLocale(code: LocaleType) {
     setLocale(code)
+    if (import.meta.client) {
+      localStorage.setItem(STORAGE_KEY, code)
+    }
   }
 
   function currentLocaleShort() {
-    const map: Record<string, string> = {
-      'zh-CN': 'CN',
-      'zh-TW': 'TW',
-      'en': 'EN'
-    }
-    return map[locale.value] ?? locale.value
+    return (
+      {
+        'zh-CN': 'CN',
+        'zh-TW': 'TW',
+        en: 'EN'
+      }[locale.value] || locale.value
+    )
   }
 
   return {
@@ -22,7 +45,6 @@ export function useAppI18n() {
     locale,
     locales,
     changeLocale,
-    currentLocaleShort,
-    switchLocalePath
+    currentLocaleShort
   }
 }

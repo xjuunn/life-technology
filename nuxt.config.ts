@@ -20,8 +20,13 @@ export default defineNuxtConfig({
     }
   },
   i18n: {
-    strategy: 'prefix_except_default',
+    strategy: 'no_prefix',
     defaultLocale: 'zh-CN',
+    detectBrowserLanguage: {
+      useCookie: true,
+      fallbackLocale: 'zh-CN',
+      alwaysRedirect: false,
+    },
     langDir: 'locales/',
     locales: [
       { code: 'zh-CN', name: '简体中文', file: 'zh-CN.json' },
