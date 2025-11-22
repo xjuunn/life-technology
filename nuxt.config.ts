@@ -5,7 +5,12 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss() as any],
   },
-  css: ["./app/assets/css/app.css"],
+  css: ["~/assets/css/app.css"],
+  imports: {
+    dirs: [
+      'stores/**'
+    ]
+  },
   app: {
     head: {
       link: [
