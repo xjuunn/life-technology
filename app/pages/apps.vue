@@ -26,7 +26,7 @@
             <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
               <button
                 class="btn btn-md sm:btn-lg h-auto py-3 px-4 sm:px-6 rounded-xl border-0 bg-base-content text-base-100 hover:bg-primary hover:scale-[1.02] transition-all shadow-lg shadow-base-content/10 flex items-center justify-start gap-3 group text-left">
-                <Icon name="logos:android-icon" class="w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0" />
+                <Icon name="logos:android-icon" class="w-6 h-6 sm:w-7 sm:h-7 shrink-0" />
                 <div class="flex flex-col">
                   <span class="text-[10px] sm:text-xs opacity-70 font-medium">Download APK</span>
                   <span class="text-sm sm:text-base font-bold">Android 下载</span>
@@ -37,7 +37,7 @@
 
               <button
                 class="btn btn-md sm:btn-lg h-auto py-3 px-4 sm:px-6 rounded-xl bg-base-200 text-base-content border border-base-content/5 hover:bg-base-300 hover:scale-[1.02] transition-all flex items-center justify-start gap-3 group text-left">
-                <Icon name="mingcute:apple-fill" size="1.5rem" class="w-6 h-6 sm:w-7 sm:h-7 text-base-content flex-shrink-0" />
+                <Icon name="mingcute:apple-fill" size="1.5rem" class="w-6 h-6 sm:w-7 sm:h-7 text-base-content shrink-0" />
                 <div class="flex flex-col">
                   <span class="text-[10px] sm:text-xs opacity-60 font-medium">Installer</span>
                   <span class="text-sm sm:text-base font-bold">iOS 下载</span>
@@ -59,13 +59,13 @@
             <div
               class="flex items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-2 text-[9px] sm:text-[10px] font-bold text-base-content/40 uppercase tracking-wider flex-wrap">
               <span class="flex items-center gap-1.5">
-                <Icon name="heroicons:shield-check" class="text-success flex-shrink-0" /> AES-256
+                <Icon name="heroicons:shield-check" class="text-success shrink-0" /> AES-256
               </span>
               <span class="flex items-center gap-1.5">
-                <Icon name="heroicons:cube-transparent" class="flex-shrink-0" /> Multi-Chain
+                <Icon name="heroicons:cube-transparent" class="shrink-0" /> Multi-Chain
               </span>
               <span class="flex items-center gap-1.5">
-                <Icon name="heroicons:lock-closed" class="flex-shrink-0" /> Non-Custodial
+                <Icon name="heroicons:lock-closed" class="shrink-0" /> Non-Custodial
               </span>
             </div>
           </div>
@@ -74,7 +74,7 @@
             <div
               class="relative w-full max-w-[180px] sm:max-w-[220px] lg:max-w-[260px] xl:max-w-[300px] flex items-center justify-center">
               <div
-                class="absolute inset-0 bg-gradient-to-tr from-primary/30 to-secondary/30 rounded-full blur-2xl animate-pulse lg:hidden">
+                class="absolute inset-0 bg-linear-to-tr from-primary/30 to-secondary/30 rounded-full blur-2xl animate-pulse lg:hidden">
               </div>
               <nuxt-img
                 class="w-full h-auto drop-shadow-2xl object-contain hover:scale-105 transition-transform duration-700 z-10"

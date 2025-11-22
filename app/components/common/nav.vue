@@ -6,7 +6,7 @@
   ]">
     <div class="container mx-auto px-4">
       <div class="navbar min-h-12 p-0 justify-between">
-        <div class="flex items-center gap-4 z-[60]">
+        <div class="flex items-center gap-4 z-60">
           <button class="btn btn-circle btn-ghost md:hidden text-base-content" @click="toggleMobileMenu">
             <Icon :name="isMobileMenuOpen ? 'heroicons:x-mark' : 'heroicons:bars-3-bottom-left'" size="24"
               class="transition-transform duration-300" :class="isMobileMenuOpen ? 'rotate-90' : 'rotate-0'" />
@@ -33,12 +33,12 @@
                 class="relative text-base-content/70 hover:text-base-content hover:bg-transparent transition-colors py-2 px-5 group overflow-hidden">
                 {{ item.label }}
                 <span
-                  class="absolute bottom-1 left-1/2 w-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent -translate-x-1/2 transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+                  class="absolute bottom-1 left-1/2 w-0 h-0.5g-linear-to-r from-transparent via-primary to-transparent -translate-x-1/2 transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100"></span>
               </nuxt-link>
             </li>
           </ul>
         </div>
-        <div class="flex items-center gap-2 z-[60]">
+        <div class="flex items-center gap-2 z-60">
           <div class="dropdown dropdown-end">
             <div tabindex="0" role="button"
               class="btn btn-ghost btn-circle btn-sm md:btn-md md:w-auto md:px-3 md:rounded-full hover:bg-base-content/5">
@@ -46,7 +46,7 @@
               <span class="hidden md:inline text-xs font-bold ml-1">CN</span>
             </div>
             <ul tabindex="0"
-              class="dropdown-content z-[1] menu p-2 shadow-xl bg-base-100 border border-base-content/5 rounded-xl w-32 mt-4 backdrop-blur-md">
+              class="dropdown-content z-1 menu p-2 shadow-xl bg-base-100 border border-base-content/5 rounded-xl w-32 mt-4 backdrop-blur-md">
               <li><a class="active:bg-primary active:text-primary-content">简体中文</a></li>
               <li><a>繁体中文</a></li>
               <li><a>English</a></li>
@@ -72,7 +72,7 @@
       </div>
     </div>
     <div v-show="isMobileMenuOpen"
-      class="fixed inset-0 z-[49] bg-base-100/95 backdrop-blur-2xl md:hidden flex flex-col pt-28 px-6 h-screen w-screen overscroll-contain">
+      class="fixed inset-0 z-49 bg-base-100/95 backdrop-blur-2xl md:hidden flex flex-col pt-28 px-6 h-screen w-screen overscroll-contain">
       <ul class="flex flex-col gap-6 text-center cursor-pointer">
         <li v-for="(item, index) in menuItems" :key="index" class="mobile-menu-item opacity-0 translate-y-4">
           <nuxt-link :to="item.link"

@@ -13,7 +13,7 @@
           <div class="badge badge-primary badge-outline mb-6 font-bold tracking-wider py-4 px-4">ABOUT LIFE</div>
           <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] mb-8">
             专业的区块链服务<br>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">值得信赖的选择</span>
+            <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">值得信赖的选择</span>
           </h1>
           <p class="text-xl text-base-content/70 leading-relaxed max-w-2xl">
             LIFE 不仅是一个钱包，更是一个开放的 Web3 生态系统。我们致力于推动个人数据主权、数字身份及资产的自由流通，为您构建通往数字未来的安全桥梁。
@@ -26,7 +26,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- 大卡片：定义 -->
           <div
-            class="md:col-span-2 bg-base-100 rounded-[2rem] p-8 md:p-12 border border-base-content/5 shadow-sm flex flex-col justify-between group hover:border-primary/20 transition-colors">
+            class="md:col-span-2 bg-base-100 rounded-4xl p-8 md:p-12 border border-base-content/5 shadow-sm flex flex-col justify-between group hover:border-primary/20 transition-colors">
             <div>
               <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-6">
                 <Icon name="heroicons:cube-transparent" size="24" />
@@ -46,13 +46,13 @@
           <!-- 右侧小卡片组 -->
           <div class="grid grid-rows-2 gap-6">
             <div
-              class="bg-base-100 rounded-[2rem] p-8 border border-base-content/5 shadow-sm flex flex-col justify-center hover:-translate-y-1 transition-transform duration-300">
+              class="bg-base-100 rounded-4xl p-8 border border-base-content/5 shadow-sm flex flex-col justify-center hover:-translate-y-1 transition-transform duration-300">
               <Icon name="heroicons:key" class="text-secondary w-8 h-8 mb-3" />
               <h4 class="text-xl font-bold mb-2">私钥自持</h4>
               <p class="text-sm text-base-content/60">100% 用户自主管理，平台无权访问您的任何资产。</p>
             </div>
             <div
-              class="bg-base-100 rounded-[2rem] p-8 border border-base-content/5 shadow-sm flex flex-col justify-center hover:-translate-y-1 transition-transform duration-300">
+              class="bg-base-100 rounded-4xl p-8 border border-base-content/5 shadow-sm flex flex-col justify-center hover:-translate-y-1 transition-transform duration-300">
               <Icon name="heroicons:globe-alt" class="text-accent w-8 h-8 mb-3" />
               <h4 class="text-xl font-bold mb-2">丰富生态</h4>
               <p class="text-sm text-base-content/60">支持 NFT、DAO、AI 等多链资产管理与交互。</p>
@@ -67,7 +67,7 @@
         <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20">
           <div class="w-full md:w-1/2 relative">
             <div
-              class="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-transparent rounded-full blur-3xl opacity-30">
+              class="absolute -inset-4 bg-linear-to-tr from-primary/20 to-transparent rounded-full blur-3xl opacity-30">
             </div>
             <div
               class="relative bg-base-200 border border-base-content/10 rounded-[2.5rem] p-8 md:p-12 aspect-square flex items-center justify-center">
@@ -92,21 +92,21 @@
             </p>
             <ul class="space-y-4">
               <li class="flex items-start gap-3">
-                <Icon name="heroicons:check-circle" class="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
+                <Icon name="heroicons:check-circle" class="w-6 h-6 text-primary shrink-0 mt-0.5" />
                 <div>
                   <span class="font-bold block text-base-content">基础流通</span>
                   <span class="text-sm text-base-content/60">支持各类支付、转账和兑换场景，高效便捷。</span>
                 </div>
               </li>
               <li class="flex items-start gap-3">
-                <Icon name="heroicons:user-group" class="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
+                <Icon name="heroicons:user-group" class="w-6 h-6 text-primary shrink-0 mt-0.5" />
                 <div>
                   <span class="font-bold block text-base-content">社区治理</span>
                   <span class="text-sm text-base-content/60">持有者通过提案和投票参与生态决策，共建未来。</span>
                 </div>
               </li>
               <li class="flex items-start gap-3">
-                <Icon name="heroicons:sparkles" class="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
+                <Icon name="heroicons:sparkles" class="w-6 h-6 text-primary shrink-0 mt-0.5" />
                 <div>
                   <span class="font-bold block text-base-content">激励体系</span>
                   <span class="text-sm text-base-content/60">奖励开发者、创作者及节点维护者，保障网络运转。</span>
@@ -118,7 +118,7 @@
         <div class="flex flex-col md:flex-row-reverse items-center gap-12 md:gap-20">
           <div class="w-full md:w-1/2 relative">
             <div
-              class="absolute -inset-4 bg-gradient-to-bl from-secondary/20 to-transparent rounded-full blur-3xl opacity-30">
+              class="absolute -inset-4 bg-linear-to-bl from-secondary/20 to-transparent rounded-full blur-3xl opacity-30">
             </div>
             <div
               class="relative bg-base-200 border border-base-content/10 rounded-[2.5rem] p-8 md:p-12 aspect-square flex flex-col items-center justify-center overflow-hidden">
@@ -213,7 +213,7 @@
             <input type="radio" name="safety-accordion" :checked="idx === 0" />
             <div class="collapse-title text-lg font-bold flex items-center gap-4 py-6 pr-12">
               <span
-                class="flex-shrink-0 w-8 h-8 rounded-full bg-base-200 text-sm flex items-center justify-center text-base-content/50 font-mono">
+                class="shrink-0 w-8 h-8 rounded-full bg-base-200 text-sm flex items-center justify-center text-base-content/50 font-mono">
                 0{{ idx + 1 }}
               </span>
               {{ tip.title }}
@@ -222,7 +222,7 @@
               <div class="pl-12 pr-4 pb-6 space-y-2">
                 <p v-for="(line, lIdx) in tip.lines" :key="lIdx"
                   class="text-base-content/70 text-sm leading-relaxed flex gap-2">
-                  <span class="text-primary mt-1.5 w-1.5 h-1.5 rounded-full bg-current flex-shrink-0 block"></span>
+                  <span class="text-primary mt-1.5 w-1.5 h-1.5 rounded-full bg-current shrink-0 block"></span>
                   <span>{{ line }}</span>
                 </p>
               </div>

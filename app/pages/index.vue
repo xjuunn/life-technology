@@ -1,8 +1,8 @@
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300">
     <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-      <div class="absolute top-[-10%] right-[-5%] w-[40rem] h-[40rem] bg-primary/10 rounded-full blur-[128px]"></div>
-      <div class="absolute bottom-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-secondary/10 rounded-full blur-[128px]">
+      <div class="absolute top-[-10%] right-[-5%] w-160 h-160 bg-primary/10 rounded-full blur-[128px]"></div>
+      <div class="absolute bottom-[-10%] left-[-10%] w-160 h-160 bg-secondary/10 rounded-full blur-[128px]">
       </div>
       <div
         class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay">
@@ -16,7 +16,7 @@
           <span class="text-xs font-bold tracking-widest uppercase opacity-80">Web3 Digital Economy</span>
         </div>
         <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none mb-8">
-          守护<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">数据价值</span>
+          守护<span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">数据价值</span>
           <br />
           重塑数字生命
         </h1>
@@ -35,7 +35,7 @@
         </div>
       </div>
     </section>
-    <div class="border-y border-base-content/5 bg-base-content/[0.02]">
+    <div class="border-y border-base-content/5 bg-base-content/2">
       <div class="container mx-auto px-4 py-12">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div v-for="(stat, index) in stats" :key="index" class="text-center group cursor-default">
@@ -57,7 +57,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[400px]">
           <div
             class="md:col-span-2 rounded-[2.5rem] bg-base-200 p-10 relative overflow-hidden group border border-base-content/5 hover:border-primary/30 transition-all duration-500">
-            <div class="absolute inset-0 bg-gradient-to-br from-base-content/5 to-transparent"></div>
+            <div class="absolute inset-0 bg-linear-to-br from-base-content/5 to-transparent"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div class="w-16 h-16 rounded-2xl bg-base-100 flex items-center justify-center shadow-sm text-primary">
                 <Icon name="heroicons:circle-stack" class="w-8 h-8" />
@@ -150,9 +150,9 @@
         <div class="flex flex-col lg:flex-row items-center gap-24">
           <div class="lg:w-1/2 w-full">
             <div
-              class="relative mx-auto max-w-sm aspect-[3/4] rounded-[3rem] bg-base-100 border border-base-content/5 shadow-2xl p-8 flex flex-col transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
+              class="relative mx-auto max-w-sm aspect-3/4 rounded-[3rem] bg-base-100 border border-base-content/5 shadow-2xl p-8 flex flex-col transform -rotate-2r:rotate-0 transition-transform duration-500">
               <div
-                class="absolute inset-0 bg-gradient-to-b from-base-content/5 to-transparent rounded-[3rem] pointer-events-none">
+                class="absolute inset-0 bg-linear-to-b from-base-content/5 to-transparent rounded-[3rem] pointer-events-none">
               </div>
 
               <div class="flex justify-between items-center mb-12 relative z-10">
@@ -211,7 +211,7 @@
             <div class="space-y-8">
               <div class="flex gap-6 group">
                 <div
-                  class="flex-shrink-0 w-12 h-12 rounded-full bg-base-200 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors">
+                  class="shrink-0 h-12 rounded-full bg-base-200 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors">
                   <Icon name="heroicons:server-stack" size="24" />
                 </div>
                 <div>
@@ -221,7 +221,7 @@
               </div>
               <div class="flex gap-6 group">
                 <div
-                  class="flex-shrink-0 w-12 h-12 rounded-full bg-base-200 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors">
+                  class="shrink-0 w-12 h-12 rounded-full bg-base-200 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors">
                   <Icon name="heroicons:check-badge" size="24" />
                 </div>
                 <div>
@@ -255,7 +255,7 @@
       </div>
     </section>
     <section class="py-40 px-4 text-center overflow-hidden relative">
-      <div class="absolute inset-0 bg-gradient-to-t from-base-content/5 to-transparent pointer-events-none"></div>
+      <div class="absolute inset-0 bg-linear-to-t from-base-content/5 to-transparent pointer-events-none"></div>
       <div class="container mx-auto relative z-10">
         <h2 class="text-6xl md:text-9xl font-black mb-8 tracking-tighter opacity-5 select-none text-base-content">
           DIGITAL
