@@ -29,12 +29,12 @@
         <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <ul class="menu menu-horizontal px-1 font-medium text-[15px] gap-2">
             <li v-for="(item, index) in menuItems" :key="index">
-              <a
+              <nuxt-link :to="item.link"
                 class="relative text-base-content/70 hover:text-base-content hover:bg-transparent transition-colors py-2 px-5 group overflow-hidden">
                 {{ item.label }}
                 <span
                   class="absolute bottom-1 left-1/2 w-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent -translate-x-1/2 transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100"></span>
-              </a>
+              </nuxt-link>
             </li>
           </ul>
         </div>
@@ -75,10 +75,11 @@
       class="fixed inset-0 z-[49] bg-base-100/95 backdrop-blur-2xl md:hidden flex flex-col pt-28 px-6 h-screen w-screen overscroll-contain">
       <ul class="flex flex-col gap-6 text-center cursor-pointer">
         <li v-for="(item, index) in menuItems" :key="index" class="mobile-menu-item opacity-0 translate-y-4">
-          <a class="text-3xl font-black text-base-content hover:text-primary transition-colors block py-2"
+          <nuxt-link :to="item.link"
+            class="text-3xl font-black text-base-content hover:text-primary transition-colors block py-2"
             @click="isMobileMenuOpen = false">
             {{ item.label }}
-          </a>
+          </nuxt-link>
         </li>
       </ul>
       <div class="mt-auto mb-10 text-center opacity-50 text-sm">
@@ -101,7 +102,7 @@ const isDark = ref(true)
 
 const menuItems = [
   { label: '首页', link: '/' },
-  { label: '介绍', link: '/intro' },
+  { label: '介绍', link: '/introduction' },
   { label: '应用', link: '/apps' },
   { label: '博客', link: '/blog' },
 ]
