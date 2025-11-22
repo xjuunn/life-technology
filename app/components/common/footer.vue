@@ -7,10 +7,10 @@
       </div>
 
       <div class="flex gap-8 text-sm font-medium text-base-content/60">
-        <a href="#" class="hover:text-primary transition-colors">首页</a>
-        <a href="#" class="hover:text-primary transition-colors">介绍</a>
-        <a href="#" class="hover:text-primary transition-colors">应用</a>
-        <a href="#" class="hover:text-primary transition-colors">博客</a>
+        <nuxt-link href="/" class="hover:text-primary transition-colors">首页</nuxt-link>
+        <nuxt-link href="/introduction" class="hover:text-primary transition-colors">介绍</nuxt-link>
+        <nuxt-link href="/apps" class="hover:text-primary transition-colors">应用</nuxt-link>
+        <nuxt-link href="/blog" class="hover:text-primary transition-colors">博客</nuxt-link>
       </div>
 
       <div class="flex gap-4">
