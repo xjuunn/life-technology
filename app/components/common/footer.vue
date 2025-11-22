@@ -7,10 +7,10 @@
       </div>
 
       <div class="flex gap-8 text-sm font-medium text-base-content/60">
-        <nuxt-link href="/" class="hover:text-primary transition-colors">首页</nuxt-link>
-        <nuxt-link href="/introduction" class="hover:text-primary transition-colors">介绍</nuxt-link>
-        <nuxt-link href="/apps" class="hover:text-primary transition-colors">应用</nuxt-link>
-        <nuxt-link href="/blog" class="hover:text-primary transition-colors">博客</nuxt-link>
+        <nuxt-link href="/" class="hover:text-primary transition-colors">{{ t('nav.home') }}</nuxt-link>
+        <nuxt-link href="/introduction" class="hover:text-primary transition-colors">{{ t('nav.intro') }}</nuxt-link>
+        <nuxt-link href="/apps" class="hover:text-primary transition-colors">{{ t('nav.apps') }}</nuxt-link>
+        <nuxt-link href="/blog" class="hover:text-primary transition-colors">{{ t('nav.blog') }}</nuxt-link>
       </div>
 
       <div class="flex gap-4">
@@ -26,8 +26,12 @@
       </div>
     </div>
     <div class="text-center mt-12 space-y-2">
-      <p class="text-xs text-base-content/40">&copy; 2014-2025 LIFE 区块链技术有限公司 版权所有</p>
-      <p class="text-xs text-base-content/30">备案号：京ICP备XXXXXXXX号-1 | 区块链信息服务备案编号：京网信备XXXXXXXX号</p>
+      <p class="text-xs text-base-content/40">&copy; 2014-2025 {{ t('footer.copyright') }}</p>
+      <p class="text-xs text-base-content/30">{{ t('footer.compliance') }}</p>
     </div>
   </footer>
 </template>
+
+<script setup>
+const { t } = useAppI18n();
+</script>

@@ -15,10 +15,12 @@
         <div class="max-w-3xl mx-auto w-full text-center space-y-6 lg:space-y-8">
           <div class="space-y-3 lg:space-y-4">
             <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight leading-tight">
-              探索 <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">Web3 视界</span>
+              {{ t('blog_page.hero.title_prefix') }} <span
+                class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{{
+                  t('blog_page.hero.title_highlight') }}</span>
             </h1>
             <p class="text-base-content/60 text-sm sm:text-base lg:text-lg max-w-xl mx-auto leading-relaxed">
-              洞察行业趋势，掌握技术前沿，与 LIFE 一起定义数字未来
+              {{ t('blog_page.hero.subtitle') }}
             </p>
           </div>
 
@@ -28,7 +30,7 @@
               <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
                 <Icon name="heroicons:magnifying-glass" class="w-4 h-4 sm:w-5 sm:h-5 text-base-content/40" />
               </div>
-              <input type="text" placeholder="搜索文章、教程或观点..."
+              <input type="text" :placeholder="t('blog_page.search_placeholder')"
                 class="input input-sm sm:input-md w-full pl-9 sm:pl-11 bg-transparent border-0 focus:bg-base-100 dark:focus:bg-base-300/50 rounded-xl transition-colors placeholder:text-base-content/30 text-sm sm:text-base" />
             </div>
 
@@ -37,15 +39,15 @@
                 <div tabindex="0" role="button"
                   class="btn btn-ghost btn-xs sm:btn-sm rounded-full font-normal text-base-content/70 gap-1 sm:gap-2 px-2 sm:px-3">
                   <Icon name="heroicons:tag" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span class="hidden sm:inline">分类</span>
+                  <span class="hidden sm:inline">{{ t('blog_page.filter.category_label') }}</span>
                   <Icon name="heroicons:chevron-down" class="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                 </div>
                 <ul tabindex="0"
                   class="dropdown-content z-1 menu p-2 shadow-xl bg-base-100 dark:bg-base-200 rounded-xl w-44 sm:w-52 border border-base-content/5 mt-2 text-sm">
-                  <li><a class="rounded-lg">全部文章</a></li>
-                  <li><a class="rounded-lg">技术科普</a></li>
-                  <li><a class="rounded-lg">行业动态</a></li>
-                  <li><a class="rounded-lg">安全指南</a></li>
+                  <li><a class="rounded-lg">{{ t('blog_page.filter.options.all') }}</a></li>
+                  <li><a class="rounded-lg">{{ t('blog_page.filter.options.tech') }}</a></li>
+                  <li><a class="rounded-lg">{{ t('blog_page.filter.options.industry') }}</a></li>
+                  <li><a class="rounded-lg">{{ t('blog_page.filter.options.security') }}</a></li>
                 </ul>
               </div>
 
@@ -55,20 +57,20 @@
                 <div tabindex="0" role="button"
                   class="btn btn-ghost btn-xs sm:btn-sm rounded-full font-normal text-base-content/70 gap-1 sm:gap-2 px-2 sm:px-3">
                   <Icon name="heroicons:arrows-up-down" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span class="hidden sm:inline">排序</span>
+                  <span class="hidden sm:inline">{{ t('blog_page.sort.label') }}</span>
                 </div>
                 <ul tabindex="0"
                   class="dropdown-content z-1 menu p-2 shadow-xl bg-base-100 dark:bg-base-200 rounded-xl w-44 sm:w-52 border border-base-content/5 mt-2 text-sm">
-                  <li><a class="rounded-lg">最新发布</a></li>
-                  <li><a class="rounded-lg">最多阅读</a></li>
-                  <li><a class="rounded-lg">最早发布</a></li>
+                  <li><a class="rounded-lg">{{ t('blog_page.sort.options.newest') }}</a></li>
+                  <li><a class="rounded-lg">{{ t('blog_page.sort.options.popular') }}</a></li>
+                  <li><a class="rounded-lg">{{ t('blog_page.sort.options.oldest') }}</a></li>
                 </ul>
               </div>
             </div>
           </div>
 
           <div class="flex gap-2 justify-center flex-wrap px-2">
-            <div v-for="tag in ['#区块链', '#数据主权', '#DAO', '#NFT', '#DeFi']" :key="tag"
+            <div v-for="tag in popularTags" :key="tag"
               class="badge badge-outline badge-sm sm:badge-md hover:bg-primary hover:text-primary-content hover:border-primary cursor-pointer transition-all duration-200 py-2.5 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm">
               {{ tag }}
             </div>
@@ -134,3 +136,16 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { computed } from 'vue';
+const { t } = useAppI18n();
+
+const popularTags = computed(() => [
+  t('blog_page.tags.blockchain'),
+  t('blog_page.tags.sovereignty'),
+  t('blog_page.tags.dao'),
+  t('blog_page.tags.nft'),
+  t('blog_page.tags.defi')
+]);
+</script>

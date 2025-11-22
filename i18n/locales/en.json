@@ -1,6 +1,302 @@
 {
-    "hello": "Hello",
-    "welcome": "Welcome",
-    "home": "Home",
-    "language": "Language"
+    "nav": {
+        "home": "Home",
+        "intro": "About",
+        "apps": "Apps",
+        "blog": "Blog",
+        "connect_wallet": "Connect Wallet",
+        "connect": "Connect",
+        "brand": "LIFE TECHNOLOGY"
+    },
+    "footer": {
+        "copyright": "LIFE Blockchain Technology Co., Ltd. All Rights Reserved.",
+        "compliance": "ICP Filing: Beijing ICP No. XXXXXXXX-1 | Blockchain Service Filing: Beijing Cyberspace No. XXXXXXXX"
+    },
+    "hero": {
+        "subtitle": "Web3 Digital Economy",
+        "title_prefix": "Guard ",
+        "title_highlight": "Data Value",
+        "title_suffix": "Reshape Digital Life",
+        "description": "LIFE is committed to building a trusted digital future. Utilizing blockchain distributed ledger technology, we transform personal data into visual digital assets, creating a secure and compliant digital management terminal to enhance the value and significance of personal data.",
+        "btn_start": "Start Digital Journey",
+        "btn_whitepaper": "Read Whitepaper"
+    },
+    "stats": {
+        "years": "Years Experience",
+        "users": "Users Served",
+        "autonomy": "Data Autonomy",
+        "accidents": "Security Accidents"
+    },
+    "trends": {
+        "subtitle": "Industry Trends",
+        "title": "Giving Life Deeper Meaning",
+        "read_more": "Read More",
+        "assets": {
+            "title": "Data Capitalization",
+            "desc": "Breaking 'data silos' through ownership confirmation and circulation mechanisms, transforming daily behaviors into quantifiable digital rights, and empowering individuals to reclaim the value of their digital lives."
+        },
+        "quantified": {
+            "title": "Quantified Self",
+            "desc": "Promoting a positive cycle of healthy behaviors through objective data feedback, making 'body management' a quantifiable lifelong career empowered by digital technology."
+        },
+        "credit": {
+            "title": "Credit Value",
+            "desc": "Breaking physical limits, accumulating credit capital through on-chain behaviors, and gaining social influence and participation in co-creating the future within the digital ecosystem."
+        },
+        "security": {
+            "title": "Security & Compliance",
+            "desc": "Strictly adhering to Blockchain Information Service regulations, employing AES-256 encryption and distributed storage to ensure technical compliance and ecosystem stability, returning data ownership to users."
+        }
+    },
+    "features": {
+        "title": "Core Features",
+        "subtitle": "LIFE provides secure and trusted digital stewardship services, building your Web3 digital avatar.",
+        "list": {
+            "brain": {
+                "title": "Digital Brain",
+                "desc": "AI-driven data analysis engine transforming your life footprints into visual data reports and suggestions."
+            },
+            "did": {
+                "title": "Digital Identity (DID)",
+                "desc": "Blockchain-based decentralized digital identity. One-time authentication for universal ecosystem access, saying goodbye to cumbersome accounts."
+            },
+            "body": {
+                "title": "Digital Body",
+                "desc": "Connect smart wearable devices to upload health data on-chain, transforming good life habits into visual digital rights."
+            },
+            "key": {
+                "title": "Self-Held Private Key",
+                "desc": "Private keys are generated offline and stored on your local device. The platform cannot touch them, ensuring asset security and privacy."
+            },
+            "cross": {
+                "title": "Cross-Chain Compatibility",
+                "desc": "Supports mainstream consortium and public chain technical standards, realizing data interoperability and value transfer between different ecosystems."
+            },
+            "privacy": {
+                "title": "Privacy Computing",
+                "desc": "Adopting Zero-Knowledge Proofs and Trusted Execution Environment technology to create value while ensuring data remains 'usable but invisible'."
+            }
+        }
+    },
+    "app": {
+        "secure_status": "Secure",
+        "points_label_en": "Digital Points",
+        "points_label": "Eco Rights Points",
+        "card_id": "Digital ID",
+        "card_id_status": "On-chain Verified",
+        "card_health": "Health Report",
+        "card_health_status": "Encrypted Storage",
+        "title_prefix": "Building a Safer Global",
+        "title_highlight": "Digital Asset Steward",
+        "description": "In the global digital economy, security is both a technical challenge and a trust commitment. The LIFE client integrates AES-256 encryption and ECDSA signature algorithms, safeguarding your digital rights through offline private key storage.",
+        "feature_control_title": "Autonomous Control",
+        "feature_control_desc": "User data is end-to-end encrypted and distributedly stored. Combined with user autonomous authorization mechanisms, true data sovereignty is achieved.",
+        "feature_compliance_title": "Technical Compliance",
+        "feature_compliance_desc": "Strictly following domestic blockchain information service management regulations to ensure legal, compliant, and stable technical operations."
+    },
+    "faq": {
+        "title": "Learn About LIFE",
+        "subtitle": "Professional blockchain technology services, a trustworthy choice",
+        "list": {
+            "q1": "What is the LIFE platform?",
+            "a1": "LIFE is a decentralized digital ecosystem based on blockchain technology, designed to provide users with a secure, private, and autonomous data management experience. It is not a financial tool in the traditional sense, but your personal data asset steward.",
+            "q2": "What are LIFE points used for?",
+            "a2": "LIFE points are proofs of rights within the ecosystem, used to reward users for data contributions (such as health data uploads). Points can be used to redeem ecosystem services and participate in community governance voting, but cannot be used for illegal trading.",
+            "q3": "How is my data security guaranteed?",
+            "a3": "We use military-grade AES-256 encryption technology. Your core data and private keys are stored only on your local device. Without your authorization, no one (including the platform) can view or access your data."
+        }
+    },
+    "cta": {
+        "title": "Ready to enter the digital economy era?",
+        "btn_download": "Download Client",
+        "btn_contact": "Contact Business",
+        "disclaimer": "* LIFE strictly complies with local laws and regulations, providing only technical services and not involving illegal financial activities."
+    },
+    "about_page": {
+        "header": {
+            "badge": "ABOUT LIFE",
+            "title_prefix": "Professional Blockchain Services",
+            "title_highlight": "A Trustworthy Choice",
+            "description": "LIFE is not just a wallet, but an open Web3 ecosystem. We are committed to promoting personal data sovereignty, digital identity, and the free circulation of assets, building a secure bridge for you to the digital future."
+        },
+        "definition": {
+            "main_card": {
+                "title": "What is LIFE?",
+                "desc": "LIFE is a decentralized ecosystem based on blockchain technology. We have abandoned the drawbacks of traditional centralized platforms, utilizing distributed ledger technology to ensure your data belongs to you and your assets are under your control. Here, privacy is no longer a luxury, but a fundamental right.",
+                "badge_web3": "Web3 Platform",
+                "badge_decentralized": "Decentralized",
+                "badge_sovereignty": "Data Sovereignty"
+            },
+            "small_card_key": {
+                "title": "Self-Held Keys",
+                "desc": "100% user-managed. The platform has no access to any of your assets."
+            },
+            "small_card_eco": {
+                "title": "Rich Ecosystem",
+                "desc": "Supports multi-chain asset management and interaction including NFTs, DAOs, and AI."
+            }
+        },
+        "token": {
+            "subtitle": "The Token",
+            "title": "LIFE Assets: The Ecosystem Blood",
+            "desc": "LIFE is the native crypto asset of the ecosystem. It is not only a medium of circulation but also a symbol of governance rights.",
+            "list": {
+                "circulation": {
+                    "title": "Basic Circulation",
+                    "desc": "Supports various payment, transfer, and exchange scenarios with high efficiency and convenience."
+                },
+                "governance": {
+                    "title": "Community Governance",
+                    "desc": "Holders participate in ecological decisions and co-build the future through proposals and voting."
+                },
+                "incentive": {
+                    "title": "Incentive System",
+                    "desc": "Rewards developers, creators, and node maintainers to ensure network operation."
+                }
+            }
+        },
+        "wallet": {
+            "subtitle": "The Gateway",
+            "title": "LIFE Wallet: Web3 Entry",
+            "desc": "Designed for data sovereignty and asset security. The code is fully open source, and core contracts have passed authoritative audits. It is your secure steward to the decentralized world.",
+            "features": {
+                "multichain": {
+                    "title": "Multi-Chain Support",
+                    "desc": "One-stop management for ETH, BSC, Polygon"
+                },
+                "storage": {
+                    "title": "Local Storage",
+                    "desc": "Mnemonic phrases are stored only on your device"
+                },
+                "privacy": {
+                    "title": "Privacy Protection",
+                    "desc": "Built-in Zero-Knowledge Proofs and mixing tech"
+                },
+                "opensource": {
+                    "title": "Open Source",
+                    "desc": "Open to global community supervision"
+                }
+            }
+        },
+        "benefits": {
+            "title": "What can LIFE do for you?",
+            "subtitle": "Whether you are a blockchain novice or a seasoned geek, we have the features you need.",
+            "list": {
+                "mobile": {
+                    "title": "Manage Assets Anywhere",
+                    "desc": "No reliance on third parties. Transfer, receive, and participate in on-chain activities freely via mobile or PC anytime, anywhere."
+                },
+                "security": {
+                    "title": "Ultimate Security & Privacy",
+                    "desc": "End-to-end encryption, Zero-Knowledge Proofs. Your private keys and data are forever stored only locally on your device; LIFE stores no sensitive information."
+                },
+                "control": {
+                    "title": "Data Controllability",
+                    "desc": "Autonomously authorize or revoke third-party access, support on-chain footprint cleaning, and truly realize data sovereignty."
+                },
+                "global": {
+                    "title": "Global Low-Cost Payments",
+                    "desc": "Complete cross-border transactions with extremely low fees and high speed. No border restrictions, no bank waiting times."
+                },
+                "ecosystem": {
+                    "title": "Web3 App Ecosystem",
+                    "desc": "Built-in DApp browser to safely access innovative applications like DeFi, NFT, GameFi, and explore infinite possibilities."
+                },
+                "identity": {
+                    "title": "Anonymity & ID Protection",
+                    "desc": "No mobile binding or real-name verification required. Supports selective identity disclosure to maximize your personal privacy protection."
+                }
+            },
+            "future": {
+                "label": "Future Vision",
+                "title": "The Future of LIFE Ecosystem",
+                "desc": "We will continue to expand multi-chain compatibility, compliance governance, and cross-industry cooperation. In the future, LIFE will connect reality and virtuality, promoting the comprehensive popularization of the digital economy.",
+                "btn": "View Roadmap"
+            }
+        },
+        "safety": {
+            "title": "Things You Need to Know",
+            "subtitle": "Security is the cornerstone of Web3. Please read the following guide carefully.",
+            "list": {
+                "assets": {
+                    "title": "Asset Security & Key Management",
+                    "line1": "Private keys/mnemonics are the only credentials for assets. Lost ones cannot be recovered. Be sure to back them up offline on paper.",
+                    "line2": "Never store private keys in networked environments like WeChat, email, or cloud drives.",
+                    "line3": "The official team will NEVER ask for your private keys or mnemonic phrases."
+                },
+                "scam": {
+                    "title": "Prevent Scams & Phishing",
+                    "line1": "Be wary of scams involving fake customer service, airdrops, and high rebates.",
+                    "line2": "Be sure to download the wallet from the official website to prevent malware from stealing assets.",
+                    "line3": "Check the source carefully before authorizing DApps and do not click on strange links."
+                },
+                "tx": {
+                    "title": "Transactions & Fees",
+                    "line1": "Blockchain transfers are irreversible. Please verify the address before transferring.",
+                    "line2": "Fees are charged by the blockchain network and are unrelated to the platform. Set Gas fees reasonably based on demand.",
+                    "line3": "Some DApps may charge additional service fees. Please read instructions before operating."
+                },
+                "compliance": {
+                    "title": "Privacy & Compliance",
+                    "line1": "LIFE Wallet does not collect or store your personal data.",
+                    "line2": "Please comply with local laws and regulations when using digital assets.",
+                    "line3": "Some countries/regions have special regulatory policies on crypto assets. Please inform yourself."
+                },
+                "support": {
+                    "title": "FAQ & Support",
+                    "line1": "Assets will be permanently lost if you forget your mnemonic phrase; the official team cannot recover them.",
+                    "line2": "If you suspect your wallet is compromised, transfer remaining assets immediately and reset your device.",
+                    "line3": "For help, contact only via the official website or community. Be wary of fake customer service."
+                }
+            }
+        }
+    },
+    "download_page": {
+        "title_line1": "Explore Web3",
+        "title_line2": "Within Reach",
+        "description": "LIFE Wallet provides professional-grade data sovereignty protection and multi-chain asset management. Secure, private, and all-in-one. Start your digital journey now.",
+        "android_sub": "Download APK",
+        "android_label": "Download for Android",
+        "ios_sub": "Installer",
+        "ios_label": "Download for iOS",
+        "qr_title": "Scan to Install",
+        "qr_desc": "Use camera or browser to scan",
+        "features": {
+            "aes": "AES-256",
+            "multichain": "Multi-Chain",
+            "custodial": "Non-Custodial"
+        }
+    },
+    "blog_page": {
+        "hero": {
+            "title_prefix": "Explore",
+            "title_highlight": "Web3 Horizon",
+            "subtitle": "Gain insights into industry trends, master frontier technologies, and define the digital future with LIFE."
+        },
+        "search_placeholder": "Search articles, tutorials, or views...",
+        "filter": {
+            "category_label": "Category",
+            "options": {
+                "all": "All Articles",
+                "tech": "Tech Education",
+                "industry": "Industry News",
+                "security": "Security Guide"
+            }
+        },
+        "sort": {
+            "label": "Sort",
+            "options": {
+                "newest": "Newest",
+                "popular": "Most Read",
+                "oldest": "Oldest"
+            }
+        },
+        "tags": {
+            "blockchain": "#Blockchain",
+            "sovereignty": "#Data Sovereignty",
+            "dao": "#DAO",
+            "nft": "#NFT",
+            "defi": "#DeFi"
+        }
+    }
 }

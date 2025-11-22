@@ -1,6 +1,302 @@
 {
-    "hello": "你好",
-    "welcome": "歡迎使用",
-    "home": "首頁",
-    "language": "語言"
+    "nav": {
+        "home": "首頁",
+        "intro": "介紹",
+        "apps": "應用",
+        "blog": "博客",
+        "connect_wallet": "連接錢包",
+        "connect": "連接",
+        "brand": "LIFE TECHNOLOGY"
+    },
+    "footer": {
+        "copyright": "LIFE 區塊鏈技術有限公司 版權所有",
+        "compliance": "備案號：京ICP備XXXXXXXX號-1 | 區塊鏈信息服務備案編號：京網信備XXXXXXXX號"
+    },
+    "hero": {
+        "subtitle": "Web3 Digital Economy",
+        "title_prefix": "守護",
+        "title_highlight": "數據價值",
+        "title_suffix": "重塑數字生命",
+        "description": "LIFE 致力於構建可信的數字未來。利用區塊鏈分佈式賬本技術，將個人數據轉化為可視化的數字資產，打造安全、合規的數字管理終端，提升個人數據的價值與意義。",
+        "btn_start": "開啟數字之旅",
+        "btn_whitepaper": "了解技術白皮書"
+    },
+    "stats": {
+        "years": "年技術沉澱",
+        "users": "服務用戶",
+        "autonomy": "數據自主權",
+        "accidents": "安全事故"
+    },
+    "trends": {
+        "subtitle": "Industry Trends",
+        "title": "賦予生命更深意義",
+        "read_more": "查看詳情",
+        "assets": {
+            "title": "數據要素資產化",
+            "desc": "打破「數據孤島」，通過確權與流通機制，將日常行為轉化為可量化的數字權益，賦予個體對自身數字生命的價值回收權。"
+        },
+        "quantified": {
+            "title": "量化自我",
+            "desc": "通過客觀數據反饋促進健康行為正循環，使「管理身體」成為可量化的終身事業，實現數字技術賦能。"
+        },
+        "credit": {
+            "title": "信用價值",
+            "desc": "突破物理限制，通過鏈上行為積累信用資本，在數字生態中獲得社會影響力與共創未來的參與感。"
+        },
+        "security": {
+            "title": "安全與合規",
+            "desc": "嚴格遵循《區塊鏈信息服務管理規定》備案，採用 AES-256 加密與分佈式存儲，確保技術合規性與生態穩健性，讓數據回歸用戶。"
+        }
+    },
+    "features": {
+        "title": "核心功能",
+        "subtitle": "LIFE 為用戶提供安全、可信的數字管家服務，構建您的 Web3 數字化身。",
+        "list": {
+            "brain": {
+                "title": "數字大腦",
+                "desc": "AI 驅動的數據分析引擎，將您的生活足跡轉化為可視化數據報告與建議。"
+            },
+            "did": {
+                "title": "數字身份 (DID)",
+                "desc": "基於區塊鏈的去中心化數字身份，一次認證，全生態通用，告別繁瑣帳號。"
+            },
+            "body": {
+                "title": "數字身體",
+                "desc": "連接智能穿戴設備，讓健康數據上鏈，將良好的生活習慣轉化為可視化的數字權益。"
+            },
+            "key": {
+                "title": "私鑰自持",
+                "desc": "私鑰離線生成並存儲於用戶本地設備，平台無法觸碰，確保資產安全與隱私。"
+            },
+            "cross": {
+                "title": "跨鏈兼容",
+                "desc": "支持主流聯盟鏈及公鏈技術標準，實現不同生態間的數據互通與價值流轉。"
+            },
+            "privacy": {
+                "title": "隱私計算",
+                "desc": "採用零知識證明與可信執行環境技術，確保數據在「可用不可見」的前提下創造價值。"
+            }
+        }
+    },
+    "app": {
+        "secure_status": "Secure",
+        "points_label_en": "Digital Points",
+        "points_label": "生態權益積分",
+        "card_id": "數字身份認證",
+        "card_id_status": "已上鏈存證",
+        "card_health": "健康數據報告",
+        "card_health_status": "加密存儲中",
+        "title_prefix": "打造全球更安全的",
+        "title_highlight": "數字資產管家",
+        "description": "全球化數字經濟體系下，安全是技術挑戰與信任承諾。LIFE 客戶端集成 AES-256 加密與 ECDSA 簽名算法，通過離線私鑰存儲，保障您的數字權益萬無一失。",
+        "feature_control_title": "自主掌控",
+        "feature_control_desc": "用戶數據實施端到端加密並分佈式存儲，結合用戶自主授權機制，真正實現數據主權。",
+        "feature_compliance_title": "技術合規",
+        "feature_compliance_desc": "嚴格遵循國內區塊鏈信息服務管理規定，確保技術應用合法合規，穩健運行。"
+    },
+    "faq": {
+        "title": "了解 LIFE",
+        "subtitle": "專業的區塊鏈技術服務，值得信賴的選擇",
+        "list": {
+            "q1": "什麼是 LIFE 平台？",
+            "a1": "LIFE 是一個基於區塊鏈技術的去中心化數字生態系統，旨在為用戶提供安全、隱私、自主的數據管理體驗。它不是傳統意義上的金融工具，而是您的個人數據資產管家。",
+            "q2": "LIFE 積分有什麼用？",
+            "a2": "LIFE 積分是生態內的權益憑證，用於獎勵用戶對生態的數據貢獻（如健康數據上傳）。積分可用於兌換生態內的服務、參與社區治理投票，不可用於非法買賣。",
+            "q3": "如何保障我的數據安全？",
+            "a3": "我們採用軍工級 AES-256 加密技術，您的核心數據和私鑰僅存儲在您的本地設備上。未經您授權，任何人（包括平台方）都無法查看或調用您的數據。"
+        }
+    },
+    "cta": {
+        "title": "準備好進入數字經濟時代了嗎？",
+        "btn_download": "下載客戶端",
+        "btn_contact": "聯繫商務合作",
+        "disclaimer": "* LIFE 嚴格遵守當地法律法規，僅提供技術服務，不涉及非法金融活動。"
+    },
+    "about_page": {
+        "header": {
+            "badge": "ABOUT LIFE",
+            "title_prefix": "專業的區塊鏈服務",
+            "title_highlight": "值得信賴的選擇",
+            "description": "LIFE 不僅是一個錢包，更是一個開放的 Web3 生態系統。我們致力於推動個人數據主權、數字身份及資產的自由流通，為您構建通往數字未來的安全橋樑。"
+        },
+        "definition": {
+            "main_card": {
+                "title": "什麼是 LIFE？",
+                "desc": "LIFE 是一個基於區塊鏈技術的去中心化生態系統。我們摒棄了傳統中心化平台的弊端，利用分佈式賬本技術，確保您的數據歸您所有，資產由您掌控。在這裡，隱私不再是奢侈品，而是基本權利。",
+                "badge_web3": "Web3 平台",
+                "badge_decentralized": "去中心化",
+                "badge_sovereignty": "數據主權"
+            },
+            "small_card_key": {
+                "title": "私鑰自持",
+                "desc": "100% 用戶自主管理，平台無權訪問您的任何資產。"
+            },
+            "small_card_eco": {
+                "title": "豐富生態",
+                "desc": "支持 NFT、DAO、AI 等多鏈資產管理與交互。"
+            }
+        },
+        "token": {
+            "subtitle": "The Token",
+            "title": "LIFE 資產：生態的血液",
+            "desc": "LIFE 是生態系統的原生加密資產。它不僅是流通媒介，更是治理權的象徵。",
+            "list": {
+                "circulation": {
+                    "title": "基礎流通",
+                    "desc": "支持各類支付、轉賬和兌換場景，高效便捷。"
+                },
+                "governance": {
+                    "title": "社區治理",
+                    "desc": "持有者通過提案和投票參與生態決策，共建未來。"
+                },
+                "incentive": {
+                    "title": "激勵體系",
+                    "desc": "獎勵開發者、創作者及節點維護者，保障網絡運轉。"
+                }
+            }
+        },
+        "wallet": {
+            "subtitle": "The Gateway",
+            "title": "LIFE 錢包：Web3 入口",
+            "desc": "專為數據主權和資產安全設計。代碼完全開源，核心合約通過權威審計，是您通往去中心化世界的安全管家。",
+            "features": {
+                "multichain": {
+                    "title": "多鏈支持",
+                    "desc": "ETH, BSC, Polygon 一站式管理"
+                },
+                "storage": {
+                    "title": "本地存儲",
+                    "desc": "助記詞僅存於您的設備"
+                },
+                "privacy": {
+                    "title": "隱私保護",
+                    "desc": "內置零知識證明與混幣技術"
+                },
+                "opensource": {
+                    "title": "開源透明",
+                    "desc": "接受全球社區監督與貢獻"
+                }
+            }
+        },
+        "benefits": {
+            "title": "LIFE 能為您做什麼？",
+            "subtitle": "無論您是區塊鏈新手還是資深極客，這裡都有您需要的功能。",
+            "list": {
+                "mobile": {
+                    "title": "隨時隨地管理資產",
+                    "desc": "無需依賴第三方，無論何時何地，通過手機或電腦即可自由轉賬、收款、參與鏈上活動。"
+                },
+                "security": {
+                    "title": "極致安全與隱私",
+                    "desc": "端到端加密、零知識證明。您的私鑰和數據永遠只保存在您的設備本地，LIFE 不存儲任何敏感信息。"
+                },
+                "control": {
+                    "title": "數據自主可控",
+                    "desc": "自主授權或撤銷第三方訪問權限，支持鏈上足跡清理，真正實現數據主權。"
+                },
+                "global": {
+                    "title": "全球低成本支付",
+                    "desc": "極低手續費、極快速度完成跨境交易。無國界限制，無需銀行等待。"
+                },
+                "ecosystem": {
+                    "title": "Web3 應用生態",
+                    "desc": "內置 DApp 瀏覽器，安全訪問 DeFi、NFT、GameFi 等創新應用，探索無限可能。"
+                },
+                "identity": {
+                    "title": "匿名與身份保護",
+                    "desc": "無需綁定手機或實名。支持選擇性披露身份，最大程度保護您的個人隱私。"
+                }
+            },
+            "future": {
+                "label": "Future Vision",
+                "title": "LIFE 生態的未來",
+                "desc": "我們將持續拓展多鏈兼容性、合規治理與跨界合作。未來，LIFE 將連接現實與虛擬，推動數字經濟的全面普及。",
+                "btn": "查看路線圖"
+            }
+        },
+        "safety": {
+            "title": "你需要知道的事情",
+            "subtitle": "安全是 Web3 的基石，請仔細閱讀以下指南。",
+            "list": {
+                "assets": {
+                    "title": "資產安全與私鑰管理",
+                    "line1": "私鑰/助記詞是資產唯一憑證，丟失無法找回，請務必線下抄寫備份。",
+                    "line2": "嚴禁將私鑰保存在微信、郵箱、網盤等聯網環境中。",
+                    "line3": "官方團隊永遠不會向您索要私鑰或助記詞。"
+                },
+                "scam": {
+                    "title": "防範詐騙與釣魚",
+                    "line1": "警惕假冒客服、空投、高額返利等騙局。",
+                    "line2": "請務必通過官網下載錢包，防止惡意軟件盜取資產。",
+                    "line3": "授權 DApp 前請仔細核查來源，不要隨意點擊陌生鏈接。"
+                },
+                "tx": {
+                    "title": "交易與費用須知",
+                    "line1": "區塊鏈轉賬不可逆，轉賬前請務必核對地址。",
+                    "line2": "手續費由區塊鏈網絡收取，與平台無關，請根據需求合理設置 Gas 費。",
+                    "line3": "部分 DApp 可能收取額外服務費，操作前請閱讀說明。"
+                },
+                "compliance": {
+                    "title": "隱私與合規聲明",
+                    "line1": "LIFE 錢包不收集、不存儲您的個人數據。",
+                    "line2": "請遵守您所在地區的法律法規，合法使用數字資產。",
+                    "line3": "部分國家/地區對加密資產有特殊監管政策，請自行了解。"
+                },
+                "support": {
+                    "title": "常見問題與支持",
+                    "line1": "忘記助記詞資產將永久丟失，官方無法找回。",
+                    "line2": "若發現錢包被盜，請立即轉移剩餘資產並重置設備。",
+                    "line3": "如需幫助，請僅通過官網或官方社群聯繫，警惕假冒客服。"
+                }
+            }
+        }
+    },
+    "download_page": {
+        "title_line1": "暢遊 Web3",
+        "title_line2": "觸手可及",
+        "description": "LIFE 錢包為您提供專業級的數據主權保護與多鏈資產管理。安全、隱私、一站式，即刻開啟您的數字之旅。",
+        "android_sub": "Download APK",
+        "android_label": "Android 下載",
+        "ios_sub": "Installer",
+        "ios_label": "iOS 下載",
+        "qr_title": "手機掃碼安裝",
+        "qr_desc": "推薦使用系統相機或瀏覽器掃碼",
+        "features": {
+            "aes": "AES-256 加密",
+            "multichain": "多鏈支持",
+            "custodial": "非託管"
+        }
+    },
+    "blog_page": {
+        "hero": {
+            "title_prefix": "探索",
+            "title_highlight": "Web3 視界",
+            "subtitle": "洞察行業趨勢，掌握技術前沿，與 LIFE 一起定義數字未來"
+        },
+        "search_placeholder": "搜索文章、教程或觀點...",
+        "filter": {
+            "category_label": "分類",
+            "options": {
+                "all": "全部文章",
+                "tech": "技術科普",
+                "industry": "行業動態",
+                "security": "安全指南"
+            }
+        },
+        "sort": {
+            "label": "排序",
+            "options": {
+                "newest": "最新發佈",
+                "popular": "最多閱讀",
+                "oldest": "最早發佈"
+            }
+        },
+        "tags": {
+            "blockchain": "#區塊鏈",
+            "sovereignty": "#數據主權",
+            "dao": "#DAO",
+            "nft": "#NFT",
+            "defi": "#DeFi"
+        }
+    }
 }

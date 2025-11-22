@@ -1,6 +1,302 @@
 {
-    "hello": "你好",
-    "welcome": "欢迎使用",
-    "home": "首页",
-    "language": "语言"
+    "nav": {
+        "home": "首页",
+        "intro": "介绍",
+        "apps": "应用",
+        "blog": "博客",
+        "connect_wallet": "连接钱包",
+        "connect": "连接",
+        "brand": "LIFE TECHNOLOGY"
+    },
+    "footer": {
+        "copyright": "LIFE 区块链技术有限公司 版权所有",
+        "compliance": "备案号：京ICP备XXXXXXXX号-1 | 区块链信息服务备案编号：京网信备XXXXXXXX号"
+    },
+    "hero": {
+        "subtitle": "Web3 Digital Economy",
+        "title_prefix": "守护",
+        "title_highlight": "数据价值",
+        "title_suffix": "重塑数字生命",
+        "description": "LIFE 致力于构建可信的数字未来。利用区块链分布式账本技术，将个人数据转化为可视化的数字资产，打造安全、合规的数字管理终端，提升个人数据的价值与意义。",
+        "btn_start": "开启数字之旅",
+        "btn_whitepaper": "了解技术白皮书"
+    },
+    "stats": {
+        "years": "年技术沉淀",
+        "users": "服务用户",
+        "autonomy": "数据自主权",
+        "accidents": "安全事故"
+    },
+    "trends": {
+        "subtitle": "Industry Trends",
+        "title": "赋予生命更深意义",
+        "read_more": "查看详情",
+        "assets": {
+            "title": "数据要素资产化",
+            "desc": "打破“数据孤岛”，通过确权与流通机制，将日常行为转化为可量化的数字权益，赋予个体对自身数字生命的价值回收权。"
+        },
+        "quantified": {
+            "title": "量化自我",
+            "desc": "通过客观数据反馈促进健康行为正循环，使「管理身体」成为可量化的终身事业，实现数字技术赋能。"
+        },
+        "credit": {
+            "title": "信用价值",
+            "desc": "突破物理限制，通过链上行为积累信用资本，在数字生态中获得社会影响力与共创未来的参与感。"
+        },
+        "security": {
+            "title": "安全与合规",
+            "desc": "严格遵循《区块链信息服务管理规定》备案，采用AES-256加密与分布式存储，确保技术合规性与生态稳健性，让数据回归用户。"
+        }
+    },
+    "features": {
+        "title": "核心功能",
+        "subtitle": "LIFE 为用户提供安全、可信的数字管家服务，构建您的 Web3 数字化身。",
+        "list": {
+            "brain": {
+                "title": "数字大脑",
+                "desc": "AI 驱动的数据分析引擎，将您的生活足迹转化为可视化数据报告与建议。"
+            },
+            "did": {
+                "title": "数字身份 (DID)",
+                "desc": "基于区块链的去中心化数字身份，一次认证，全生态通用，告别繁琐账号。"
+            },
+            "body": {
+                "title": "数字身体",
+                "desc": "连接智能穿戴设备，让健康数据上链，将良好的生活习惯转化为可视化的数字权益。"
+            },
+            "key": {
+                "title": "私钥自持",
+                "desc": "私钥离线生成并存储于用户本地设备，平台无法触碰，确保资产安全与隐私。"
+            },
+            "cross": {
+                "title": "跨链兼容",
+                "desc": "支持主流联盟链及公链技术标准，实现不同生态间的数据互通与价值流转。"
+            },
+            "privacy": {
+                "title": "隐私计算",
+                "desc": "采用零知识证明与可信执行环境技术，确保数据在“可用不可见”的前提下创造价值。"
+            }
+        }
+    },
+    "app": {
+        "secure_status": "Secure",
+        "points_label_en": "Digital Points",
+        "points_label": "生态权益积分",
+        "card_id": "数字身份认证",
+        "card_id_status": "已上链存证",
+        "card_health": "健康数据报告",
+        "card_health_status": "加密存储中",
+        "title_prefix": "打造全球更安全的",
+        "title_highlight": "数字资产管家",
+        "description": "全球化数字经济体系下，安全是技术挑战与信任承诺。LIFE 客户端集成 AES-256 加密与 ECDSA 签名算法，通过离线私钥存储，保障您的数字权益万无一失。",
+        "feature_control_title": "自主掌控",
+        "feature_control_desc": "用户数据实施端到端加密并分布式存储，结合用户自主授权机制，真正实现数据主权。",
+        "feature_compliance_title": "技术合規",
+        "feature_compliance_desc": "严格遵循国内区块链信息服务管理规定，确保技术应用合法合规，稳健运行。"
+    },
+    "faq": {
+        "title": "了解 LIFE",
+        "subtitle": "专业的区块链技术服务，值得信赖的选择",
+        "list": {
+            "q1": "什么是 LIFE 平台？",
+            "a1": "LIFE 是一个基于区块链技术的去中心化数字生态系统，旨在为用户提供安全、隐私、自主的数据管理体验。它不是传统意义上的金融工具，而是您的个人数据资产管家。",
+            "q2": "LIFE 积分有什么用？",
+            "a2": "LIFE 积分是生态内的权益凭证，用于奖励用户对生态的数据贡献（如健康数据上传）。积分可用于兑换生态内的服务、参与社区治理投票，不可用于非法买卖。",
+            "q3": "如何保障我的数据安全？",
+            "a3": "我们采用军工级 AES-256 加密技术，您的核心数据和私钥仅存储在您的本地设备上。未经您授权，任何人（包括平台方）都无法查看或调用您的数据。"
+        }
+    },
+    "cta": {
+        "title": "准备好进入数字经济时代了吗？",
+        "btn_download": "下载客户端",
+        "btn_contact": "联系商务合作",
+        "disclaimer": "* LIFE 严格遵守当地法律法规，仅提供技术服务，不涉及非法金融活动。"
+    },
+    "about_page": {
+        "header": {
+            "badge": "ABOUT LIFE",
+            "title_prefix": "专业的区块链服务",
+            "title_highlight": "值得信赖的选择",
+            "description": "LIFE 不仅是一个钱包，更是一个开放的 Web3 生态系统。我们致力于推动个人数据主权、数字身份及资产的自由流通，为您构建通往数字未来的安全桥梁。"
+        },
+        "definition": {
+            "main_card": {
+                "title": "什么是 LIFE？",
+                "desc": "LIFE 是一个基于区块链技术的去中心化生态系统。我们摒弃了传统中心化平台的弊端，利用分布式账本技术，确保您的数据归您所有，资产由您掌控。在这里，隐私不再是奢侈品，而是基本权利。",
+                "badge_web3": "Web3 平台",
+                "badge_decentralized": "去中心化",
+                "badge_sovereignty": "数据主权"
+            },
+            "small_card_key": {
+                "title": "私钥自持",
+                "desc": "100% 用户自主管理，平台无权访问您的任何资产。"
+            },
+            "small_card_eco": {
+                "title": "丰富生态",
+                "desc": "支持 NFT、DAO、AI 等多链资产管理与交互。"
+            }
+        },
+        "token": {
+            "subtitle": "The Token",
+            "title": "LIFE 资产：生态的血液",
+            "desc": "LIFE 是生态系统的原生加密资产。它不仅是流通媒介，更是治理权的象征。",
+            "list": {
+                "circulation": {
+                    "title": "基础流通",
+                    "desc": "支持各类支付、转账和兑换场景，高效便捷。"
+                },
+                "governance": {
+                    "title": "社区治理",
+                    "desc": "持有者通过提案和投票参与生态决策，共建未来。"
+                },
+                "incentive": {
+                    "title": "激励体系",
+                    "desc": "奖励开发者、创作者及节点维护者，保障网络运转。"
+                }
+            }
+        },
+        "wallet": {
+            "subtitle": "The Gateway",
+            "title": "LIFE 钱包：Web3 入口",
+            "desc": "专为数据主权和资产安全设计。代码完全开源，核心合约通过权威审计，是您通往去中心化世界的安全管家。",
+            "features": {
+                "multichain": {
+                    "title": "多链支持",
+                    "desc": "ETH, BSC, Polygon 一站式管理"
+                },
+                "storage": {
+                    "title": "本地存储",
+                    "desc": "助记词仅存于您的设备"
+                },
+                "privacy": {
+                    "title": "隐私保护",
+                    "desc": "内置零知识证明与混币技术"
+                },
+                "opensource": {
+                    "title": "开源透明",
+                    "desc": "接受全球社区监督与贡献"
+                }
+            }
+        },
+        "benefits": {
+            "title": "LIFE 能为您做什么？",
+            "subtitle": "无论您是区块链新手还是资深极客，这里都有您需要的功能。",
+            "list": {
+                "mobile": {
+                    "title": "随时随地管理资产",
+                    "desc": "无需依赖第三方，无论何时何地，通过手机或电脑即可自由转账、收款、参与链上活动。"
+                },
+                "security": {
+                    "title": "极致安全与隐私",
+                    "desc": "端到端加密、零知识证明。您的私钥和数据永远只保存在您的设备本地，LIFE 不存储任何敏感信息。"
+                },
+                "control": {
+                    "title": "数据自主可控",
+                    "desc": "自主授权或撤销第三方访问权限，支持链上足迹清理，真正实现数据主权。"
+                },
+                "global": {
+                    "title": "全球低成本支付",
+                    "desc": "极低手续费、极快速度完成跨境交易。无国界限制，无需银行等待。"
+                },
+                "ecosystem": {
+                    "title": "Web3 应用生态",
+                    "desc": "内置 DApp 浏览器，安全访问 DeFi、NFT、GameFi 等创新应用，探索无限可能。"
+                },
+                "identity": {
+                    "title": "匿名与身份保护",
+                    "desc": "无需绑定手机或实名。支持选择性披露身份，最大程度保护您的个人隐私。"
+                }
+            },
+            "future": {
+                "label": "Future Vision",
+                "title": "LIFE 生态的未来",
+                "desc": "我们将持续拓展多链兼容性、合规治理与跨界合作。未来，LIFE 将连接现实与虚拟，推动数字经济的全面普及。",
+                "btn": "查看路线图"
+            }
+        },
+        "safety": {
+            "title": "你需要知道的事情",
+            "subtitle": "安全是 Web3 的基石，请仔细阅读以下指南。",
+            "list": {
+                "assets": {
+                    "title": "资产安全与私钥管理",
+                    "line1": "私钥/助记词是资产唯一凭证，丢失无法找回，请务必线下手抄备份。",
+                    "line2": "严禁将私钥保存在微信、邮箱、网盘等联网环境中。",
+                    "line3": "官方团队永远不会向您索要私钥或助记词。"
+                },
+                "scam": {
+                    "title": "防范诈骗与钓鱼",
+                    "line1": "警惕假冒客服、空投、高额返利等骗局。",
+                    "line2": "请务必通过官网下载钱包，防止恶意软件盗取资产。",
+                    "line3": "授权 DApp 前请仔细核查来源，不要随意点击陌生链接。"
+                },
+                "tx": {
+                    "title": "交易与费用须知",
+                    "line1": "区块链转账不可逆，转账前请务必核对地址。",
+                    "line2": "手续费由区块链网络收取，与平台无关，请根据需求合理设置 Gas 费。",
+                    "line3": "部分 DApp 可能收取额外服务费，操作前请阅读说明。"
+                },
+                "compliance": {
+                    "title": "隐私与合规声明",
+                    "line1": "LIFE 钱包不收集、不存储您的个人数据。",
+                    "line2": "请遵守您所在地区的法律法规，合法使用数字资产。",
+                    "line3": "部分国家/地区对加密资产有特殊监管政策，请自行了解。"
+                },
+                "support": {
+                    "title": "常见问题与支持",
+                    "line1": "忘记助记词资产将永久丢失，官方无法找回。",
+                    "line2": "若发现钱包被盗，请立即转移剩余资产并重置设备。",
+                    "line3": "如需帮助，请仅通过官网或官方社群联系，警惕假冒客服。"
+                }
+            }
+        }
+    },
+    "download_page": {
+        "title_line1": "畅游 Web3",
+        "title_line2": "触手可及",
+        "description": "LIFE 钱包为您提供专业级的数据主权保护与多链资产管理。安全、隐私、一站式，即刻开启您的数字之旅。",
+        "android_sub": "Download APK",
+        "android_label": "Android 下载",
+        "ios_sub": "Installer",
+        "ios_label": "iOS 下载",
+        "qr_title": "手机扫码安装",
+        "qr_desc": "推荐使用系统相机或浏览器扫码",
+        "features": {
+            "aes": "AES-256 加密",
+            "multichain": "多链支持",
+            "custodial": "非托管"
+        }
+    },
+    "blog_page": {
+        "hero": {
+            "title_prefix": "探索",
+            "title_highlight": "Web3 视界",
+            "subtitle": "洞察行业趋势，掌握技术前沿，与 LIFE 一起定义数字未来"
+        },
+        "search_placeholder": "搜索文章、教程或观点...",
+        "filter": {
+            "category_label": "分类",
+            "options": {
+                "all": "全部文章",
+                "tech": "技术科普",
+                "industry": "行业动态",
+                "security": "安全指南"
+            }
+        },
+        "sort": {
+            "label": "排序",
+            "options": {
+                "newest": "最新发布",
+                "popular": "最多阅读",
+                "oldest": "最早发布"
+            }
+        },
+        "tags": {
+            "blockchain": "#区块链",
+            "sovereignty": "#数据主权",
+            "dao": "#DAO",
+            "nft": "#NFT",
+            "defi": "#DeFi"
+        }
+    }
 }

@@ -66,8 +66,8 @@
           </button>
           <button
             class="btn btn-primary btn-sm md:btn-md rounded-full font-bold shadow-lg shadow-primary/20 border-none text-primary-content ml-1 group transition-all duration-300 hover:scale-105 active:scale-95">
-            <span class="hidden md:inline">连接钱包</span>
-            <span class="md:hidden">连接</span>
+            <span class="hidden md:inline">{{ t('nav.connect_wallet') }}</span>
+            <span class="md:hidden">{{ t('nav.connect') }}</span>
             <Icon name="heroicons:wallet" class="w-4 h-4 transition-transform group-hover:-rotate-12" />
           </button>
         </div>
@@ -85,7 +85,7 @@
         </li>
       </ul>
       <div class="mt-auto mb-10 text-center opacity-50 text-sm">
-        <p>LIFE TECHNOLOGY</p>
+        <p>{{ t('nav.brand') }}</p>
       </div>
     </div>
   </nav>
@@ -93,7 +93,8 @@
 
 <script setup>
 import { animate, stagger } from 'animejs'
-const { changeLocale, currentLocaleShort } = useAppI18n()
+import { computed } from 'vue' // 必须导入 computed
+const { t, changeLocale, currentLocaleShort } = useAppI18n()
 
 const { y } = useWindowScroll()
 const isScrolled = computed(() => y.value > 20)
@@ -101,12 +102,13 @@ const isMobileMenuOpen = ref(false)
 const themeBtnRef = ref(null)
 const isDark = ref(true)
 
-const menuItems = [
-  { label: '首页', link: '/' },
-  { label: '介绍', link: '/introduction' },
-  { label: '应用', link: '/apps' },
-  { label: '博客', link: '/blog' },
-]
+// 使用 computed 确保语言切换时菜单文字随之更新
+const menuItems = computed(() => [
+  { label: t('nav.home'), link: '/' },
+  { label: t('nav.intro'), link: '/introduction' },
+  { label: t('nav.apps'), link: '/apps' },
+  { label: t('nav.blog'), link: '/blog' },
+])
 
 onMounted(() => {
   const savedTheme = localStorage.getItem('life-theme')
