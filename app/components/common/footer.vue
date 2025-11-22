@@ -7,10 +7,10 @@
       </div>
 
       <div class="flex gap-8 text-sm font-medium text-base-content/60">
-        <a href="#" class="hover:text-primary transition-colors">数字身份</a>
-        <a href="#" class="hover:text-primary transition-colors">资产管理</a>
-        <a href="#" class="hover:text-primary transition-colors">生态治理</a>
-        <a href="#" class="hover:text-primary transition-colors">加入我们</a>
+        <a href="#" class="hover:text-primary transition-colors">首页</a>
+        <a href="#" class="hover:text-primary transition-colors">介绍</a>
+        <a href="#" class="hover:text-primary transition-colors">应用</a>
+        <a href="#" class="hover:text-primary transition-colors">博客</a>
       </div>
 
       <div class="flex gap-4">

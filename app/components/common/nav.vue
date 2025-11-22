@@ -1,7 +1,7 @@
 <template>
   <nav class="fixed top-0 w-full z-50 transition-all duration-500 border-b" :class="[
     isScrolled
-      ? 'bg-base-100/85 backdrop-blur-xl border-base-content/10 py-3 shadow-lg shadow-base-content/5'
+      ? 'bg-base-100/85 backdrop-blur-xl border-base-content/10 py-3'
       : 'bg-transparent border-transparent py-5'
   ]">
     <div class="container mx-auto px-4">
@@ -17,7 +17,7 @@
               <div
                 class="absolute inset-0 bg-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               </div>
-              <nuxt-img src="/favicon.png"></nuxt-img>
+              <nuxt-img src="/favicon.png" class="w-8 h-8 object-contain"></nuxt-img>
             </div>
             <div class="flex flex-col leading-none">
               <span class="font-black text-2xl tracking-tighter text-base-content relative">
@@ -48,8 +48,8 @@
             <ul tabindex="0"
               class="dropdown-content z-[1] menu p-2 shadow-xl bg-base-100 border border-base-content/5 rounded-xl w-32 mt-4 backdrop-blur-md">
               <li><a class="active:bg-primary active:text-primary-content">简体中文</a></li>
+              <li><a>繁体中文</a></li>
               <li><a>English</a></li>
-              <li><a>日本語</a></li>
             </ul>
           </div>
           <button ref="themeBtnRef"
@@ -72,8 +72,8 @@
       </div>
     </div>
     <div v-show="isMobileMenuOpen"
-      class="fixed inset-0 z-50 bg-base-100/95 backdrop-blur-2xl md:hidden flex flex-col pt-24 px-6">
-      <ul class="flex flex-col gap-6 text-center">
+      class="fixed inset-0 z-[49] bg-base-100/95 backdrop-blur-2xl md:hidden flex flex-col pt-28 px-6 h-screen w-screen overscroll-contain">
+      <ul class="flex flex-col gap-6 text-center cursor-pointer">
         <li v-for="(item, index) in menuItems" :key="index" class="mobile-menu-item opacity-0 translate-y-4">
           <a class="text-3xl font-black text-base-content hover:text-primary transition-colors block py-2"
             @click="isMobileMenuOpen = false">
@@ -81,7 +81,6 @@
           </a>
         </li>
       </ul>
-
       <div class="mt-auto mb-10 text-center opacity-50 text-sm">
         <p>LIFE TECHNOLOGY</p>
       </div>
@@ -105,17 +104,20 @@ const menuItems = [
   { label: '介绍', link: '/intro' },
   { label: '应用', link: '/apps' },
   { label: '博客', link: '/blog' },
-  { label: '信息', link: '/info' }
 ]
 
 onMounted(() => {
   const savedTheme = localStorage.getItem('life-theme')
   if (savedTheme) {
     isDark.value = savedTheme === 'dark'
+  } else {
+    isDark.value = true
   }
   applyTheme()
 })
-
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
 watch(isMobileMenuOpen, (isOpen) => {
   if (isOpen) {
     setTimeout(() => {
@@ -132,7 +134,6 @@ watch(isMobileMenuOpen, (isOpen) => {
     document.body.style.overflow = ''
   }
 })
-
 const toggleTheme = () => {
   isDark.value = !isDark.value
   applyTheme()
@@ -145,7 +146,6 @@ const toggleTheme = () => {
     })
   }
 }
-
 const applyTheme = () => {
   const themeName = isDark.value ? 'dark' : 'light'
   document.documentElement.setAttribute('data-theme', themeName)
