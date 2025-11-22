@@ -1,4 +1,26 @@
 @import "tailwindcss";
+
 @plugin "daisyui" {
-    themes: light --default, dark;
+    themes: dark --default, light;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.glass-card {
+    @apply bg-base-200/50 backdrop-blur-md border border-white/10;
 }

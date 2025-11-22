@@ -18,5 +18,11 @@ export default defineNuxtConfig({
       ]
     }
   },
-  modules: ['@nuxt/icon', '@vueuse/nuxt', '@pinia/nuxt', '@nuxtjs/i18n']
+  modules: [
+    '@nuxt/icon',
+    '@vueuse/nuxt',
+    '@pinia/nuxt',
+    '@nuxtjs/i18n',
+    '@nuxt/image'
+  ]
 })
