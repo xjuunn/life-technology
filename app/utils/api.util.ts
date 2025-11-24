@@ -5,6 +5,7 @@ import axios, {
   type InternalAxiosRequestConfig,
   AxiosError
 } from 'axios'
+import { useUserStore } from '@/stores/user'
 
 export interface ApiResponse<T = any> {
   code: number;
@@ -37,11 +38,11 @@ class Request {
   private setupInterceptors() {
     this.instance.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        // TODO 获取 token 的方式 （store）
-        // const token = localStorage.getItem('token')
-        // if (token && config.headers) {
-        //   config.headers.set('Authorization', `Bearer ${token}`)
-        // }
+        const userStore = useUserStore()
+        const token = userStore.token
+        if (token && config.headers) {
+          config.headers.set('Authorization', `Bearer ${token}`)
+        }
         return config
       },
       (error: AxiosError) => Promise.reject(error)

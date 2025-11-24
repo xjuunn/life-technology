@@ -309,6 +309,12 @@
         "btn_login": "立即登录",
         "or": "或",
         "no_account": "还没有账户？",
-        "create_account": "注册新账户"
+        "create_account": "注册新账户",
+        "register_subtitle": "立即开启您的数字之旅",
+        "username_label": "用户名",
+        "username_placeholder": "您的昵称",
+        "btn_register": "立即注册",
+        "has_account": "已有账户？",
+        "login_link": "去登录"
     }
 }

@@ -50,6 +50,18 @@ export const useUserStore = defineStore('user', () => {
     return result.data.token;
   }
 
+  function setUser(u: ApiList.auth.User) {
+    _user.value = u;
+  }
+
+  function setToken(t: string) {
+    _token.value = t;
+  }
+
+  function setRefreshToken(r: string) {
+    _refreshToken.value = r;
+  }
+
   return {
     _user,
     _token,
@@ -59,6 +71,9 @@ export const useUserStore = defineStore('user', () => {
     refreshToken,
     login,
     logout,
+    setUser,
+    setToken,
+    setRefreshToken,
   }
 }, {
   persist: {

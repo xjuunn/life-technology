@@ -309,6 +309,12 @@
         "btn_login": "立即登入",
         "or": "或",
         "no_account": "還沒有帳戶？",
-        "create_account": "註冊新帳戶"
+        "create_account": "註冊新帳戶",
+        "register_subtitle": "立即開啟您的數位旅程",
+        "username_label": "使用者名稱",
+        "username_placeholder": "您的暱稱",
+        "btn_register": "立即註冊",
+        "has_account": "已有帳戶？",
+        "login_link": "前往登入"
     }
 }

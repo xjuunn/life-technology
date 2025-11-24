@@ -309,6 +309,12 @@
         "btn_login": "Sign In",
         "or": "OR",
         "no_account": "Don't have an account?",
-        "create_account": "Create Account"
+        "create_account": "Create Account",
+        "register_subtitle": "Start your journey with us today",
+        "username_label": "Username",
+        "username_placeholder": "johndoe",
+        "btn_register": "Sign Up",
+        "has_account": "Already have an account?",
+        "login_link": "Sign In"
     }
 }

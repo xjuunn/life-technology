@@ -1,13 +1,12 @@
 <template>
-  <div class="mt-32">
+  <div>
     <button class="btn btn-primary" @click="test">test</button>
-    {{ userStore.user?.username }}
   </div>
 </template>
 <script lang="ts" setup>
-const userStore = useUserStore();
 async function test() {
-
+  const data = await ApiList.auth.profile();
+  console.log(data);
 
 } 
 </script>
