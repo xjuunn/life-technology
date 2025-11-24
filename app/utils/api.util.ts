@@ -11,7 +11,7 @@ export interface ApiResponse<T = any> {
   data: T;
   success: boolean;
   message: string;
-  error: null | { message: string };
+  error: null | { message: string, [key: string]: any; };
   [key: string]: any;
 }
 

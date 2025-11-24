@@ -1,2 +1,2 @@
-export * as Test from './test';
-export * as Auth from './auth';
+export * as system from './system';
+export * as auth from './auth';

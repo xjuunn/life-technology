@@ -5,7 +5,7 @@
 </template>
 <script lang="ts" setup>
 async function test() {
-  const { code, data, message, success, error } = await ApiList.Test.health();
+  const { code, data, message, success, error } = await ApiList.system.health();
   console.log(code, data, message, success, error);
 }
 </script>
