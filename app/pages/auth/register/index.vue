@@ -3,8 +3,7 @@
     <div
       class="absolute top-1/4 -right-20 w-96 h-96 bg-primary/20 rounded-full blur-[128px] pointer-events-none animate-pulse">
     </div>
-    <div
-      class="absolute bottom-1/4 -left-20 w-96 h-96 bg-secondary/20 rounded-full blur-[128px] pointer-events-none">
+    <div class="absolute bottom-1/4 -left-20 w-96 h-96 bg-secondary/20 rounded-full blur-[128px] pointer-events-none">
     </div>
 
     <div class="w-full max-w-md relative z-10">
@@ -47,7 +46,7 @@
             <div class="form-control">
               <label class="label pt-0">
                 <span class="label-text font-bold text-xs uppercase tracking-wider opacity-70">{{ t('auth.email_label')
-                  }}</span>
+                }}</span>
               </label>
               <div class="relative group">
                 <div
@@ -146,9 +145,9 @@ const handleRegister = async () => {
         userStore.setUser(response.data.user);
         userStore.setToken(response.data.token);
         userStore.setRefreshToken(response.data.refreshToken)
-        router.push('/');
+        navigateTo('/', { replace: true })
       } else {
-        router.push('/auth/login');
+        navigateTo("/auth/login", { replace: true })
       }
     } else {
       errorMsg.value = response.message || 'Registration failed';
@@ -163,6 +162,6 @@ const handleRegister = async () => {
 };
 
 const navigateToLogin = () => {
-  router.push('/auth/login');
+  navigateTo("/auth/login", { replace: true })
 };
 </script>

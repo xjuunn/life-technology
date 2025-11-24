@@ -7,7 +7,11 @@
         "login": "Login",
         "connect_wallet": "Connect Wallet",
         "connect": "Connect",
-        "brand": "LIFE TECHNOLOGY"
+        "brand": "LIFE TECHNOLOGY",
+        "admin_panel": "Admin Panel",
+        "profile": "My Profile",
+        "settings": "Settings",
+        "logout": "Log Out"
     },
     "footer": {
         "copyright": "LIFE Blockchain Technology Co., Ltd. All Rights Reserved.",

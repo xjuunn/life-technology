@@ -54,6 +54,7 @@
               <li><a @click="changeLocale('en')">English</a></li>
             </ul>
           </div>
+
           <button ref="themeBtnRef"
             class="btn btn-ghost btn-circle btn-sm md:btn-md hover:bg-base-content/5 text-base-content overflow-hidden"
             @click="toggleTheme" aria-label="Toggle Theme">
@@ -64,22 +65,87 @@
                 :class="isDark ? 'translate-y-0 opacity-100 rotate-0' : '-translate-y-8 opacity-0 -rotate-90'" />
             </div>
           </button>
-          <div class="join">
-            <!-- 登录 -->
-            <nuxt-link v-if="!userStore.user" to="/auth/login"
-              class="btn btn-primary join-item btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
-              <span>{{ t('nav.login') }}</span>
-              <!-- <Icon name="heroicons:wallet" class="w-4 h-4 transition-transform group-hover:-rotate-12" /> -->
-            </nuxt-link>
-            <!-- 连接钱包 -->
-            <button
-              class="btn btn-primary join-item btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
-              <span class="hidden md:inline">{{ t('nav.connect_wallet') }}</span>
-              <span class="md:hidden">{{ t('nav.connect') }}</span>
-              <Icon name="heroicons:wallet" class="w-4 h-4 transition-transform group-hover:-rotate-12" />
-            </button>
-          </div>
 
+          <!-- 连接钱包 (独立显示) -->
+          <button
+            class="btn btn-primary btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 hidden sm:flex">
+            <span>{{ t('nav.connect_wallet') }}</span>
+            <Icon name="heroicons:wallet" class="w-4 h-4" />
+          </button>
+
+          <!-- 未登录状态 -->
+          <nuxt-link v-if="!userStore.user" to="/auth/login"
+            class="btn btn-primary btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
+            <span>{{ t('nav.login') }}</span>
+          </nuxt-link>
+
+          <!-- 已登录状态 (用户头像菜单) -->
+          <div v-else class="dropdown dropdown-end ml-1">
+            <div tabindex="0" role="button"
+              class="btn btn-ghost btn-circle avatar border border-base-content/10 hover:border-primary/50 transition-colors">
+              <div
+                class="w-9 h-9 rounded-full ring ring-primary/20 ring-offset-base-100 ring-offset-1 flex items-center justify-center overflow-hidden bg-base-200 text-base-content">
+                <img v-if="userStore.user?.avatar" :src="userStore.user.avatar" class="w-full h-full object-cover"
+                  alt="Avatar" />
+                <span v-else class="text-sm font-bold uppercase">
+                  {{ userStore.user?.username?.charAt(0) || 'U' }}
+                </span>
+              </div>
+            </div>
+            <ul tabindex="0"
+              class="menu dropdown-content z-1 p-2 shadow-2xl bg-base-100/90 border border-base-content/5 rounded-2xl w-64 mt-4 backdrop-blur-xl">
+              <!-- 用户信息头部 -->
+              <li class="pointer-events-none px-2 pb-2 pt-1">
+                <div class="flex items-center gap-3">
+                  <div class="avatar">
+                    <div
+                      class="w-10 h-10 rounded-full ring ring-base-content/5 flex items-center justify-center overflow-hidden bg-base-200">
+                      <img v-if="userStore.user?.avatar" :src="userStore.user.avatar"
+                        class="w-full h-full object-cover" />
+                      <span v-else class="text-lg font-bold uppercase opacity-70">
+                        {{ userStore.user?.username?.charAt(0) || 'U' }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex flex-col overflow-hidden">
+                    <span class="font-bold text-base truncate leading-tight">{{ userStore.user?.username }}</span>
+                    <span class="text-xs opacity-50 truncate mt-0.5">{{ userStore.user?.email }}</span>
+                  </div>
+                </div>
+              </li>
+              <li class="divider p-0 h-0.5"></li>
+
+              <!-- 菜单项 -->
+              <li v-if="userStore.user?.isAdmin">
+                <nuxt-link to="/admin" class="py-3 font-medium hover:bg-primary/10 hover:text-primary">
+                  <Icon name="heroicons:presentation-chart-line" class="w-5 h-5" />
+                  {{ t('nav.admin_panel') }}
+                </nuxt-link>
+              </li>
+              <li>
+                <nuxt-link to="/user/profile" class="py-3 font-medium hover:bg-base-content/5">
+                  <Icon name="heroicons:user-circle" class="w-5 h-5" />
+                  {{ t('nav.profile') }}
+                </nuxt-link>
+              </li>
+              <li>
+                <nuxt-link to="/user/settings" class="py-3 font-medium hover:bg-base-content/5">
+                  <Icon name="heroicons:cog-6-tooth" class="w-5 h-5" />
+                  {{ t('nav.settings') }}
+                </nuxt-link>
+              </li>
+
+              <li class="divider h-0.5"></li>
+
+              <!-- 登出 -->
+              <li>
+                <button @click="handleLogout" class="py-3 text-error hover:bg-error/10 font-medium">
+                  <Icon name="heroicons:arrow-right-start-on-rectangle" class="w-5 h-5" />
+                  {{ t('nav.logout') }}
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -164,6 +230,11 @@ const applyTheme = () => {
   const themeName = isDark.value ? 'dark' : 'light'
   document.documentElement.setAttribute('data-theme', themeName)
   localStorage.setItem('life-theme', themeName)
+}
+
+const handleLogout = async () => {
+  await userStore.logout()
+  navigateTo('/auth/login')
 }
 </script>
 

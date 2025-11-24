@@ -3,8 +3,8 @@
     <div
       class="absolute top-1/4 -left-20 w-96 h-96 bg-primary/20 rounded-full blur-[128px] pointer-events-none animate-pulse">
     </div>
-    <div
-      class="absolute bottom-1/4 -right-20 w-96 h-96 bg-secondary/20 rounded-full blur-[128px] pointer-events-none"></div>
+    <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-secondary/20 rounded-full blur-[128px] pointer-events-none">
+    </div>
     <div class="w-full max-w-md relative z-10">
       <div class="text-center mb-10 animate-fade-in-up">
         <div
@@ -32,7 +32,7 @@
             <div class="form-control">
               <label class="label">
                 <span class="label-text font-bold text-xs uppercase tracking-wider opacity-70">{{ t('auth.email_label')
-                  }}</span>
+                }}</span>
               </label>
               <div class="relative group">
                 <div
@@ -94,7 +94,6 @@
 
 <script lang="ts" setup>
 const { t } = useAppI18n();
-const router = useRouter();
 const isLoading = ref(false);
 const errorMsg = ref('');
 const showPassword = ref(false);
@@ -110,7 +109,7 @@ const handleLogin = async () => {
   isLoading.value = true;
   try {
     await userStore.login(formData.email, formData.password);
-    router.push('/');
+    navigateTo("/", { replace: true })
   } catch (error: any) {
     console.error('Login error:', error.message);
     errorMsg.value = error.message;
@@ -120,10 +119,10 @@ const handleLogin = async () => {
 };
 
 const navigateToRegister = () => {
-  router.push('/auth/register');
+  navigateTo('/auth/register', { replace: true })
 };
 
 const navigateToForgot = () => {
-  router.push('/auth/forgot-password');
+  navigateTo('/auth/forgot-password', { replace: false })
 };
 </script>
