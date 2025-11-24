@@ -1,13 +1,5 @@
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300">
-    <!-- <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-      <div class="absolute top-[-10%] right-[-5%] w-160 h-160 bg-primary/10 rounded-full blur-[128px]"></div>
-      <div class="absolute bottom-[-10%] left-[-10%] w-160 h-160 bg-secondary/10 rounded-full blur-[128px]">
-      </div>
-      <div
-        class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay">
-      </div>
-    </div> -->
     <section class="relative pt-40 pb-20 md:pt-40 md:pb-32 px-4">
       <div class="container mx-auto text-center max-w-5xl">
         <div
