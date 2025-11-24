@@ -299,5 +299,16 @@
             "nft": "#NFT",
             "defi": "#DeFi"
         }
+    },
+    "auth": {
+        "welcome_back": "欢迎回来",
+        "login_subtitle": "请输入您的账户信息以登录",
+        "email_label": "电子邮箱",
+        "password_label": "登录密码",
+        "forgot_password": "忘记密码？",
+        "btn_login": "立即登录",
+        "or": "或",
+        "no_account": "还没有账户？",
+        "create_account": "注册新账户"
     }
 }

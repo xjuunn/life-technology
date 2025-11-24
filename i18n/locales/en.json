@@ -299,5 +299,16 @@
             "nft": "#NFT",
             "defi": "#DeFi"
         }
+    },
+    "auth": {
+        "welcome_back": "Welcome Back",
+        "login_subtitle": "Enter your credentials to access your account",
+        "email_label": "Email Address",
+        "password_label": "Password",
+        "forgot_password": "Forgot password?",
+        "btn_login": "Sign In",
+        "or": "OR",
+        "no_account": "Don't have an account?",
+        "create_account": "Create Account"
     }
 }

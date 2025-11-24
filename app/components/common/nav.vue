@@ -66,8 +66,8 @@
           </button>
           <div class="join">
             <!-- 登录 -->
-            <nuxt-link to="/auth/login"
-              class="btn btn-primary join-item btn-sm font-bold shadow-lg  transition-all duration-300 hover:scale-105 active:scale-95">
+            <nuxt-link v-if="!userStore.user" to="/auth/login"
+              class="btn btn-primary join-item btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
               <span>{{ t('nav.login') }}</span>
               <!-- <Icon name="heroicons:wallet" class="w-4 h-4 transition-transform group-hover:-rotate-12" /> -->
             </nuxt-link>
@@ -103,8 +103,8 @@
 
 <script setup>
 import { animate, stagger } from 'animejs'
-import { computed } from 'vue' // 必须导入 computed
 const { t, changeLocale, currentLocaleShort } = useAppI18n()
+const userStore = useUserStore();
 
 const { y } = useWindowScroll()
 const isScrolled = computed(() => y.value > 20)

@@ -299,5 +299,16 @@
             "nft": "#NFT",
             "defi": "#DeFi"
         }
+    },
+    "auth": {
+        "welcome_back": "歡迎回來",
+        "login_subtitle": "請輸入您的帳戶資訊以登入",
+        "email_label": "電子郵件",
+        "password_label": "登入密碼",
+        "forgot_password": "忘記密碼？",
+        "btn_login": "立即登入",
+        "or": "或",
+        "no_account": "還沒有帳戶？",
+        "create_account": "註冊新帳戶"
     }
 }
