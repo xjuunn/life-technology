@@ -1,0 +1,1 @@
+export * as ApiList from '~/api/index';

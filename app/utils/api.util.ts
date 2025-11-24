@@ -6,11 +6,12 @@ import axios, {
   AxiosError
 } from 'axios'
 
-// TODO 临时的
 export interface ApiResponse<T = any> {
-  success: boolean;
-  message?: string;
+  code: number;
   data: T;
+  success: boolean;
+  message: string;
+  error: null | { message: string };
   [key: string]: any;
 }
 
@@ -21,7 +22,7 @@ interface RequestConfig extends AxiosRequestConfig {
 class Request {
   private instance: AxiosInstance
   private baseConfig: AxiosRequestConfig = {
-    baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+    baseURL: '/api',
     timeout: 15000,
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
@@ -49,7 +50,7 @@ class Request {
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => {
         const res = response.data as ApiResponse<any>
-        if (res.success) {
+        if (true) {
           return res as unknown as AxiosResponse
         } else {
           const errorMsg = res.message || '请求处理失败'
@@ -95,3 +96,4 @@ class Request {
 export const api = new Request({ baseURL: '/bgapi/' })
 
 export default Request
+
