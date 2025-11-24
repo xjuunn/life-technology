@@ -40,15 +40,6 @@ export default defineNuxtConfig({
       base_url: process.env.BASE_URL
     }
   },
-  nitro: {
-    devProxy: {
-      '/bgapi': {
-        target: `${process.env.BASE_URL}`,
-        changeOrigin: true,
-        prependPath: true,
-      },
-    },
-  },
   modules: [
     '@nuxt/icon',
     '@vueuse/nuxt',

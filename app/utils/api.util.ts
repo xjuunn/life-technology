@@ -23,7 +23,7 @@ interface RequestConfig extends AxiosRequestConfig {
 class Request {
   private instance: AxiosInstance
   private baseConfig: AxiosRequestConfig = {
-    baseURL: '/api',
+    baseURL: useRuntimeConfig().public.base_url,
     timeout: 15000,
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
@@ -51,7 +51,7 @@ class Request {
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => {
         const res = response.data as ApiResponse<any>
-        if (true) {
+        if (res.success) {
           return res as unknown as AxiosResponse
         } else {
           const errorMsg = res.message || '请求处理失败'
@@ -94,7 +94,7 @@ class Request {
   }
 }
 
-export const api = new Request({ baseURL: '/bgapi/' })
+export const api = new Request()
 
 export default Request
 
