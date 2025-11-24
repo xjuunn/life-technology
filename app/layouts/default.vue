@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col font-sans ">
     <common-nav></common-nav>
-    <main class="">
+    <main class="mt-22">
       <slot />
     </main>
     <common-footer></common-footer>

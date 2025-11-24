@@ -1,14 +1,6 @@
 <template>
   <div
-    class="min-h-screen h-screen bg-base-100 text-base-content font-sans relative overflow-hidden selection:bg-primary selection:text-primary-content flex flex-col">
-    <div class="fixed inset-0 pointer-events-none -z-10">
-      <div
-        class="absolute top-0 left-1/4 w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 bg-primary/20 rounded-full blur-[80px] sm:blur-[120px] opacity-50 mix-blend-multiply dark:mix-blend-screen">
-      </div>
-      <div
-        class="absolute bottom-0 right-1/4 w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 bg-secondary/20 rounded-full blur-[80px] sm:blur-[120px] opacity-50 mix-blend-multiply dark:mix-blend-screen">
-      </div>
-    </div>
+    class="min-h-full h-[calc(100vh-90px)] bg-base-100 text-base-content font-sans relative overflow-hidden selection:bg-primary selection:text-primary-content flex flex-col">
     <main class="flex-1 w-full flex items-center py-8 sm:py-12 lg:py-0 overflow-y-auto overflow-x-hidden">
       <div class="container mx-auto sm:px-6">
         <div class="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12 xl:gap-16">
@@ -29,7 +21,7 @@
                 <Icon name="logos:android-icon" class="w-6 h-6 sm:w-7 sm:h-7 shrink-0" />
                 <div class="flex flex-col">
                   <span class="text-[10px] sm:text-xs opacity-70 font-medium">{{ t('download_page.android_sub')
-                    }}</span>
+                  }}</span>
                   <span class="text-sm sm:text-base font-bold">{{ t('download_page.android_label') }}</span>
                 </div>
                 <Icon name="heroicons:arrow-down-tray"

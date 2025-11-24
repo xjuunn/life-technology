@@ -1,8 +1,8 @@
 <template>
   <nav class="fixed top-0 w-full z-50 transition-all duration-500 border-b" :class="[
     isScrolled
-      ? 'bg-base-100/85 backdrop-blur-xl border-base-content/10 py-3'
-      : 'bg-transparent border-transparent py-5'
+      ? 'bg-base-100/85 backdrop-blur-xl border-base-content/10 py-5'
+      : ' backdrop-blur-none border-transparent py-5 bg-base-100'
   ]">
     <div class="container mx-auto px-4">
       <div class="navbar min-h-12 p-0 justify-between">
@@ -64,12 +64,22 @@
                 :class="isDark ? 'translate-y-0 opacity-100 rotate-0' : '-translate-y-8 opacity-0 -rotate-90'" />
             </div>
           </button>
-          <button
-            class="btn btn-primary btn-sm md:btn-md rounded-full font-bold shadow-lg shadow-primary/20 border-none text-primary-content ml-1 group transition-all duration-300 hover:scale-105 active:scale-95">
-            <span class="hidden md:inline">{{ t('nav.connect_wallet') }}</span>
-            <span class="md:hidden">{{ t('nav.connect') }}</span>
-            <Icon name="heroicons:wallet" class="w-4 h-4 transition-transform group-hover:-rotate-12" />
-          </button>
+          <div class="join">
+            <!-- 登录 -->
+            <nuxt-link to="/auth/login"
+              class="btn btn-primary join-item btn-sm font-bold shadow-lg  transition-all duration-300 hover:scale-105 active:scale-95">
+              <span>{{ t('nav.login') }}</span>
+              <!-- <Icon name="heroicons:wallet" class="w-4 h-4 transition-transform group-hover:-rotate-12" /> -->
+            </nuxt-link>
+            <!-- 连接钱包 -->
+            <button
+              class="btn btn-primary join-item btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
+              <span class="hidden md:inline">{{ t('nav.connect_wallet') }}</span>
+              <span class="md:hidden">{{ t('nav.connect') }}</span>
+              <Icon name="heroicons:wallet" class="w-4 h-4 transition-transform group-hover:-rotate-12" />
+            </button>
+          </div>
+
         </div>
       </div>
     </div>
