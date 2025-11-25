@@ -8,7 +8,7 @@
 
       <div class="flex gap-8 text-sm font-medium text-base-content/60">
         <nuxt-link href="/" class="hover:text-primary transition-colors">{{ t('nav.home') }}</nuxt-link>
-        <nuxt-link href="/introduction" class="hover:text-primary transition-colors">{{ t('nav.intro') }}</nuxt-link>
+        <nuxt-link href="/intro" class="hover:text-primary transition-colors">{{ t('nav.intro') }}</nuxt-link>
         <nuxt-link href="/apps" class="hover:text-primary transition-colors">{{ t('nav.apps') }}</nuxt-link>
         <nuxt-link href="/blog" class="hover:text-primary transition-colors">{{ t('nav.blog') }}</nuxt-link>
       </div>

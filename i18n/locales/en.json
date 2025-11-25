@@ -11,7 +11,12 @@
         "admin_panel": "Admin Panel",
         "profile": "My Profile",
         "settings": "Settings",
-        "logout": "Log Out"
+        "logout": "Log Out",
+        "whatIsLife": "What is LIFE",
+        "whatLifeCanDo": "What LIFE Can Do for You",
+        "howToUseLife": "How to Use LIFE",
+        "thingsYouNeedToKnow": "Things You Need to Know",
+        "whitepaper": "LIFE Token White Paper"
     },
     "footer": {
         "copyright": "LIFE Blockchain Technology Co., Ltd. All Rights Reserved.",

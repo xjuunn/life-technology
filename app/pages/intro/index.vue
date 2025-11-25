@@ -10,10 +10,12 @@
     <section class="relative pt-32 pb-20 px-4 md:px-8">
       <div class="container mx-auto max-w-6xl">
         <div class="max-w-3xl">
-          <div class="badge badge-primary badge-outline mb-6 font-bold tracking-wider py-4 px-4">{{ t('about_page.header.badge') }}</div>
+          <div class="badge badge-primary badge-outline mb-6 font-bold tracking-wider py-4 px-4">{{
+            t('about_page.header.badge') }}</div>
           <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] mb-8">
             {{ t('about_page.header.title_prefix') }}<br>
-            <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{{ t('about_page.header.title_highlight') }}</span>
+            <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{{
+              t('about_page.header.title_highlight') }}</span>
           </h1>
           <p class="text-xl text-base-content/70 leading-relaxed max-w-2xl">
             {{ t('about_page.header.description') }}
@@ -37,9 +39,12 @@
               </p>
             </div>
             <div class="mt-8 flex flex-wrap gap-3">
-              <div class="badge badge-lg bg-base-200 border-none text-base-content/70">{{ t('about_page.definition.main_card.badge_web3') }}</div>
-              <div class="badge badge-lg bg-base-200 border-none text-base-content/70">{{ t('about_page.definition.main_card.badge_decentralized') }}</div>
-              <div class="badge badge-lg bg-base-200 border-none text-base-content/70">{{ t('about_page.definition.main_card.badge_sovereignty') }}</div>
+              <div class="badge badge-lg bg-base-200 border-none text-base-content/70">{{
+                t('about_page.definition.main_card.badge_web3') }}</div>
+              <div class="badge badge-lg bg-base-200 border-none text-base-content/70">{{
+                t('about_page.definition.main_card.badge_decentralized') }}</div>
+              <div class="badge badge-lg bg-base-200 border-none text-base-content/70">{{
+                t('about_page.definition.main_card.badge_sovereignty') }}</div>
             </div>
           </div>
 
@@ -85,7 +90,8 @@
             </div>
           </div>
           <div class="w-full md:w-1/2">
-            <h2 class="text-sm font-bold text-primary uppercase tracking-widest mb-2">{{ t('about_page.token.subtitle') }}</h2>
+            <h2 class="text-sm font-bold text-primary uppercase tracking-widest mb-2">{{ t('about_page.token.subtitle')
+              }}</h2>
             <h3 class="text-3xl md:text-4xl font-bold mb-6">{{ t('about_page.token.title') }}</h3>
             <p class="text-base-content/60 text-lg leading-relaxed mb-8">
               {{ t('about_page.token.desc') }}
@@ -94,21 +100,24 @@
               <li class="flex items-start gap-3">
                 <Icon name="heroicons:check-circle" class="w-6 h-6 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <span class="font-bold block text-base-content">{{ t('about_page.token.list.circulation.title') }}</span>
+                  <span class="font-bold block text-base-content">{{ t('about_page.token.list.circulation.title')
+                    }}</span>
                   <span class="text-sm text-base-content/60">{{ t('about_page.token.list.circulation.desc') }}</span>
                 </div>
               </li>
               <li class="flex items-start gap-3">
                 <Icon name="heroicons:user-group" class="w-6 h-6 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <span class="font-bold block text-base-content">{{ t('about_page.token.list.governance.title') }}</span>
+                  <span class="font-bold block text-base-content">{{ t('about_page.token.list.governance.title')
+                    }}</span>
                   <span class="text-sm text-base-content/60">{{ t('about_page.token.list.governance.desc') }}</span>
                 </div>
               </li>
               <li class="flex items-start gap-3">
                 <Icon name="heroicons:sparkles" class="w-6 h-6 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <span class="font-bold block text-base-content">{{ t('about_page.token.list.incentive.title') }}</span>
+                  <span class="font-bold block text-base-content">{{ t('about_page.token.list.incentive.title')
+                    }}</span>
                   <span class="text-sm text-base-content/60">{{ t('about_page.token.list.incentive.desc') }}</span>
                 </div>
               </li>
@@ -137,7 +146,8 @@
             </div>
           </div>
           <div class="w-full md:w-1/2">
-            <h2 class="text-sm font-bold text-secondary uppercase tracking-widest mb-2">{{ t('about_page.wallet.subtitle') }}</h2>
+            <h2 class="text-sm font-bold text-secondary uppercase tracking-widest mb-2">{{
+              t('about_page.wallet.subtitle') }}</h2>
             <h3 class="text-3xl md:text-4xl font-bold mb-6">{{ t('about_page.wallet.title') }}</h3>
             <p class="text-base-content/60 text-lg leading-relaxed mb-8">
               {{ t('about_page.wallet.desc') }}
@@ -184,7 +194,8 @@
 
         <div class="mt-16 text-center border-t border-white/10 pt-12">
           <div class="inline-flex flex-col items-center">
-            <span class="text-primary font-bold tracking-widest uppercase text-xs mb-2">{{ t('about_page.benefits.future.label') }}</span>
+            <span class="text-primary font-bold tracking-widest uppercase text-xs mb-2">{{
+              t('about_page.benefits.future.label') }}</span>
             <h3 class="text-2xl font-bold mb-4">{{ t('about_page.benefits.future.title') }}</h3>
             <p class="max-w-2xl text-base-100/60 mb-8">
               {{ t('about_page.benefits.future.desc') }}

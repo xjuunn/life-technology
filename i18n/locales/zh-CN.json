@@ -11,7 +11,12 @@
         "admin_panel": "管理面板",
         "profile": "个人资料",
         "settings": "账号设置",
-        "logout": "退出登录"
+        "logout": "退出登录",
+        "whatIsLife": "什么是 LIFE",
+        "whatLifeCanDo": "LIFE 能为你做什么",
+        "howToUseLife": "如何使用 LIFE",
+        "thingsYouNeedToKnow": "你需要知道的事情",
+        "whitepaper": "LIFE 代币白皮书"
     },
     "footer": {
         "copyright": "LIFE 区块链技术有限公司 版权所有",

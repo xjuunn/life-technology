@@ -28,14 +28,42 @@
         </div>
         <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <ul class="menu menu-horizontal px-1 font-medium text-[15px] gap-2">
-            <li v-for="(item, index) in menuItems" :key="index">
-              <nuxt-link :to="item.link"
-                class="relative text-base-content/70 hover:text-base-content hover:bg-transparent transition-colors py-2 px-5 group overflow-hidden">
-                {{ item.label }}
-                <span
-                  class="absolute bottom-1 left-1/2 w-0 h-0.5g-linear-to-r from-transparent via-primary to-transparent -translate-x-1/2 transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+            <li>
+              <nuxt-link to="/"
+                class="relative btn btn-ghost text-base-content/70 hover:text-base-content transition-colors py-2 px-5 group overflow-hidden">
+                {{ t('nav.home') }}
               </nuxt-link>
             </li>
+            <li>
+              <nuxt-link class="dropdown dropdown-center p-0">
+                <div tabindex="0" role="button"
+                  class="btn btn-ghost text-base-content/70 hover:text-base-content transition-colors py-2 px-5 group overflow-hidden">
+                  {{ t('nav.intro') }}</div>
+                <ul tabindex="-1"
+                  class="dropdown-content bg-base-200 menu border border-base-content/10 rounded-box z-1 w-52 p-2 shadow-sm">
+                  <li><a>{{ t('nav.whatIsLife') }}</a></li>
+                  <li><a>{{ t('nav.whatLifeCanDo') }}</a></li>
+                  <li><a>{{ t('nav.howToUseLife') }}</a></li>
+                  <li><a>{{ t('nav.thingsYouNeedToKnow') }}</a></li>
+                  <li><a>{{ t('nav.whitepaper') }}</a></li>
+                </ul>
+              </nuxt-link>
+            </li>
+            <li>
+              <nuxt-link to="/apps"
+                class="relative btn btn-ghost text-base-content/70 hover:text-base-content transition-colors py-2 px-5 group overflow-hidden">
+                {{ t('nav.apps') }}
+              </nuxt-link>
+            </li>
+
+            <li>
+              <nuxt-link to="/blog"
+                class="relative btn btn-ghost text-base-content/70 hover:text-base-content transition-colors py-2 px-5 group overflow-hidden">
+                {{ t('nav.blog') }}
+              </nuxt-link>
+            </li>
+
+
           </ul>
         </div>
         <div class="flex items-center gap-2 z-60">
@@ -181,7 +209,7 @@ const isDark = ref(true)
 // 使用 computed 确保语言切换时菜单文字随之更新
 const menuItems = computed(() => [
   { label: t('nav.home'), link: '/' },
-  { label: t('nav.intro'), link: '/introduction' },
+  { label: t('nav.intro'), link: '/intro' },
   { label: t('nav.apps'), link: '/apps' },
   { label: t('nav.blog'), link: '/blog' },
 ])

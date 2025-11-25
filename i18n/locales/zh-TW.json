@@ -11,7 +11,12 @@
         "admin_panel": "管理面板",
         "profile": "個人資料",
         "settings": "帳號設定",
-        "logout": "登出"
+        "logout": "登出",
+        "whatIsLife": "什麼是 LIFE",
+        "whatLifeCanDo": "LIFE 能為你做什麼",
+        "howToUseLife": "如何使用 LIFE",
+        "thingsYouNeedToKnow": "你需要知道的事情",
+        "whitepaper": "LIFE 代幣白皮書"
     },
     "footer": {
         "copyright": "LIFE 區塊鏈技術有限公司 版權所有",
