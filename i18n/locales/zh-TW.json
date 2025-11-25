@@ -320,5 +320,20 @@
         "btn_register": "立即註冊",
         "has_account": "已有帳戶？",
         "login_link": "前往登入"
+    },
+    "settings": {
+        "title": "編輯資料",
+        "subtitle": "更新您的個人資訊",
+        "btn_save": "儲存變更",
+        "username": "顯示暱稱",
+        "username_placeholder": "請輸入暱稱",
+        "bio": "個人簡介",
+        "bio_placeholder": "一句話介紹你自己...",
+        "change_avatar": "更換頭像",
+        "upload_hint": "點擊或拖曳圖片以上傳",
+        "upload_success": "頭像上傳成功",
+        "save_success": "儲存成功",
+        "error_image_type": "圖片格式無效",
+        "error_image_size": "圖片過大 (最大 5MB)"
     }
 }

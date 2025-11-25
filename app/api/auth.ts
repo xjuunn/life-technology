@@ -72,7 +72,7 @@ export function updateProfile(data: {
     bio: string;
     avatar: string;
 }) {
-    return api.put<{ message: string, user: User }>(base + '/profile');
+    return api.put<{ message: string, user: User }>(base + '/profile', data);
 }
 
 /**

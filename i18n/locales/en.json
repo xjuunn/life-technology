@@ -320,5 +320,20 @@
         "btn_register": "Sign Up",
         "has_account": "Already have an account?",
         "login_link": "Sign In"
+    },
+    "settings": {
+        "title": "Edit Profile",
+        "subtitle": "Update your personal information",
+        "btn_save": "Save Changes",
+        "username": "Display Name",
+        "username_placeholder": "Enter your username",
+        "bio": "Bio",
+        "bio_placeholder": "Brief description for your profile...",
+        "change_avatar": "Change",
+        "upload_hint": "Click or drag image to upload",
+        "upload_success": "Avatar uploaded",
+        "save_success": "Saved successfully",
+        "error_image_type": "Invalid image format",
+        "error_image_size": "Image too large (Max 5MB)"
     }
 }
