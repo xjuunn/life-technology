@@ -1,6 +1,6 @@
 <template>
   <div>
-    <common-editor></common-editor>
+    <icon name="mingcute:flower-4-fill" size="5rem"></icon>
   </div>
 </template>
 <script lang="ts" setup>
