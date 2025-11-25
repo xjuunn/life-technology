@@ -105,8 +105,6 @@ const dropZoneRef = ref<HTMLElement>()
 const isUploading = ref(false)
 const isSaving = ref(false)
 const statusMsg = reactive({ type: '', text: '' })
-
-// 使用独立的 ref 替代 reactive 对象，避免解构失效
 const username = ref('')
 const bio = ref('')
 const avatar = ref('')
