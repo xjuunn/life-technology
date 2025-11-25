@@ -2,9 +2,9 @@
 export function useAppI18n() {
   const { t, locale, locales, setLocale } = useI18n()
   const STORAGE_KEY = 'app-locale'
-  type LocaleType = 'zh_CN' | 'zh_TW' | 'en'
+  type LocaleType = 'zh-CN' | 'zh-TW' | 'en'
   const isValidLocale = (v: string | null): v is LocaleType => {
-    return v === 'zh_CN' || v === 'zh_TW' || v === 'en'
+    return v === 'zh-CN' || v === 'zh-TW' || v === 'en'
   }
   if (import.meta.client) {
     const saved = localStorage.getItem(STORAGE_KEY)
@@ -13,11 +13,11 @@ export function useAppI18n() {
       setLocale(saved)
     } else {
       let system: LocaleType =
-        navigator.language === 'zh_TW'
-          ? 'zh_TW'
+        navigator.language === 'zh-TW'
+          ? 'zh-TW'
           : navigator.language.startsWith('en')
             ? 'en'
-            : 'zh_CN'
+            : 'zh-CN'
 
       setLocale(system)
       localStorage.setItem(STORAGE_KEY, system)
@@ -33,8 +33,8 @@ export function useAppI18n() {
   function currentLocaleShort() {
     return (
       {
-        'zh_CN': 'CN',
-        'zh_TW': 'TW',
+        'zh-CN': 'CN',
+        'zh-TW': 'TW',
         en: 'EN'
       }[locale.value] || locale.value
     )

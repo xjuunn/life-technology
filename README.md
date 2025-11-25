@@ -69,8 +69,8 @@ const { t } = useAppI18n();
 ```
 
 对应语言包存放于：
- `~/i18n/locales/zh_CN.json`
- `~/i18n/locales/zh_TW.json`
+ `~/i18n/locales/zh-CN.json`
+ `~/i18n/locales/zh-TW.json`
  `~/i18n/locales/en.json`
 
 #### 4.2 页面尽量轻逻辑，主要逻辑放 composables

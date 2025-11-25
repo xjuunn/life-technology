@@ -77,8 +77,8 @@
             </div>
             <ul tabindex="0"
               class="dropdown-content z-1 menu p-2 shadow-xl bg-base-100 border border-base-content/5 rounded-xl w-32 mt-4 backdrop-blur-md">
-              <li><a @click="changeLocale('zh_CN')">简体中文</a></li>
-              <li><a @click="changeLocale('zh_TW')">繁体中文</a></li>
+              <li><a @click="changeLocale('zh-CN')">简体中文</a></li>
+              <li><a @click="changeLocale('zh-TW')">繁体中文</a></li>
               <li><a @click="changeLocale('en')">English</a></li>
             </ul>
           </div>
