@@ -22,16 +22,16 @@ export default defineNuxtConfig({
   },
   i18n: {
     strategy: 'no_prefix',
-    defaultLocale: 'zh-CN',
+    defaultLocale: 'zh_CN',
     detectBrowserLanguage: {
       useCookie: true,
-      fallbackLocale: 'zh-CN',
+      fallbackLocale: 'zh_CN',
       alwaysRedirect: false,
     },
     langDir: 'locales/',
     locales: [
-      { code: 'zh-CN', name: '简体中文', file: 'zh-CN.json' },
-      { code: 'zh-TW', name: '繁體中文', file: 'zh-TW.json' },
+      { code: 'zh_CN', name: '简体中文', file: 'zh_CN.json' },
+      { code: 'zh_TW', name: '繁體中文', file: 'zh_TW.json' },
       { code: 'en', name: 'English', file: 'en.json' }
     ]
   },
@@ -40,12 +40,16 @@ export default defineNuxtConfig({
       base_url: process.env.BASE_URL
     }
   },
+  nitro: {
+    preset: process.env.CF_PAGES ? 'cloudflare_pages' : undefined
+  },
   modules: [
     '@nuxt/icon',
     '@vueuse/nuxt',
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/i18n',
-    '@nuxt/image'
+    '@nuxt/image',
+    '@nuxt/content'
   ]
 })
