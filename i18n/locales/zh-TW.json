@@ -319,7 +319,11 @@
         "username_placeholder": "您的暱稱",
         "btn_register": "立即註冊",
         "has_account": "已有帳戶？",
-        "login_link": "前往登入"
+        "login_link": "前往登入",
+        "code_label": "驗證碼",
+        "code_placeholder": "請輸入驗證碼",
+        "send_code": "發送驗證碼",
+        "email_required": "請先輸入電子郵件地址"
     },
     "settings": {
         "title": "編輯資料",

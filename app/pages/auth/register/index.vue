@@ -5,7 +5,6 @@
     </div>
     <div class="absolute bottom-1/4 -left-20 w-96 h-96 bg-secondary/20 rounded-full blur-[128px] pointer-events-none">
     </div>
-
     <div class="w-full max-w-md relative z-10">
       <div class="text-center mb-10 animate-fade-in-up">
         <div
@@ -43,10 +42,11 @@
                   required :disabled="isLoading" />
               </div>
             </div>
+
             <div class="form-control">
               <label class="label pt-0">
                 <span class="label-text font-bold text-xs uppercase tracking-wider opacity-70">{{ t('auth.email_label')
-                }}</span>
+                  }}</span>
               </label>
               <div class="relative group">
                 <div
@@ -58,6 +58,31 @@
                   required :disabled="isLoading" />
               </div>
             </div>
+
+            <div class="form-control">
+              <label class="label pt-0">
+                <span class="label-text font-bold text-xs uppercase tracking-wider opacity-70">{{ t('auth.code_label')
+                  || 'Verification Code' }}</span>
+              </label>
+              <div class="flex gap-2">
+                <div class="relative group flex-1">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/40 transition-colors">
+                    <Icon name="heroicons:shield-check" class="w-5 h-5" />
+                  </div>
+                  <input v-model="formData.code" type="text" :placeholder="t('auth.code_placeholder') || 'Enter code'"
+                    class="input input-bordered w-full pl-11 rounded-xl bg-base-200/50 focus:bg-base-100 focus:border-primary focus:shadow-lg focus:shadow-primary/10 transition-all duration-300 focus-within:outline-0"
+                    required :disabled="isLoading" />
+                </div>
+                <button type="button" @click="handleSendCode"
+                  class="btn btn-neutral rounded-xl px-4 min-w-[100px] transition-all"
+                  :disabled="isLoading || countdown > 0 || !isEmailValid">
+                  <span v-if="countdown > 0">{{ countdown }}s</span>
+                  <span v-else>{{ t('auth.send_code') || 'Send' }}</span>
+                </button>
+              </div>
+            </div>
+
             <div class="form-control">
               <div class="label pt-0">
                 <span class="label-text font-bold text-xs uppercase tracking-wider opacity-70">{{
@@ -112,11 +137,18 @@ const router = useRouter();
 const isLoading = ref(false);
 const errorMsg = ref('');
 const showPassword = ref(false);
+const countdown = ref(0);
+let timer: NodeJS.Timeout | null = null;
 
 const formData = reactive({
   username: '',
   email: '',
-  password: ''
+  password: '',
+  code: ''
+});
+
+const isEmailValid = computed(() => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
 });
 
 const passwordStrength = computed(() => {
@@ -129,6 +161,36 @@ const passwordStrength = computed(() => {
   return s;
 });
 
+const startCountdown = () => {
+  countdown.value = 60;
+  if (timer) clearInterval(timer);
+  timer = setInterval(() => {
+    countdown.value--;
+    if (countdown.value <= 0) {
+      if (timer) clearInterval(timer);
+    }
+  }, 1000);
+};
+
+const handleSendCode = async () => {
+  if (!formData.email) {
+    errorMsg.value = t('auth.email_required') || 'Email is required';
+    return;
+  }
+  errorMsg.value = '';
+  try {
+    const response = await ApiList.auth.sendRegisterCode(formData.email);
+    if (response.success) {
+      startCountdown();
+    } else {
+      errorMsg.value = response.message || 'Failed to send code';
+    }
+  } catch (error: any) {
+    const msg = error.response?.data?.message || error.message || 'Network Error';
+    errorMsg.value = msg;
+  }
+};
+
 const handleRegister = async () => {
   errorMsg.value = '';
   isLoading.value = true;
@@ -136,7 +198,8 @@ const handleRegister = async () => {
     const response = await ApiList.auth.register(
       formData.username,
       formData.email,
-      formData.password
+      formData.password,
+      formData.code
     );
 
     if (response.success) {
@@ -160,6 +223,10 @@ const handleRegister = async () => {
     isLoading.value = false;
   }
 };
+
+onBeforeUnmount(() => {
+  if (timer) clearInterval(timer);
+});
 
 const navigateToLogin = () => {
   navigateTo("/auth/login", { replace: true })

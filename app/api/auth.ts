@@ -29,11 +29,12 @@ export interface RegisterResponse {
  * @param email 邮箱
  * @param password 密码
  */
-export function register(username: string, email: string, password: string) {
+export function register(username: string, email: string, password: string, code: string) {
     return api.post<RegisterResponse>(base + '/register', {
         username,
         email,
-        password
+        password,
+        code
     })
 }
 
@@ -122,4 +123,12 @@ export function resetPassword(token: string, newPassword: string) {
  */
 export function logout() {
     return api.post<{ message: string }>(base + '/logout');
+}
+
+/**
+ * 发送注册邮箱验证码
+ * @param email 邮箱
+ */
+export function sendRegisterCode(email: string) {
+    return api.post(base + '/send-register-code', { email });
 }

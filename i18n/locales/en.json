@@ -319,7 +319,11 @@
         "username_placeholder": "johndoe",
         "btn_register": "Sign Up",
         "has_account": "Already have an account?",
-        "login_link": "Sign In"
+        "login_link": "Sign In",
+        "code_label": "Verification Code",
+        "code_placeholder": "Enter verification code",
+        "send_code": "Send Code",
+        "email_required": "Please enter your email address first"
     },
     "settings": {
         "title": "Edit Profile",

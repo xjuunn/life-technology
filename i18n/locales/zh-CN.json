@@ -319,7 +319,11 @@
         "username_placeholder": "您的昵称",
         "btn_register": "立即注册",
         "has_account": "已有账户？",
-        "login_link": "去登录"
+        "login_link": "去登录",
+        "code_label": "验证码",
+        "code_placeholder": "请输入验证码",
+        "send_code": "发送验证码",
+        "email_required": "请先输入电子邮箱地址"
     },
     "settings": {
         "title": "编辑资料",
