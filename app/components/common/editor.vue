@@ -14,12 +14,12 @@
       <button @click="editor.chain().focus().undo().run()"
         :disabled="!editor.can().chain().focus().undo().run() || disabled"
         class="btn btn-sm btn-ghost btn-square min-h-8 h-8 w-8 rounded-lg text-base-content/70">
-        <Icon name="heroicons:arrow-uturn-left" class="w-4 h-4" />
+        <Icon name="mingcute:back-line" class="w-4 h-4" />
       </button>
       <button @click="editor.chain().focus().redo().run()"
         :disabled="!editor.can().chain().focus().redo().run() || disabled"
         class="btn btn-sm btn-ghost btn-square min-h-8 h-8 w-8 rounded-lg text-base-content/70">
-        <Icon name="heroicons:arrow-uturn-right" class="w-4 h-4" />
+        <Icon name="mingcute:forward-line" class="w-4 h-4" />
       </button>
 
       <slot name="toolbar" :editor="editor"></slot>
@@ -102,61 +102,62 @@ const toolbarItems = computed(() => {
   return [
     {
       title: 'Bold',
-      icon: 'heroicons:bold',
+      icon: 'mingcute:bold-line',
       action: () => editor.value?.chain().focus().toggleBold().run(),
       isActive: () => editor.value?.isActive('bold')
     },
     {
       title: 'Italic',
-      icon: 'heroicons:italic',
+      icon: 'mingcute:italic-line',
       action: () => editor.value?.chain().focus().toggleItalic().run(),
       isActive: () => editor.value?.isActive('italic')
     },
     {
       title: 'Strike',
-      icon: 'heroicons:strikethrough',
+      icon: 'mingcute:strikethrough-line',
       action: () => editor.value?.chain().focus().toggleStrike().run(),
       isActive: () => editor.value?.isActive('strike')
     },
     {
       title: 'Code',
-      icon: 'heroicons:code-bracket',
+      icon: 'mingcute:code-line',
       action: () => editor.value?.chain().focus().toggleCode().run(),
       isActive: () => editor.value?.isActive('code')
     },
     {
       title: 'H1',
-      icon: 'icon-park-outline:h1',
+      icon: 'mingcute:heading-1-line',
       action: () => editor.value?.chain().focus().toggleHeading({ level: 1 }).run(),
       isActive: () => editor.value?.isActive('heading', { level: 1 })
     },
     {
       title: 'H2',
-      icon: 'icon-park-outline:h2',
+      icon: 'mingcute:heading-2-line',
       action: () => editor.value?.chain().focus().toggleHeading({ level: 2 }).run(),
       isActive: () => editor.value?.isActive('heading', { level: 2 })
     },
     {
       title: 'Bullet List',
-      icon: 'heroicons:list-bullet',
+      icon: 'mingcute:list-check-line',
       action: () => editor.value?.chain().focus().toggleBulletList().run(),
       isActive: () => editor.value?.isActive('bulletList')
     },
+
     {
       title: 'Ordered List',
-      icon: 'heroicons:queue-list',
+      icon: 'mingcute:list-ordered-line',
       action: () => editor.value?.chain().focus().toggleOrderedList().run(),
       isActive: () => editor.value?.isActive('orderedList')
     },
     {
       title: 'Blockquote',
-      icon: 'heroicons:chat-bubble-bottom-center-text',
+      icon: 'mingcute:quote-left-line',
       action: () => editor.value?.chain().focus().toggleBlockquote().run(),
       isActive: () => editor.value?.isActive('blockquote')
     },
     {
       title: 'Horizontal Rule',
-      icon: 'heroicons:minus',
+      icon: 'mingcute:minimize-line',
       action: () => editor.value?.chain().focus().setHorizontalRule().run(),
       isActive: () => false
     }

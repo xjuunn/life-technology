@@ -8,7 +8,7 @@
       <div class="navbar min-h-12 p-0 justify-between">
         <div class="flex items-center gap-4 z-60">
           <button class="btn btn-circle btn-ghost md:hidden text-base-content" @click="toggleMobileMenu">
-            <Icon :name="isMobileMenuOpen ? 'heroicons:x-mark' : 'heroicons:bars-3-bottom-left'" size="24"
+            <Icon :name="isMobileMenuOpen ? 'mingcute:close-fill' : 'mingcute:menu-fill'" size="24"
               class="transition-transform duration-300" :class="isMobileMenuOpen ? 'rotate-90' : 'rotate-0'" />
           </button>
           <NuxtLink to="/" class="group flex items-center gap-2 cursor-pointer select-none"
@@ -42,7 +42,7 @@
           <div class="dropdown dropdown-end">
             <div tabindex="0" role="button"
               class="btn btn-ghost btn-circle btn-sm md:btn-md md:w-auto md:px-3 md:rounded-full hover:bg-base-content/5">
-              <Icon name="heroicons:language" class="w-5 h-5" />
+              <Icon name="mingcute:translate-2-fill" class="w-5 h-5" />
               <span class="hidden md:inline text-xs font-bold ml-1">
                 {{ currentLocaleShort() }}
               </span>
@@ -59,9 +59,9 @@
             class="btn btn-ghost btn-circle btn-sm md:btn-md hover:bg-base-content/5 text-base-content overflow-hidden"
             @click="toggleTheme" aria-label="Toggle Theme">
             <div class="relative w-full h-full flex items-center justify-center">
-              <Icon name="heroicons:sun-20-solid" class="absolute w-5 h-5 transition-all duration-500 ease-spring"
+              <Icon name="mingcute:sun-fill" class="absolute w-5 h-5 transition-all duration-500 ease-spring"
                 :class="isDark ? 'translate-y-8 opacity-0 rotate-90' : 'translate-y-0 opacity-100 rotate-0'" />
-              <Icon name="heroicons:moon-20-solid" class="absolute w-5 h-5 transition-all duration-500 ease-spring"
+              <Icon name="mingcute:moon-fill" class="absolute w-5 h-5 transition-all duration-500 ease-spring"
                 :class="isDark ? 'translate-y-0 opacity-100 rotate-0' : '-translate-y-8 opacity-0 -rotate-90'" />
             </div>
           </button>
@@ -70,7 +70,7 @@
           <button
             class="btn btn-primary btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 hidden sm:flex">
             <span>{{ t('nav.connect_wallet') }}</span>
-            <Icon name="heroicons:wallet" class="w-4 h-4" />
+            <Icon name="mingcute:wallet-3-fill" class="w-4 h-4" />
           </button>
 
           <!-- 未登录状态 -->
@@ -118,19 +118,19 @@
               <!-- 菜单项 -->
               <li v-if="userStore.user?.isAdmin">
                 <nuxt-link to="/admin" class="py-3 font-medium hover:bg-primary/10 hover:text-primary">
-                  <Icon name="heroicons:presentation-chart-line" class="w-5 h-5" />
+                  <Icon name="mingcute:safe-lock-fill" class="w-5 h-5" />
                   {{ t('nav.admin_panel') }}
                 </nuxt-link>
               </li>
               <li>
                 <nuxt-link to="/user/profile" class="py-3 font-medium hover:bg-base-content/5">
-                  <Icon name="heroicons:user-circle" class="w-5 h-5" />
+                  <Icon name="mingcute:profile-fill" class="w-5 h-5" />
                   {{ t('nav.profile') }}
                 </nuxt-link>
               </li>
               <li>
                 <nuxt-link to="/user/settings" class="py-3 font-medium hover:bg-base-content/5">
-                  <Icon name="heroicons:cog-6-tooth" class="w-5 h-5" />
+                  <Icon name="mingcute:settings-3-fill" class="w-5 h-5" />
                   {{ t('nav.settings') }}
                 </nuxt-link>
               </li>
@@ -140,7 +140,7 @@
               <!-- 登出 -->
               <li>
                 <button @click="handleLogout" class="py-3 text-error hover:bg-error/10 font-medium">
-                  <Icon name="heroicons:arrow-right-start-on-rectangle" class="w-5 h-5" />
+                  <Icon name="mingcute:exit-fill" class="w-5 h-5" />
                   {{ t('nav.logout') }}
                 </button>
               </li>

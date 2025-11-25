@@ -15,13 +15,13 @@
 
       <div class="flex gap-4">
         <a href="#" class="btn btn-circle btn-sm btn-ghost hover:bg-base-content hover:text-base-100 transition-all">
-          <Icon name="ri:wechat-fill" size="20" />
+          <Icon name="mingcute:wechat-fill" size="20" />
         </a>
         <a href="#" class="btn btn-circle btn-sm btn-ghost hover:bg-base-content hover:text-base-100 transition-all">
-          <Icon name="ri:weibo-fill" size="20" />
+          <Icon name="mingcute:weibo-fill" size="20" />
         </a>
         <a href="#" class="btn btn-circle btn-sm btn-ghost hover:bg-base-content hover:text-base-100 transition-all">
-          <Icon name="ri:mail-fill" size="20" />
+          <Icon name="mingcute:mail-fill" size="20" />
         </a>
       </div>
     </div>
