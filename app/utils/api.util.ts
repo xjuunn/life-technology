@@ -23,7 +23,8 @@ interface RequestConfig extends AxiosRequestConfig {
 class Request {
   private instance: AxiosInstance
   private baseConfig: AxiosRequestConfig = {
-    baseURL: useRuntimeConfig().public.base_url,
+    // baseURL: useRuntimeConfig().public.base_url,
+    baseURL: import.meta.env.VITE_BACKBASE_URL,
     timeout: 15000,
     headers: {
       'Content-Type': 'application/json;charset=utf-8'

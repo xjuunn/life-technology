@@ -32,8 +32,8 @@
         "btn_whitepaper": "了解技术白皮书"
     },
     "stats": {
-        "years": "年技术沉淀",
-        "users": "服务用户",
+        "users": "用户数",
+        "distributed_records": "分布式账本记录",
         "autonomy": "数据自主权",
         "accidents": "安全事故"
     },

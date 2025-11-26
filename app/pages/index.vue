@@ -38,8 +38,9 @@
       <div class="container mx-auto px-4 py-12">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div v-for="(stat, index) in stats" :key="index" class="text-center group cursor-default">
-            <div class="text-4xl font-black mb-1 tracking-tight group-hover:text-primary transition-colors">{{
-              stat.value }}</div>
+            <div class="text-4xl font-black mb-1 tracking-tight group-hover:text-primary transition-colors">
+              <effect-decrypted-text :text="stat.value + ''" animate-on="view" characters="1234567890" />
+            </div>
             <div class="text-xs font-bold uppercase tracking-widest text-base-content/50">{{ stat.label }}</div>
           </div>
         </div>
@@ -280,12 +281,26 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { type StatsResponse } from '~/api/system'
 import { computed } from 'vue';
 const { t } = useAppI18n();
+const statsData = ref<StatsResponse>()
+onMounted(() => {
+  initData();
+})
+async function initData() {
+  try {
+    const { data, success } = await ApiList.system.stats();
+    statsData.value = data;
+  } catch (e: any) {
+    console.log(e.message);
+
+  }
+}
 const stats = computed(() => [
-  { value: '10+', label: t('stats.years') },
-  { value: '1.2M+', label: t('stats.users') },
+  { value: statsData.value?.totalAddresses ?? "???", label: t('stats.users') },
+  { value: statsData.value?.totalTransactions ?? '???', label: t('stats.distributed_records') },
   { value: '100%', label: t('stats.autonomy') },
   { value: '0', label: t('stats.accidents') }
 ])
