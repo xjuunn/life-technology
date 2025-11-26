@@ -1,6 +1,11 @@
 <template>
-  <div class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300">
-    <section class="relative pt-40 pb-20 md:pt-40 md:pb-32 px-4">
+  <div class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300 relative">
+    <div ref="effectRef" class="absolute w-screen h-[calc(100vh-200px)] z-1">
+      <!-- <effect-prism :animation-type="'hover'" :time-scale="0.1" :height="3.6" :base-width="5.5" :scale="1.5"
+        :hue-shift="0" :color-frequency="1" :noise="0.5" :glow="1"></effect-prism> -->
+      <effect-threads :distance="0.3" :amplitude="2"></effect-threads>
+    </div>
+    <section class="relative pt-40 pb-20 md:pt-40 md:pb-32 px-4 z-2">
       <div class="container mx-auto text-center max-w-5xl">
         <div
           class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-base-content/10 bg-base-content/5 mb-8 backdrop-blur-sm">
@@ -29,7 +34,7 @@
         </div>
       </div>
     </section>
-    <div class="border-y border-base-content/5 bg-base-content/2">
+    <div class="border-y border-base-content/5 bg-base-content/2 z-2">
       <div class="container mx-auto px-4 py-12">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div v-for="(stat, index) in stats" :key="index" class="text-center group cursor-default">
@@ -40,6 +45,7 @@
         </div>
       </div>
     </div>
+    {{ effectRefIsVisible }}
     <section class="py-32 px-4">
       <div class="container mx-auto max-w-6xl">
         <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
@@ -278,6 +284,8 @@
 <script setup>
 import { computed } from 'vue';
 const { t } = useAppI18n();
+const effectRef = useTemplateRef < HTMLDivElement > ('effectRef');
+const effectRefIsVisible = useElementVisibility(effectRef);
 
 const stats = computed(() => [
   { value: '10+', label: t('stats.years') },
