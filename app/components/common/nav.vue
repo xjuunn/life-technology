@@ -43,7 +43,7 @@
                   class="dropdown-content bg-base-200 menu border border-base-content/10 rounded-box z-1 w-52 p-2 shadow-sm">
                   <li><a>{{ t('nav.whatIsLife') }}</a></li>
                   <li><a>{{ t('nav.whatLifeCanDo') }}</a></li>
-                  <li><a>{{ t('nav.howToUseLife') }}</a></li>
+                  <li><NuxtLink to="/intro/how-to-use-life">{{ t('nav.howToUseLife') }}</NuxtLink></li>
                   <li><a>{{ t('nav.thingsYouNeedToKnow') }}</a></li>
                   <li><a>{{ t('nav.whitepaper') }}</a></li>
                 </ul>
