@@ -1,4 +1,3 @@
-how-to-use-life.vue
 <script setup lang="ts">
 // 定义步骤类型接口（类型安全）
 interface UseLifeStep {
@@ -53,45 +52,95 @@ const steps: UseLifeStep[] = [
     <!-- <nav-bar /> -->
 
     <!-- 标题区域 -->
-    <section class="bg-primary text-primary-content py-10">
-      <div class="container mx-auto px-4 text-center">
-        <h1 class="text-3xl md:text-4xl font-bold mb-2">如何使用 
-          <span class="text-3xl md:text-4xl font-bold mb-2">LIFE</span></h1>
-        <p class="text-primary-content/70">开启您的 Web3 数字之旅</p>
-      </div>
-    </section>
+  
+    <div class="title hero bg-base-200 min-h-screen floating-grid-bg">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold">如何使用
+        <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">LIFE</span></h1>
+      <p class="py-6">
+        开启您的 Web3 数字之旅
+      </p>
+      <button class="btn btn-primary">Get Started</button>
+    </div>
+  </div>
+</div>
 
     <!-- 步骤时间线 -->
-    <section class="container mx-auto px-4 py-12">
-      <div class="max-w-3xl mx-auto relative">
-        <!-- 垂直引导线 -->
-        <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-primary/20"></div>
-
-        <!-- 步骤列表 -->
-        <div class="space-y-12">
-          <div 
-            v-for="step in steps" 
-            :key="step.id"
-            class="flex flex-col md:flex-row items-center"
-            :class="{
-              'md:flex-row-reverse': step.id % 2 === 0
-            }"
+    <ul class="list timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+      <li v-for="(step, index) in steps" :key="step.id">
+        <div class="timeline-middle">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="h-5 w-5"
           >
-           
-
-            <!-- 步骤内容 -->
-            <div class="md:w-1/2" :class="{
-              'pl-8': step.id % 2 === 1,
-              'pr-8': step.id % 2 === 0
-            }">
-              <div class="bg-base-200 p-4 rounded-lg shadow-sm">
-                <h3 class="font-bold text-primary mb-2">{{step.id}}.{{ step.title }}</h3>
-                <p class="text-base-content">{{ step.description }}</p>
-              </div>
-            </div>
-          </div>
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+              clip-rule="evenodd"
+            />
+          </svg>
         </div>
-      </div>
-    </section>
+        <div :class="index % 2 === 0 ? 'timeline-start mb-10 md:text-end' : 'timeline-end md:mb-10'">
+          <time class="font-mono italic">{{ step.id }}</time>
+          <div class="text-lg font-black">{{ step.title }}</div>
+          {{ step.description }}
+        </div>
+        <hr v-if="index < steps.length - 1" />
+      </li>
+    </ul>
   </div>
 </template>
+
+<style scoped>
+.list {
+  width:800px;
+  margin:0 auto;
+}
+.title{
+  height: 300px;
+}
+
+/* 浮动网格背景样式 */
+.floating-grid-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.floating-grid-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  animation: floatGrid 20s linear infinite;
+  z-index: 0;
+}
+
+@keyframes floatGrid {
+  0% {
+    transform: translate(0, 0);
+    background-size: 30px 30px;
+  }
+  50% {
+    transform: translate(15px, 15px);
+    background-size: 35px 35px;
+  }
+  100% {
+    transform: translate(0, 0);
+    background-size: 30px 30px;
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+</style>

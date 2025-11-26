@@ -44,8 +44,8 @@
                   <li><a>{{ t('nav.whatIsLife') }}</a></li>
                   <li><a>{{ t('nav.whatLifeCanDo') }}</a></li>
                   <li><NuxtLink to="/intro/how-to-use-life">{{ t('nav.howToUseLife') }}</NuxtLink></li>
-                  <li><a>{{ t('nav.thingsYouNeedToKnow') }}</a></li>
-                  <li><a>{{ t('nav.whitepaper') }}</a></li>
+                  <li><NuxtLink to="/intro/need-know"><a>{{ t('nav.thingsYouNeedToKnow') }}</a></NuxtLink></li>
+                  <li><NuxtLink to="/intro/white-book"><a>{{ t('nav.whitepaper') }}</a></NuxtLink></li>
                 </ul>
               </nuxt-link>
             </li>
