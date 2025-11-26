@@ -50,7 +50,7 @@ const steps: UseLifeStep[] = [
 <template>
   <div class="min-h-screen bg-base-100">
     <!-- 导航栏组件（遵循PascalCase组件名，模板中用kebab-case） -->
-    <nav-bar />
+    <!-- <nav-bar /> -->
 
     <!-- 标题区域 -->
     <section class="bg-primary text-primary-content py-10">
@@ -95,7 +95,3 @@ const steps: UseLifeStep[] = [
     </section>
   </div>
 </template>
-
-<style scoped>
-
-</style>
