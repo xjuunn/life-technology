@@ -46,17 +46,31 @@ const steps: UseLifeStep[] = [
     icon: "🌐"
   }
 ];
+
+// 添加滚动到列表区域的功能，考虑导航栏高度
+const scrollToContent = () => {
+  const element = document.getElementById('content-section');
+  if (element) {
+    const navbarHeight = 80; // 导航栏高度估计值（包括padding等）
+    const targetPosition = element.offsetTop - navbarHeight;
+    
+    window.scrollTo({
+      top: targetPosition,
+      behavior: 'smooth'
+    });
+  }
+};
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-base-100 to-base-200">
+  <div class="min-h-screen bg-linear-to-br from-base-100 to-base-200">
     <!-- 标题区域 -->
     <div class="title hero min-h-screen floating-grid-bg">
       <div class="hero-content text-center z-10">
         <div class="max-w-2xl backdrop-blur-sm bg-white/30 dark:bg-black/30 p-8 rounded-2xl shadow-xl border border-white/50 dark:border-black/50">
           <div class="badge badge-primary mb-4">用户须知</div>
           <h1 class="text-4xl md:text-5xl font-bold mb-6">
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+            <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">
               您需要知道的事情
             </span>
           </h1>
@@ -66,7 +80,7 @@ const steps: UseLifeStep[] = [
           </p>
           
           <div class="mt-8">
-            <button class="btn btn-primary btn-lg glass animate-bounce">
+            <button class="btn btn-primary btn-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105" @click="scrollToContent">
               开始使用
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -78,7 +92,7 @@ const steps: UseLifeStep[] = [
     </div>
 
     <!-- 列表区域 -->
-    <div class="max-w-6xl mx-auto p-6 -mt-32 relative z-10">
+    <div id="content-section" class="max-w-6xl mx-auto p-6 -mt-32 relative z-10">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div 
           v-for="step in steps" 
@@ -100,7 +114,7 @@ const steps: UseLifeStep[] = [
       </div>
       
       <div class="text-center mt-12 mb-8">
-        <button class="btn btn-secondary btn-lg glass" @click="$router.back()">
+        <button class="btn btn-outline btn-secondary btn-lg hover:bg-secondary hover:text-secondary-content transition-all duration-300" @click="$router.back()">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
           </svg>

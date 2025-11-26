@@ -48,61 +48,56 @@ const steps: UseLifeStep[] = [
 
 <template>
   <div class="min-h-screen bg-base-100">
-    <!-- 导航栏组件（遵循PascalCase组件名，模板中用kebab-case） -->
-    <!-- <nav-bar /> -->
-
     <!-- 标题区域 -->
-  
-    <div class="title hero bg-base-200 min-h-screen floating-grid-bg">
-  <div class="hero-content text-center">
-    <div class="max-w-md">
-      <h1 class="text-5xl font-bold">如何使用
-        <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">LIFE</span></h1>
-      <p class="py-6">
-        开启您的 Web3 数字之旅
-      </p>
-      <button class="btn btn-primary">Get Started</button>
+    <div class="hero bg-base-200 min-h-[50vh] floating-grid-bg">
+      <div class="hero-content text-center">
+        <div class="max-w-2xl">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold">
+            如何使用
+            <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">LIFE</span>
+          </h1>
+          <p class="py-6 text-lg md:text-xl text-base-content/70 max-w-2xl mx-auto">
+            开启您的 Web3 数字之旅
+          </p>
+          <button class="btn btn-primary btn-lg rounded-full shadow-lg hover:scale-105 transition-transform">
+            立即开始
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
     <!-- 步骤时间线 -->
-    <ul class="list timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
-      <li v-for="(step, index) in steps" :key="step.id">
-        <div class="timeline-middle">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            class="h-5 w-5"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-              clip-rule="evenodd"
-            />
-          </svg>
+    <div class="py-16 px-4">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-2xl md:text-3xl font-bold mb-4">使用步骤</h2>
+          <p class="text-base-content/70 max-w-2xl mx-auto">
+            跟随以下简单步骤，快速上手 LIFE 生态系统
+          </p>
         </div>
-        <div :class="index % 2 === 0 ? 'timeline-start mb-10 md:text-end' : 'timeline-end md:mb-10'">
-          <time class="font-mono italic">{{ step.id }}</time>
-          <div class="text-lg font-black">{{ step.title }}</div>
-          {{ step.description }}
-        </div>
-        <hr v-if="index < steps.length - 1" />
-      </li>
-    </ul>
+        
+        <ul class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+          <li v-for="(step, index) in steps" :key="step.id">
+            <div class="timeline-middle">
+              <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content font-bold">
+                {{ step.id }}
+              </div>
+            </div>
+            
+            <div :class="index % 2 === 0 ? 'timeline-start mb-10 md:text-end' : 'timeline-end mb-10'">
+              <div class="text-lg font-bold text-primary">{{ step.title }}</div>
+              <div class="text-base-content/80">{{ step.description }}</div>
+            </div>
+            
+            <hr v-if="index < steps.length - 1" :class="index % 2 === 0 ? 'timeline-end' : 'timeline-start'" />
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.list {
-  width:800px;
-  margin:0 auto;
-}
-.title{
-  height: 300px;
-}
-
 /* 浮动网格背景样式 */
 .floating-grid-bg {
   position: relative;
@@ -120,7 +115,7 @@ const steps: UseLifeStep[] = [
     linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
   background-size: 30px 30px;
-  animation: floatGrid 20s linear infinite;
+  animation: floatGrid 20s ease-in-out infinite;
   z-index: 0;
 }
 
