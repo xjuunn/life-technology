@@ -3,7 +3,6 @@
 </template>
 <script lang="ts" setup>
 function test() {
-  console.log(import.meta.env.VITE_BACKBASE_URL);
 
 }
 
