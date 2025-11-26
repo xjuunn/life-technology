@@ -16,6 +16,15 @@ export interface ApiResponse<T = any> {
   [key: string]: any;
 }
 
+export interface Pagination {
+  currentPage: number,
+  totalPages: number,
+  totalBlogs: number,
+  hasNextPage: boolean,
+  hasPrevPage: boolean,
+  limit: number
+}
+
 interface RequestConfig extends AxiosRequestConfig {
   needToken?: boolean;
 }
