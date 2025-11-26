@@ -94,6 +94,13 @@ const whitePaper: WhitePaperContent = {
   z-index: 0;
 }
 
+/* 深色模式下的网格背景 */
+[data-theme="dark"] .floating-grid-bg::before {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+}
+
 @keyframes floatGrid {
   0% {
     transform: translate(0, 0);
