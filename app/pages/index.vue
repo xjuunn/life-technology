@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300 relative">
-    <div ref="effectRef" class="absolute w-screen h-[calc(100vh-200px)] z-1">
+    <div class="absolute w-screen h-[calc(100vh-200px)] z-1">
       <!-- <effect-prism :animation-type="'hover'" :time-scale="0.1" :height="3.6" :base-width="5.5" :scale="1.5"
         :hue-shift="0" :color-frequency="1" :noise="0.5" :glow="1"></effect-prism> -->
       <effect-threads :distance="0.3" :amplitude="2"></effect-threads>
@@ -45,7 +45,6 @@
         </div>
       </div>
     </div>
-    {{ effectRefIsVisible }}
     <section class="py-32 px-4">
       <div class="container mx-auto max-w-6xl">
         <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
@@ -284,9 +283,6 @@
 <script setup>
 import { computed } from 'vue';
 const { t } = useAppI18n();
-const effectRef = useTemplateRef < HTMLDivElement > ('effectRef');
-const effectRefIsVisible = useElementVisibility(effectRef);
-
 const stats = computed(() => [
   { value: '10+', label: t('stats.years') },
   { value: '1.2M+', label: t('stats.users') },
