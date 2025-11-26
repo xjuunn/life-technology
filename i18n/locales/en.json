@@ -32,8 +32,8 @@
         "btn_whitepaper": "Read Whitepaper"
     },
     "stats": {
-        "years": "Years Experience",
-        "users": "Users Served",
+        "users": "User Count",
+        "distributed_records": "Distributed Ledger Records",
         "autonomy": "Data Autonomy",
         "accidents": "Security Accidents"
     },
