@@ -204,9 +204,9 @@
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <button class="btn btn-primary btn-lg rounded-full px-8 text-white">
             下载白皮书
-            <Icon name="mingcute:download-fill" size="20" />
+            <Icon name="mingcute:arrow-down-circle-fill" size="20" />
           </button>
-          <button class="btn btn-outline btn-lg rounded-full px-8 border-white/20 text-white hover:bg-white hover:text-base-content">
+          <button class="btn btn-primary btn-lg rounded-full px-8 text-white hover:bg-blue-600">
             技术文档
             <Icon name="mingcute:book-open-fill" size="20" />
           </button>

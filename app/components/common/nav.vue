@@ -41,11 +41,11 @@
                   {{ t('nav.intro') }}</div>
                 <ul tabindex="-1"
                   class="dropdown-content bg-base-200 menu border border-base-content/10 rounded-box z-1 w-52 p-2 shadow-sm">
+                  <li><NuxtLink to="/intro/what-is-life"><a>{{ t('nav.whatIsLife') }}</a></NuxtLink></li>
+                  <li><NuxtLink to="/intro/what-life-do"><a>{{ t('nav.whatLifeCanDo') }}</a></NuxtLink></li>
                   <li><NuxtLink to="/intro/how-to-use-life">{{ t('nav.howToUseLife') }}</NuxtLink></li>
                   <li><NuxtLink to="/intro/need-know"><a>{{ t('nav.thingsYouNeedToKnow') }}</a></NuxtLink></li>
                   <li><NuxtLink to="/intro/white-book"><a>{{ t('nav.whitepaper') }}</a></NuxtLink></li>
-                  <li><NuxtLink to="/intro/what-is-life"><a>{{ t('nav.nav.whatIsLife') }}</a></NuxtLink></li>
-                  <li><NuxtLink to="/intro/what-life-do">{{ t('nav.whatLifeCanDo') }}</NuxtLink></li>
                 </ul>
               </nuxt-link>
             </li>
