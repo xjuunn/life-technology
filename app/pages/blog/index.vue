@@ -311,7 +311,7 @@ onMounted(async () => {
       <section class="pb-16 lg:pb-24">
         <!-- 博客列表加载状态 -->
         <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-          <div v-for="n in itemsPerPage" :key="n" class="card bg-base-300 dark:bg-base-200/50 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden animate-pulse">
+          <div v-for="n in itemsPerPage" :key="n" class="card bg-base-300">
             <div class="p-3 sm:p-4">
               <div class="aspect-16/10 w-full rounded-xl lg:rounded-2xl bg-base-content/10"></div>
               <div class="pt-4 space-y-3">
@@ -334,11 +334,11 @@ onMounted(async () => {
         <!-- 博客列表 -->
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
           <div v-for="blog in blogs" :key="blog.id"
-            class="card bg-base-300 dark:bg-base-200/50 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer">
+            class="card bg-base-300 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer">
             <div class="p-3  bg-base-300 sm:p-4">
-              <div class="aspect-16/10 w-full rounded-xl lg:rounded-2xl overflow-hidden">
-                <img :src="blog.coverImage" :alt="blog.title" class="w-full h-full object-cover"></img>
-              </div>
+              <div class="relative w-full rounded-xl lg:rounded-2xl overflow-hidden" style="aspect-ratio: 16/10;">
+    <img :src="blog.coverImage" :alt="blog.title" class="absolute inset-0 w-full h-full object-cover"></img>
+  </div>
 
               <div class="pt-4 space-y-3">
                 <div class="flex flex-wrap gap-2">
@@ -353,10 +353,11 @@ onMounted(async () => {
                 <div class="space-y-2">
                   <h3 class="font-bold text-lg leading-tight line-clamp-2">{{ blog.title }}</h3>
                 </div>
-
-                <div class="space-y-1.5 pt-1">
-                  <p class="text-sm text-base-content/70 line-clamp-2">{{ blog.summary ? blog.summary.substring(0, 45) + (blog.summary.length > 45 ? '...' : '') : '' }}</p>
-                </div>
+<div class="space-y-1.5 pt-1">
+  <p class="text-sm text-base-content/70 line-clamp-2 min-h-[2.5em]">
+    {{ blog.summary ? blog.summary.substring(0, 45) + (blog.summary.length > 45 ? '...' : '') : '' }}
+  </p>
+</div>
               </div>
 
               <div class="flex items-center justify-between mt-5 pt-4 border-t border-base-content/5">
