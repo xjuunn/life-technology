@@ -47,6 +47,16 @@ const stepStates = ref(steps.value.map(() => ({
   animating: false 
 })))
 
+// 图标映射
+const stepIcons = [
+  'mingcute:user-4-fill',     // 替换 user-4-fill，更适合移动端特性
+  'mingcute:shield-fill',         // 替换 check-fill，更适合安全特性
+  'mingcute:dashboard-fill',      // 替换 building-4-fill，更适合控制特性
+  'mingcute:earth-fill',          // 替换 global-line，更适合全球化特性
+  'mingcute:components-fill',     // 替换 puzzle-fill，更适合生态系统特性
+  'mingcute:profile-fill'         // 替换 user-setting-fill，更适合身份特性
+]
+
 // 切换步骤可见性的函数
 const toggleStepVisibility = (index: number) => {
   const target = stepStates.value[index]
@@ -131,18 +141,23 @@ const setTimelineItemRef = (el: HTMLElement | null, index: number) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-base-100">
+  <div class="min-h-screen bg-linear-to-br from-base-200/50 to-primary/5 relative">
+    <!-- 背景装饰图案 -->
+    <div class="absolute inset-0 z-0">
+      <div class="pattern-grid-lg opacity-10 w-full h-full"></div>
+    </div>
+    
     <!-- 标题区域 -->
-    <div class="hero bg-base-200 min-h-[50vh] floating-grid-bg">
-      <div class="hero-content text-center">
+    <div class="hero min-h-[50vh] relative">
+      <div class="hero-content text-center z-10">
         <div class="max-w-2xl">
           <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold">
             <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{{t('nav.howToUseLife')}}</span>
           </h1>
-          <p class="py-6 text-lg md:text-xl text-base-content/70 max-w-2xl mx-auto">
+          <p class="py-6 text-lg md:text-xl text-base-content/70 max-w-2xl mx-auto leading-relaxed">
             {{ t('about_page.benefits.subtitle') }}
           </p>
-          <button class="btn btn-primary btn-lg rounded-full shadow-lg hover:scale-105 transition-transform">
+          <button class="btn btn-primary btn-lg rounded-full shadow-lg hover:scale-105 transition-all duration-300">
             {{ t('hero.btn_start') }}
           </button>
         </div>
@@ -150,46 +165,54 @@ const setTimelineItemRef = (el: HTMLElement | null, index: number) => {
     </div>
 
     <!-- 步骤时间线 -->
-    <div class="py-16 px-4">
+    <div class="py-16 px-4 relative z-10">
       <div class="max-w-4xl mx-auto">
         <div class="text-center mb-16">
           <h2 class="text-2xl md:text-3xl font-bold mb-4">{{ t('about_page.benefits.title') }}</h2>
-          <p class="text-base-content/70 max-w-2xl mx-auto">
+          <p class="text-base-content/70 max-w-2xl mx-auto leading-relaxed">
             {{ t('about_page.benefits.subtitle') }}
           </p>
         </div>
         
-         <ul class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
-    <li 
-      v-for="(step, index) in steps" 
-      :key="step.id"
-      :ref="(el) => setTimelineItemRef(el as HTMLElement, index)"
-      :data-index="index"
-    >
-      <div class="timeline-middle cursor-pointer" @click="toggleStepVisibility(index)">
-        <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content font-bold transition-transform duration-200 hover:scale-110">
-          {{ step.id }}
-        </div>
-      </div>
-      
-      <div 
-        :class="[
-          index % 2 === 0 ? 'timeline-start mb-10 md:text-end' : 'timeline-end mb-10',
-          'prose transition-all duration-500 ease-in-out transform',
-           'border border-base-300 rounded-lg shadow-md p-6', // 新增边框和阴影样式
-          {
-            'opacity-0 scale-90': !stepStates[index]?.visible || stepStates[index]?.animating,
-            'opacity-100 scale-100': stepStates[index]?.visible && !stepStates[index]?.animating
-          }
-        ]"
-      >
-        <div class="text-lg font-bold text-primary">{{ step.title }}</div>
-        <div class="w-60 text-base-content/300">{{ step.description }}</div>
-      </div>
-      
-      <hr v-if="index < steps.length - 1" class="bg-base-content/10" />
-    </li>
-  </ul>
+        <ul class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+          <li 
+            v-for="(step, index) in steps" 
+            :key="step.id"
+            :ref="(el) => setTimelineItemRef(el as HTMLElement, index)"
+            :data-index="index"
+          >
+            <div class="timeline-middle cursor-pointer" @click="toggleStepVisibility(index)">
+              <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content font-bold transition-all duration-300 hover:scale-110">
+                {{ step.id }}
+              </div>
+            </div>
+            
+            <div 
+              :class="[
+                index % 2 === 0 ? 'timeline-start mb-10 md:text-end' : 'timeline-end mb-10',
+                'prose transition-all duration-500 ease-in-out transform',
+                'bg-linear-to-br from-primary/5 to-secondary/5 backdrop-blur-sm border border-primary/10 rounded-xl shadow-md p-6 hover:shadow-lg', // 新增背景和悬停效果
+                {
+                  'opacity-0 scale-90': !stepStates[index]?.visible || stepStates[index]?.animating,
+                  'opacity-100 scale-100': stepStates[index]?.visible && !stepStates[index]?.animating
+                }
+              ]"
+            >
+              <div class="flex items-start gap-3 mb-3">
+
+              <Icon 
+                :name="stepIcons[index] ?? 'mingcute:question-fill'" 
+                class="text-primary shrink-0 mt-0.5"
+                style="width: 1.8rem; height: 1.8rem;"
+              />
+                <div class="text-xl font-bold text-primary">{{ step.title }}</div>
+              </div>
+              <div class="text-base-content/80 leading-relaxed">{{ step.description }}</div>
+            </div>
+            
+            <hr v-if="index < steps.length - 1" class="bg-linear-to-b from-primary/30 to-secondary/30 h-1 rounded-full border-0" />
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -211,34 +234,15 @@ const setTimelineItemRef = (el: HTMLElement | null, index: number) => {
 .transition-all {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms; /* 更改为300ms */
-}
-/* 浮动网格背景样式 */
-.floating-grid-bg {
-  position: relative;
-  overflow: hidden;
+  transition-duration: 300ms;
 }
 
-.floating-grid-bg::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.pattern-grid-lg {
   background-image: 
-    linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    linear-gradient(currentColor 1px, transparent 1px),
+    linear-gradient(90deg, currentColor 1px, transparent 1px);
   background-size: 30px 30px;
-  animation: floatGrid 20s ease-in-out infinite;
-  z-index: 0;
-}
-
-/* 深色模式下的网格背景 */
-[data-theme="dark"] .floating-grid-bg::before {
-  background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  animation: floatGrid 20s linear infinite;
 }
 
 @keyframes floatGrid {
@@ -254,6 +258,17 @@ const setTimelineItemRef = (el: HTMLElement | null, index: number) => {
     transform: translate(0, 0);
     background-size: 30px 30px;
   }
+}
+
+/* 深色模式下的网格背景 */
+[data-theme="dark"] .pattern-grid-lg {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px);
+}
+
+.hero {
+  background: radial-gradient(circle at center, var(--fallback-p,oklch(var(--p)/0.1)) 0%, transparent 70%);
 }
 
 .hero-content {
