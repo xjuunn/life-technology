@@ -10,6 +10,8 @@ const itemsPerPage = ref(8); // 默认每页显示8个博客
 const loading = ref(false);
 const sortBy = ref<'createdAt' | 'viewCount' | 'likeCount' | 'commentCount'>('createdAt'); // 默认排序字段
 const sortOrder = ref<'asc' | 'desc'>('desc'); // 默认排序方向
+const searchKeyword = ref(''); // 搜索关键字
+const selectedCategory = ref<string | null>(null); // 选中的分类
 
 const popularTags = computed(() => [
   t('blog_page.tags.blockchain'),
@@ -32,12 +34,25 @@ const pagination = ref({
 const fetchBlogs = async (page: number = 1) => {
   loading.value = true;
   try {
-    const result = await list({ 
+    // 构造请求参数
+    const params: any = { 
       page, 
       limit: itemsPerPage.value,
       sortBy: sortBy.value,
       sortOrder: sortOrder.value
-    });
+    };
+    
+    // 只有当搜索关键字不为空时才添加搜索参数
+    if (searchKeyword.value && searchKeyword.value.trim() !== '') {
+      params.search = searchKeyword.value.trim();
+    }
+    
+    // 如果选择了分类，则添加分类筛选参数
+    if (selectedCategory.value) {
+      params.category = selectedCategory.value;
+    }
+    
+    const result = await list(params);
     
     // 更新博客数据
     blogs.value = result.data.blogs;
@@ -105,6 +120,26 @@ const toggleSortOrder = () => {
   fetchBlogs(1);
 };
 
+// 执行搜索
+const performSearch = () => {
+  currentPage.value = 1; // 重置到第一页
+  fetchBlogs(1);
+};
+
+// 清空搜索
+const clearSearch = () => {
+  searchKeyword.value = '';
+  currentPage.value = 1;
+  fetchBlogs(1);
+};
+
+// 选择分类
+const selectCategory = (category: string | null) => {
+  selectedCategory.value = category;
+  currentPage.value = 1; // 重置到第一页
+  fetchBlogs(1);
+};
+
 // 上一页
 const prevPage = () => {
   if (pagination.value.hasPrevPage) {
@@ -157,7 +192,7 @@ onMounted(async () => {
 
 <template>
   <div
-    class="min-h-screen bg-base-300 text-base-content font-sans relative overflow-x-hidden selection:bg-primary selection:text-primary-content">
+    class="min-h-screen text-base-content font-sans relative overflow-x-hidden selection:bg-primary selection:text-primary-content">
     <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
       <div
         class="absolute -top-32 -right-32 w-120 h-120 lg:w-160 lg:h-160 bg-primary/10 rounded-full blur-[100px] lg:blur-[128px] opacity-40 dark:opacity-30">
@@ -187,9 +222,26 @@ onMounted(async () => {
               <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
                 <Icon name="heroicons:magnifying-glass" class="w-4 h-4 sm:w-5 sm:h-5 text-base-content/40" />
               </div>
-              <input type="text" :placeholder="t('blog_page.search_placeholder')"
+              <input 
+                v-model="searchKeyword"
+                @keyup.enter="performSearch"
+                type="text" 
+                :placeholder="t('blog_page.search_placeholder')"
                 class="input input-sm sm:input-md w-full pl-9 sm:pl-11 bg-transparent border-0 focus:bg-base-100 dark:focus:bg-base-300/50 rounded-xl transition-colors placeholder:text-base-content/30 text-sm sm:text-base" />
+                
+              <div v-if="searchKeyword" class="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center">
+                <button @click="clearSearch" class="btn btn-xs btn-circle btn-ghost text-base-content/50 hover:text-base-content">
+                  <Icon name="heroicons:x-mark" class="w-4 h-4" />
+                </button>
+              </div>
             </div>
+            
+            <button 
+              @click="performSearch"
+              class="btn btn-primary btn-sm sm:btn-md rounded-xl font-medium whitespace-nowrap">
+             <Icon name="heroicons:magnifying-glass" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-200" />
+              <span class="hidden sm:inline ml-2 text-gray-800 dark:text-gray-100">搜索</span>
+            </button>
 
             <div class="flex items-center justify-center gap-1 sm:gap-2 shrink-0 relative" style="z-index: 1000;">
               <div class="dropdown dropdown-end">
@@ -202,8 +254,21 @@ onMounted(async () => {
                 <ul tabindex="0"
                   class="dropdown-content menu p-2 shadow-xl bg-base-100 dark:bg-base-200 rounded-xl w-44 sm:w-52 border border-base-content/5 mt-2 text-sm">
 
+                  <li>
+                    <a 
+                      class="rounded-lg" 
+                      :class="{ 'bg-primary text-primary-content': selectedCategory === null }"
+                      @click="selectCategory(null)">
+                      {{ t('blog_page.filter.options.all') || '全部文章' }}
+                    </a>
+                  </li>
                   <li v-for="category in blogCategories" :key="category">
-                    <a class="rounded-lg">{{ category }}</a>
+                    <a 
+                      class="rounded-lg" 
+                      :class="{ 'bg-primary text-primary-content': selectedCategory === category }"
+                      @click="selectCategory(category)">
+                      {{ category }}
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -233,20 +298,20 @@ onMounted(async () => {
               </div>
             </div>
           </div>
-
+<!-- 
           <div class="flex gap-2 justify-center flex-wrap px-2">
             <div v-for="tag in popularTags" :key="tag"
               class="badge badge-outline badge-sm sm:badge-md hover:bg-primary hover:text-primary-content hover:border-primary cursor-pointer transition-all duration-200 py-2.5 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm">
               {{ tag }}
             </div>
-          </div>
+          </div> -->
         </div>
       </section>
 
       <section class="pb-16 lg:pb-24">
         <!-- 博客列表加载状态 -->
-        <div v-if="loading" class="grid bg-base-300 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-          <div v-for="n in itemsPerPage" :key="n" class="card bg-base-100 dark:bg-base-200/50 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden animate-pulse">
+        <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+          <div v-for="n in itemsPerPage" :key="n" class="card bg-base-300 dark:bg-base-200/50 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden animate-pulse">
             <div class="p-3 sm:p-4">
               <div class="aspect-16/10 w-full rounded-xl lg:rounded-2xl bg-base-content/10"></div>
               <div class="pt-4 space-y-3">
@@ -267,10 +332,10 @@ onMounted(async () => {
         </div>
         
         <!-- 博客列表 -->
-        <div v-else class="grid bg-base-300 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
           <div v-for="blog in blogs" :key="blog.id"
-            class="card bg-base-100 dark:bg-base-200/50 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <div class="p-3 sm:p-4">
+            class="card bg-base-300 dark:bg-base-200/50 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer">
+            <div class="p-3  bg-base-300 sm:p-4">
               <div class="aspect-16/10 w-full rounded-xl lg:rounded-2xl overflow-hidden">
                 <img :src="blog.coverImage" :alt="blog.title" class="w-full h-full object-cover"></img>
               </div>
@@ -278,11 +343,13 @@ onMounted(async () => {
               <div class="pt-4 space-y-3">
                 <div class="flex flex-wrap gap-2">
                   <div v-for="tag in blog.tags" :key="tag"
-                    class="badge badge-outline badge-sm rounded-full">
+                    class="">
                     <span class="text-xs">{{ tag }}</span>
+                    
                   </div>
+                  
                 </div>
-
+           
                 <div class="space-y-2">
                   <h3 class="font-bold text-lg leading-tight line-clamp-2">{{ blog.title }}</h3>
                 </div>
@@ -303,6 +370,11 @@ onMounted(async () => {
                 </div>
                 <div class="text-xs text-base-content/50">
                   {{ blog.createdAt ? blog.createdAt.split('-').slice(0, 2).join('-') : '' }}
+                </div>
+              </div>
+              <div class="flex justify-end mt-2">
+                <div class="badge badge-xs bg-base-300 text-xs flex items-center justify-center">
+                  {{ blog.category }}
                 </div>
               </div>
             </div>
