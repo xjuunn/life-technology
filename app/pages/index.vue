@@ -55,10 +55,10 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[400px]">
           <div
             class="md:col-span-2 rounded-[2.5rem] bg-base-200 p-10 relative overflow-hidden group border border-base-content/5 hover:border-primary/30 transition-all duration-500">
-            <div class="absolute inset-0 bg-linear-to-br from-base-content/5 to-transparent"></div>
+            <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div class="w-20 h-20 rounded-2xl bg-base-100 flex items-center justify-center shadow-sm text-primary">
-                <Icon name="heroicons:circle-stack" class="!w-10 !h-10"/>
+                <Icon name="heroicons:circle-stack" class="!w-10 !h-10" />
               </div>
               <div>
                 <h4 class="text-3xl font-bold mb-3">{{ t('trends.assets.title') }}</h4>
@@ -75,6 +75,7 @@
           </div>
           <div
             class="rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-secondary/30 transition-all duration-500 shadow-sm">
+            <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-secondary">
                 <Icon name="heroicons:chart-bar-square" class="!w-10 !h-10" />
@@ -89,6 +90,7 @@
           </div>
           <div
             class="rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-all duration-500 shadow-sm">
+            <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-accent">
                 <Icon name="heroicons:user-group" class="!w-10 !h-10" />
@@ -143,64 +145,84 @@
         </div>
       </div>
     </section>
-    <section class="py-32 px-4 overflow-hidden">
+    <section class="py-32 px-4 overflow-hidden bg-base-100 relative z-10">
       <div class="container mx-auto max-w-6xl">
         <div class="flex flex-col lg:flex-row items-center gap-24">
-          <div class="lg:w-1/2 w-full">
-            <div
-              class="relative mx-auto max-w-sm aspect-3/4 rounded-[3rem] bg-base-100 border border-base-content/5 shadow-2xl p-8 flex flex-col transform -rotate-2r:rotate-0 transition-transform duration-500">
+          <div class="lg:w-1/2 w-full flex justify-center perspective-container">
+            <div class="hover-3d mx-auto w-full max-w-[380px] aspect-3/4">
               <div
-                class="absolute inset-0 bg-linear-to-b from-base-content/5 to-transparent rounded-[3rem] pointer-events-none">
+                class="relative h-full w-full rounded-2xl bg-base-100 border border-base-content/10 shadow-2xl p-8 flex flex-col justify-between overflow-hidden">
+                <div class="absolute inset-0 bg-linear-to-br from-base-content/5 to-transparent pointer-events-none">
+                </div>
+
+                <div class="relative z-10 flex justify-between items-center">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-12 h-12 rounded-2xl bg-base-200 flex items-center justify-center text-primary shadow-sm">
+                      <Icon name="ph:shield-check-fill" size="24" />
+                    </div>
+                    <span class="font-bold tracking-tight text-xl">LIFE Guard</span>
+                  </div>
+                  <div
+                    class="px-3 py-1.5 rounded-full bg-green-500/10 text-green-600 text-xs font-bold flex items-center gap-2 border border-green-500/10">
+                    <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                    {{ t('app.secure_status') }}
+                  </div>
+                </div>
+                <div class="relative z-10 my-auto">
+                  <div class="text-sm text-base-content/50 font-bold uppercase tracking-wider mb-2">
+                    {{ t('app.points_label_en') }}
+                  </div>
+                  <div class="text-6xl font-mono font-black tracking-tighter text-base-content">
+                    8,592<span class="text-3xl text-base-content/30">.00</span>
+                  </div>
+                  <div
+                    class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-bold">
+                    <Icon name="heroicons:trophy" size="16" />
+                    <span>{{ t('app.points_label') }}</span>
+                  </div>
+                </div>
+                <div class="relative z-10 space-y-3">
+                  <div
+                    class="p-4 rounded-2xl bg-base-200/50 border border-base-content/5 flex items-center gap-4 hover:bg-base-200 transition-colors">
+                    <div
+                      class="w-10 h-10 rounded-full bg-base-100 flex items-center justify-center text-base-content/70 shadow-sm">
+                      <Icon name="heroicons:document-text" size="20" />
+                    </div>
+                    <div>
+                      <div class="font-bold text-sm">{{ t('app.card_id') }}</div>
+                      <div class="text-xs text-base-content/50 font-medium">{{ t('app.card_id_status') }}</div>
+                    </div>
+                  </div>
+                  <div
+                    class="p-4 rounded-2xl bg-base-200/50 border border-base-content/5 flex items-center gap-4 hover:bg-base-200 transition-colors">
+                    <div
+                      class="w-10 h-10 rounded-full bg-base-100 flex items-center justify-center text-base-content/70 shadow-sm">
+                      <Icon name="heroicons:chart-pie" size="20" />
+                    </div>
+                    <div>
+                      <div class="font-bold text-sm">{{ t('app.card_health') }}</div>
+                      <div class="text-xs text-base-content/50 font-medium">{{ t('app.card_health_status') }}</div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="flex justify-between items-center mb-12 relative z-10">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-base-200 flex items-center justify-center text-primary">
-                    <Icon name="ph:shield-check-fill" size="20" />
-                  </div>
-                  <span class="font-bold tracking-tight">LIFE Guard</span>
-                </div>
-                <div
-                  class="px-2 py-1 rounded-full bg-green-500/10 text-green-600 text-xs font-bold flex items-center gap-1">
-                  <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div> {{ t('app.secure_status') }}
-                </div>
-              </div>
-              <div class="relative z-10 mb-auto">
-                <div class="text-sm text-base-content/50 font-medium mb-2">{{ t('app.points_label_en') }}</div>
-                <div class="text-5xl font-mono font-bold tracking-tighter mb-4">8,592<span
-                    class="text-2xl text-base-content/40">.00</span></div>
-                <div
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-bold">
-                  <Icon name="heroicons:trophy" size="14" />
-                  <span>{{ t('app.points_label') }}</span>
-                </div>
-              </div>
-              <div class="space-y-3 relative z-10 mt-8">
-                <div class="p-4 rounded-2xl bg-base-200/50 flex items-center gap-4">
-                  <div class="w-10 h-10 rounded-full bg-base-100 flex items-center justify-center">
-                    <Icon name="heroicons:document-text" />
-                  </div>
-                  <div>
-                    <div class="font-bold text-sm">{{ t('app.card_id') }}</div>
-                    <div class="text-xs text-base-content/50">{{ t('app.card_id_status') }}</div>
-                  </div>
-                </div>
-                <div class="p-4 rounded-2xl bg-base-200/50 flex items-center gap-4">
-                  <div class="w-10 h-10 rounded-full bg-base-100 flex items-center justify-center">
-                    <Icon name="heroicons:chart-pie" />
-                  </div>
-                  <div>
-                    <div class="font-bold text-sm">{{ t('app.card_health') }}</div>
-                    <div class="text-xs text-base-content/50">{{ t('app.card_health_status') }}</div>
-                  </div>
-                </div>
-              </div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
             </div>
           </div>
           <div class="lg:w-1/2">
             <h2 class="text-4xl md:text-6xl font-black mb-8 leading-tight">
               {{ t('app.title_prefix') }}
               <br />
-              <span class="text-primary">{{ t('app.title_highlight') }}</span>
+              <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{{
+                t('app.title_highlight') }}</span>
             </h2>
             <p class="text-lg text-base-content/60 mb-10 leading-relaxed max-w-md">
               {{ t('app.description') }}
@@ -208,22 +230,22 @@
             <div class="space-y-8">
               <div class="flex gap-6 group">
                 <div
-                  class="shrink-0 h-12 rounded-full bg-base-200 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors">
-                  <Icon name="heroicons:server-stack" size="24" />
+                  class="shrink-0 w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors duration-300 shadow-sm">
+                  <Icon name="heroicons:server-stack" size="26" />
                 </div>
                 <div>
                   <h5 class="text-xl font-bold mb-2">{{ t('app.feature_control_title') }}</h5>
-                  <p class="text-base-content/60 text-sm">{{ t('app.feature_control_desc') }}</p>
+                  <p class="text-base-content/60 text-sm leading-relaxed">{{ t('app.feature_control_desc') }}</p>
                 </div>
               </div>
               <div class="flex gap-6 group">
                 <div
-                  class="shrink-0 w-12 h-12 rounded-full bg-base-200 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors">
-                  <Icon name="heroicons:check-badge" size="24" />
+                  class="shrink-0 w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors duration-300 shadow-sm">
+                  <Icon name="heroicons:check-badge" size="26" />
                 </div>
                 <div>
                   <h5 class="text-xl font-bold mb-2">{{ t('app.feature_compliance_title') }}</h5>
-                  <p class="text-base-content/60 text-sm">{{ t('app.feature_compliance_desc') }}</p>
+                  <p class="text-base-content/60 text-sm leading-relaxed">{{ t('app.feature_compliance_desc') }}</p>
                 </div>
               </div>
             </div>
