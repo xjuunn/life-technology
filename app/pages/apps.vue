@@ -64,22 +64,7 @@
               </span>
             </div>
           </div>
-
-          <!-- <div class="w-full lg:w-2/5 flex justify-center relative order-1 lg:order-2">
-            <div
-              class="relative w-full max-w-[180px] sm:max-w-[220px] lg:max-w-[260px] xl:max-w-[300px] flex items-center justify-center">
-              <div
-                class="absolute inset-0 bg-linear-to-tr from-primary/30 to-secondary/30 rounded-full blur-2xl animate-pulse lg:hidden">
-              </div>
-              <nuxt-img
-                class="w-full h-auto drop-shadow-2xl object-contain hover:scale-105 transition-transform duration-700 z-10"
-                src="/imgs/app.png" alt="App Preview">
-              </nuxt-img>
-            </div>
-          </div>
-        </div>
-      </div> -->
-      <div class="w-full lg:w-2/5 flex justify-center relative order-1 lg:order-2">
+        <div class="w-full lg:w-2/5 flex justify-center relative order-1 lg:order-2">
           <div
               class="relative w-full max-w-[180px] sm:max-w-[220px] lg:max-w-[260px] xl:max-w-[300px] flex items-center justify-center">
               <div
