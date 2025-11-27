@@ -57,8 +57,8 @@
             class="md:col-span-2 rounded-[2.5rem] bg-base-200 p-10 relative overflow-hidden group border border-base-content/5 hover:border-primary/30 transition-all duration-500">
             <div class="absolute inset-0 bg-linear-to-br from-base-content/5 to-transparent"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
-              <div class="w-16 h-16 rounded-2xl bg-base-100 flex items-center justify-center shadow-sm text-primary">
-                <Icon name="heroicons:circle-stack" class="w-8 h-8" />
+              <div class="w-20 h-20 rounded-2xl bg-base-100 flex items-center justify-center shadow-sm text-primary">
+                <Icon name="heroicons:circle-stack" class="!w-10 !h-10"/>
               </div>
               <div>
                 <h4 class="text-3xl font-bold mb-3">{{ t('trends.assets.title') }}</h4>
@@ -76,8 +76,8 @@
           <div
             class="rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-secondary/30 transition-all duration-500 shadow-sm">
             <div class="relative z-10 h-full flex flex-col justify-between">
-              <div class="w-16 h-16 rounded-2xl bg-base-200 flex items-center justify-center text-secondary">
-                <Icon name="heroicons:chart-bar-square" class="w-8 h-8" />
+              <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-secondary">
+                <Icon name="heroicons:chart-bar-square" class="!w-10 !h-10" />
               </div>
               <div>
                 <h4 class="text-2xl font-bold mb-3">{{ t('trends.quantified.title') }}</h4>
@@ -90,8 +90,8 @@
           <div
             class="rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-all duration-500 shadow-sm">
             <div class="relative z-10 h-full flex flex-col justify-between">
-              <div class="w-16 h-16 rounded-2xl bg-base-200 flex items-center justify-center text-accent">
-                <Icon name="heroicons:user-group" class="w-8 h-8" />
+              <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-accent">
+                <Icon name="heroicons:user-group" class="!w-10 !h-10" />
               </div>
               <div>
                 <h4 class="text-2xl font-bold mb-3">{{ t('trends.credit.title') }}</h4>
@@ -108,8 +108,8 @@
             </div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div
-                class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center backdrop-blur-md text-white">
-                <Icon name="heroicons:shield-check" class="w-8 h-8" />
+                class="w-20 h-20 rounded-2xl bg-white/10 flex items-center justify-center backdrop-blur-md text-white">
+                <Icon name="heroicons:shield-check" class="!w-10 !h-10" />
               </div>
               <div>
                 <h4 class="text-3xl font-bold mb-3 text-white">{{ t('trends.security.title') }}</h4>
@@ -134,8 +134,8 @@
           <div v-for="(feature, i) in features" :key="i"
             class="group p-8 rounded-3xl bg-base-100 border border-base-content/5 hover:border-primary/20 hover:shadow-xl transition-all duration-300">
             <div
-              class="w-14 h-14 rounded-2xl bg-base-200 group-hover:bg-primary group-hover:text-primary-content flex items-center justify-center mb-6 text-primary transition-colors">
-              <Icon :name="feature.icon" size="28" />
+              class="w-16 h-16 rounded-2xl bg-base-200 group-hover:bg-primary group-hover:text-primary-content flex items-center justify-center mb-6 text-primary transition-colors">
+              <Icon :name="feature.icon" size="32" />
             </div>
             <h4 class="font-bold text-xl mb-3">{{ feature.title }}</h4>
             <p class="text-base-content/60 text-sm leading-relaxed">{{ feature.desc }}</p>

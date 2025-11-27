@@ -1,6 +1,136 @@
+<script setup lang="ts">
+import { computed, onMounted, ref, watch } from 'vue';
+const { t } = useAppI18n();
+import { list, categories } from '~/api/blog';
+
+const blogs = ref<any[]>([]);
+const blogCategories = ref<string[]>([]);
+const currentPage = ref(1);
+const itemsPerPage = ref(8); // 默认每页显示8个博客
+const loading = ref(false);
+
+const popularTags = computed(() => [
+  t('blog_page.tags.blockchain'),
+  t('blog_page.tags.sovereignty'),
+  t('blog_page.tags.dao'),
+  t('blog_page.tags.nft'),
+  t('blog_page.tags.defi')
+]);
+
+const pagination = ref({
+  currentPage: 1,
+  totalPages: 1,
+  totalBlogs: 0,
+  hasNextPage: false,
+  hasPrevPage: false,
+  limit: 16
+});
+
+// 获取博客列表（带分页）
+const fetchBlogs = async (page: number = 1) => {
+  loading.value = true;
+  try {
+    const result = await list({ page, limit: itemsPerPage.value });
+    
+    // 更新博客数据
+    blogs.value = result.data.blogs;
+    
+    // 更新分页信息
+    if (result.data.pagination) {
+      pagination.value = result.data.pagination;
+    } else {
+      // 如果API没有返回分页信息，则手动计算
+      const totalBlogs = result.data.blogs.length;
+      const totalPages = Math.ceil(totalBlogs / itemsPerPage.value);
+      
+      pagination.value = {
+        currentPage: page,
+        totalPages: totalPages,
+        totalBlogs: totalBlogs,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+        limit: itemsPerPage.value
+      };
+    }
+    
+    currentPage.value = page;
+  } catch (error) {
+    console.error('获取博客列表失败:', error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 切换页面
+const changePage = (page: number | string) => {
+  const pageNum = Number(page);
+  if (pageNum >= 1 && pageNum <= pagination.value.totalPages && pageNum !== currentPage.value) {
+    fetchBlogs(pageNum);
+    // 滚动到顶部
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+};
+
+// 更改每页显示数量
+const changeItemsPerPage = (limit: number) => {
+  itemsPerPage.value = limit;
+  currentPage.value = 1; // 重置到第一页
+  fetchBlogs(1);
+};
+
+// 上一页
+const prevPage = () => {
+  if (pagination.value.hasPrevPage) {
+    changePage(currentPage.value - 1);
+  }
+};
+
+// 下一页
+const nextPage = () => {
+  if (pagination.value.hasNextPage) {
+    changePage(currentPage.value + 1);
+  }
+};
+
+// 计算显示的页码按钮
+const getPageNumbers = () => {
+  const pages: (number | string)[] = [];
+  const totalPages = pagination.value.totalPages;
+  const current = currentPage.value;
+  
+  if (totalPages <= 5) {
+    // 总页数较少时显示所有页码
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+  } else {
+    // 总页数较多时显示部分页码
+    if (current <= 3) {
+      pages.push(1, 2, 3, 4, 5, '...', totalPages);
+    } else if (current >= totalPages - 2) {
+      pages.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+    } else {
+      pages.push(1, '...', current - 1, current, current + 1, '...', totalPages);
+    }
+  }
+  
+  return pages;
+};
+
+// 在组件挂载时获取博客列表
+onMounted(async () => {
+  await Promise.all([
+    fetchBlogs(1),
+    categories().then(result => {
+      blogCategories.value = result.data.categories;
+    })
+  ]);
+});
+</script>
+
 <template>
   <div
-    class="min-h-screen bg-base-100 text-base-content font-sans relative overflow-x-hidden selection:bg-primary selection:text-primary-content">
+    class="min-h-screen bg-base-300 text-base-content font-sans relative overflow-x-hidden selection:bg-primary selection:text-primary-content">
     <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
       <div
         class="absolute -top-32 -right-32 w-120 h-120 lg:w-160 lg:h-160 bg-primary/10 rounded-full blur-[100px] lg:blur-[128px] opacity-40 dark:opacity-30">
@@ -44,10 +174,10 @@
                 </div>
                 <ul tabindex="0"
                   class="dropdown-content z-1 menu p-2 shadow-xl bg-base-100 dark:bg-base-200 rounded-xl w-44 sm:w-52 border border-base-content/5 mt-2 text-sm">
-                  <li><a class="rounded-lg">{{ t('blog_page.filter.options.all') }}</a></li>
-                  <li><a class="rounded-lg">{{ t('blog_page.filter.options.tech') }}</a></li>
-                  <li><a class="rounded-lg">{{ t('blog_page.filter.options.industry') }}</a></li>
-                  <li><a class="rounded-lg">{{ t('blog_page.filter.options.security') }}</a></li>
+
+                  <li v-for="category in blogCategories" :key="category">
+                    <a class="rounded-lg">{{ category }}</a>
+                  </li>
                 </ul>
               </div>
 
@@ -79,73 +209,133 @@
       </section>
 
       <section class="pb-16 lg:pb-24">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-          <div v-for="n in 12" :key="n"
-            class="card bg-base-100 dark:bg-base-200/50 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden">
+        <!-- 博客列表加载状态 -->
+        <div v-if="loading" class="grid bg-base-300 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+          <div v-for="n in itemsPerPage" :key="n" class="card bg-base-100 dark:bg-base-200/50 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden animate-pulse">
             <div class="p-3 sm:p-4">
-              <div class="skeleton aspect-16/10 w-full rounded-xl lg:rounded-2xl"></div>
+              <div class="aspect-16/10 w-full rounded-xl lg:rounded-2xl bg-base-content/10"></div>
+              <div class="pt-4 space-y-3">
+                <div class="flex flex-wrap gap-2">
+                  <div class="badge badge-outline badge-sm rounded-full bg-base-content/10 w-12 h-4"></div>
+                </div>
+                <div class="space-y-2">
+                  <div class="h-5 bg-base-content/10 rounded w-3/4"></div>
+                  <div class="h-5 bg-base-content/10 rounded w-1/2"></div>
+                </div>
+                <div class="space-y-1.5 pt-1">
+                  <div class="h-4 bg-base-content/10 rounded w-full"></div>
+                  <div class="h-4 bg-base-content/10 rounded w-4/5"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 博客列表 -->
+        <div v-else class="grid bg-base-300 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+          <div v-for="blog in blogs" :key="blog.id"
+            class="card bg-base-100 dark:bg-base-200/50 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+            <div class="p-3 sm:p-4">
+              <div class="aspect-16/10 w-full rounded-xl lg:rounded-2xl overflow-hidden">
+                <img :src="blog.coverImage" :alt="blog.title" class="w-full h-full object-cover"></img>
+              </div>
 
               <div class="pt-4 space-y-3">
-                <div class="flex items-center gap-2">
-                  <div class="skeleton h-5 w-16 rounded-full"></div>
-                  <div class="skeleton h-4 w-20 rounded"></div>
+                <div class="flex flex-wrap gap-2">
+                  <div v-for="tag in blog.tags" :key="tag"
+                    class="badge badge-outline badge-sm rounded-full">
+                    <span class="text-xs">{{ tag }}</span>
+                  </div>
                 </div>
 
                 <div class="space-y-2">
-                  <div class="skeleton h-5 w-full rounded"></div>
-                  <div class="skeleton h-5 w-4/5 rounded"></div>
+                  <h3 class="font-bold text-lg leading-tight line-clamp-2">{{ blog.title }}</h3>
                 </div>
 
                 <div class="space-y-1.5 pt-1">
-                  <div class="skeleton h-3 w-full rounded"></div>
-                  <div class="skeleton h-3 w-full rounded"></div>
-                  <div class="skeleton h-3 w-3/4 rounded"></div>
+                  <p class="text-sm text-base-content/70 line-clamp-2">{{ blog.summary ? blog.summary.substring(0, 45) + (blog.summary.length > 45 ? '...' : '') : '' }}</p>
                 </div>
               </div>
 
               <div class="flex items-center justify-between mt-5 pt-4 border-t border-base-content/5">
                 <div class="flex items-center gap-2">
-                  <div class="skeleton w-7 h-7 rounded-full"></div>
-                  <div class="skeleton h-3 w-16 rounded"></div>
+                  <div class="avatar">
+                    <div class="w-7 h-7 rounded-full">
+                      <img :src="blog.author.avatar" :alt="blog.author.username" class="object-cover w-full h-full">
+                    </div>
+                  </div>
+                  <div class="text-sm font-medium truncate max-w-20">{{ blog.author.username }}</div>
                 </div>
-                <div class="skeleton h-3 w-14 rounded"></div>
+                <div class="text-xs text-base-content/50">
+                  {{ blog.createdAt ? blog.createdAt.split('-').slice(0, 2).join('-') : '' }}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="flex justify-center mt-10 lg:mt-16">
+        <!-- 分页控件 -->
+        <div v-if="pagination.totalPages > 1" class="flex flex-col items-center mt-10 lg:mt-16 gap-4">
+          <!-- 每页显示数量选择器 -->
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-base-content/70">{{ '每页显示' }}</span>
+            <select 
+              v-model.number="itemsPerPage" 
+              @change="changeItemsPerPage(itemsPerPage)"
+              class="select select-bordered select-sm w-24"
+            >
+              <option value="4">4 {{  '条' }}</option>
+              <option value="8" selected>8  {{ '条' }}</option>
+              <option value="12">12 {{  '条' }}</option>
+              <option value="16">16 {{  '条' }}</option>
+            </select>
+          </div>
+          
+          <!-- 分页按钮 -->
           <div class="join">
+            <!-- 上一页按钮 -->
             <button
-              class="join-item btn btn-sm sm:btn-md btn-outline border-base-content/10 text-base-content/50 hover:bg-base-content hover:text-base-100 hover:border-base-content">
+              class="join-item btn btn-sm sm:btn-md btn-outline border-base-content/10 text-base-content/50 hover:bg-base-content hover:text-base-100 hover:border-base-content"
+              :disabled="!pagination.hasPrevPage"
+              @click="prevPage">
               <Icon name="heroicons:chevron-left" class="w-4 h-4" />
             </button>
+
+            <!-- 页码按钮 -->
+            <template v-for="page in getPageNumbers()" :key="page">
+              <button 
+                v-if="page === '...'"
+                class="join-item btn btn-sm sm:btn-md btn-outline border-base-content/10 text-base-content/50 cursor-default"
+                disabled>
+                ...
+              </button>
+              <button
+                v-else
+                class="join-item btn btn-sm sm:btn-md"
+                :class="{
+                  'bg-primary text-primary-content border-primary hover:bg-primary/90 hover:border-primary/90': page === currentPage,
+                  'btn-outline border-base-content/10 text-base-content/60 hover:bg-base-content hover:text-base-100 hover:border-base-content': page !== currentPage
+                }"
+                @click="changePage(Number(page))">
+                {{ page }}
+              </button>
+            </template>
+
+            <!-- 下一页按钮 -->
             <button
-              class="join-item btn btn-sm sm:btn-md btn-outline border-base-content/10 text-base-content/60 hover:bg-base-content hover:text-base-100 hover:border-base-content">1</button>
-            <button
-              class="join-item btn btn-sm sm:btn-md bg-primary text-primary-content border-primary hover:bg-primary/90 hover:border-primary/90">2</button>
-            <button
-              class="join-item btn btn-sm sm:btn-md btn-outline border-base-content/10 text-base-content/60 hover:bg-base-content hover:text-base-100 hover:border-base-content">3</button>
-            <button
-              class="join-item btn btn-sm sm:btn-md btn-outline border-base-content/10 text-base-content/50 hover:bg-base-content hover:text-base-100 hover:border-base-content">
+              class="join-item btn btn-sm sm:btn-md btn-outline border-base-content/10 text-base-content/50 hover:bg-base-content hover:text-base-100 hover:border-base-content"
+              :disabled="!pagination.hasNextPage"
+              @click="nextPage">
               <Icon name="heroicons:chevron-right" class="w-4 h-4" />
             </button>
+          </div>
+          
+          <!-- 分页信息 -->
+          <div class="text-sm text-base-content/60">
+            {{ `第 ${currentPage} 页，共 ${pagination.totalPages} 页，总计 ${pagination.totalBlogs} 篇文章` }}
           </div>
         </div>
       </section>
     </div>
   </div>
 </template>
-
-<script setup>
-import { computed } from 'vue';
-const { t } = useAppI18n();
-
-const popularTags = computed(() => [
-  t('blog_page.tags.blockchain'),
-  t('blog_page.tags.sovereignty'),
-  t('blog_page.tags.dao'),
-  t('blog_page.tags.nft'),
-  t('blog_page.tags.defi')
-]);
-</script>
