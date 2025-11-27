@@ -73,7 +73,7 @@ const themeColors = computed(() => {
   } else {
     return {
       line: '#000000',
-      mapDots: '#00000020',
+      mapDots: '#00000030',
       bg: 'transparent'
     };
   }
