@@ -17,11 +17,11 @@
               <div
                 class="absolute inset-0 bg-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               </div>
-              <nuxt-img src="/favicon.png" class="w-16 h-14 scale-125 object-contain"></nuxt-img>
+              <img v-if="!themeStore.isDark" src="/favicon.ico" class="w-16 h-14 scale-95 object-contain" />
+              <nuxt-img v-else src="/favicon.png" class="w-16 h-14 scale-125 object-contain" />
             </div>
             <div class="flex flex-col leading-none">
-              <span class="text-2xl text-base-content relative"
-                style="-webkit-text-stroke: 0.5px currentColor;">
+              <span class="text-2xl text-base-content relative" style="-webkit-text-stroke: 0.5px currentColor;">
                 LIFE
               </span>
             </div>
@@ -74,7 +74,6 @@
               </nuxt-link>
             </li>
 
-
           </ul>
         </div>
         <div class="flex items-center gap-2 z-60">
@@ -96,12 +95,12 @@
 
           <button ref="themeBtnRef"
             class="btn btn-ghost btn-circle btn-sm md:btn-md hover:bg-base-content/5 text-base-content overflow-hidden"
-            @click="toggleTheme" aria-label="Toggle Theme">
+            @click="themeStore.toggleTheme" aria-label="Toggle Theme">
             <div class="relative w-full h-full flex items-center justify-center">
               <Icon name="mingcute:sun-fill" class="absolute w-5 h-5 transition-all duration-500 ease-spring"
-                :class="isDark ? 'translate-y-8 opacity-0 rotate-90' : 'translate-y-0 opacity-100 rotate-0'" />
+                :class="themeStore.isDark ? 'translate-y-8 opacity-0 rotate-90' : 'translate-y-0 opacity-100 rotate-0'" />
               <Icon name="mingcute:moon-fill" class="absolute w-5 h-5 transition-all duration-500 ease-spring"
-                :class="isDark ? 'translate-y-0 opacity-100 rotate-0' : '-translate-y-8 opacity-0 -rotate-90'" />
+                :class="themeStore.isDark ? 'translate-y-0 opacity-100 rotate-0' : '-translate-y-8 opacity-0 -rotate-90'" />
             </div>
           </button>
 
@@ -208,16 +207,18 @@
 
 <script setup>
 import { animate, stagger } from 'animejs'
+
+const themeStore = useThemeStore()
+const userStore = useUserStore()
 const { t, changeLocale, currentLocaleShort } = useAppI18n()
-const userStore = useUserStore();
 
 const { y } = useWindowScroll()
 const isScrolled = computed(() => y.value > 20)
+
 const isMobileMenuOpen = ref(false)
 const themeBtnRef = ref(null)
-const isDark = ref(true)
 
-// 使用 computed 确保语言切换时菜单文字随之更新
+// 动态菜单
 const menuItems = computed(() => [
   { label: t('nav.home'), link: '/' },
   { label: t('nav.intro'), link: '/intro' },
@@ -225,18 +226,15 @@ const menuItems = computed(() => [
   { label: t('nav.blog'), link: '/blog' },
 ])
 
+// 主题初始化（使用 themeStore 的逻辑）
 onMounted(() => {
-  const savedTheme = localStorage.getItem('life-theme')
-  if (savedTheme) {
-    isDark.value = savedTheme === 'dark'
-  } else {
-    isDark.value = true
-  }
-  applyTheme()
+  themeStore.initTheme()
 })
+
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
 }
+
 watch(isMobileMenuOpen, (isOpen) => {
   if (isOpen) {
     setTimeout(() => {
@@ -253,24 +251,8 @@ watch(isMobileMenuOpen, (isOpen) => {
     document.body.style.overflow = ''
   }
 })
-const toggleTheme = () => {
-  isDark.value = !isDark.value
-  applyTheme()
 
-  if (themeBtnRef.value) {
-    animate(themeBtnRef.value, {
-      scale: [0.8, 1],
-      duration: 800,
-      easing: 'easeOutElastic(1, .5)'
-    })
-  }
-}
-const applyTheme = () => {
-  const themeName = isDark.value ? 'dark' : 'light'
-  document.documentElement.setAttribute('data-theme', themeName)
-  localStorage.setItem('life-theme', themeName)
-}
-
+// 登出
 const handleLogout = async () => {
   await userStore.logout()
   navigateTo('/auth/login')
