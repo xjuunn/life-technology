@@ -1,9 +1,9 @@
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300 relative">
     <div class="absolute w-screen h-[calc(100vh-200px)] z-1">
-      <!-- <effect-prism :animation-type="'hover'" :time-scale="0.1" :height="3.6" :base-width="5.5" :scale="1.5"
-        :hue-shift="0" :color-frequency="1" :noise="0.5" :glow="1"></effect-prism> -->
-      <effect-threads :distance="0.3" :amplitude="2"></effect-threads>
+      <effect-prism :animation-type="'hover'" :time-scale="0.1" :height="3.6" :base-width="5.5" :scale="1.5"
+        :hue-shift="0" :color-frequency="1" :noise="0.5" :glow="1"></effect-prism>
+      <!-- <effect-threads :distance="0.3" :amplitude="2"></effect-threads> -->
     </div>
     <section class="relative pt-40 pb-20 md:pt-40 md:pb-32 px-4 z-2">
       <div class="container mx-auto text-center max-w-5xl">
