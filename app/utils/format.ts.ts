@@ -25,3 +25,31 @@ export function formatChineseNumber(
   // 不到 1 万的直接输出
   return num.toString();
 }
+
+
+import type { ClassValue } from "clsx"
+import { clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+/**
+ * 合并多个 CSS class，并自动处理 Tailwind CSS 类名冲突。
+ *
+ * 该函数结合了 `clsx` 与 `tailwind-merge`：
+ * - `clsx()` 用于将字符串、数组、对象等多种格式的 class 输入规范化。
+ * - `twMerge()` 用于自动合并并去除互相冲突的 Tailwind 工具类。
+ *
+ * @param inputs - 需要合并的类名列表，可以是字符串、数组或对象等 clsx 支持的类型。
+ * @returns 合并并去重后的最终 class 字符串。
+ *
+ * @example
+ * cn("p-2", "p-4") // "p-4"
+ *
+ * @example
+ * cn("bg-red-500", condition && "bg-blue-500") // "bg-blue-500"
+ *
+ * @example
+ * cn("btn", ["btn-primary", { active: isActive }])
+ */
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}

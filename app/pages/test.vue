@@ -1,9 +1,9 @@
 <template>
-  <button class="btn btn-primary" @click="test">test</button>
+  <div class="w-full h-screen">
+    <effect-global-map></effect-global-map>
+  </div>
 </template>
-<script lang="ts" setup>
-function test() {
-  
-}
+
+<script setup lang="ts">
 
 </script>

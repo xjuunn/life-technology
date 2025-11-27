@@ -1,9 +1,7 @@
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300 relative">
-    <div class="absolute w-screen h-[calc(100vh-200px)] z-1">
-      <effect-prism :animation-type="'hover'" :time-scale="0.1" :height="3.6" :base-width="5.5" :scale="1.5"
-        :hue-shift="0" :color-frequency="1" :noise="0.5" :glow="1"></effect-prism>
-      <!-- <effect-threads :distance="0.3" :amplitude="2"></effect-threads> -->
+    <div class="absolute w-screen h-[calc(100vh-0px)] z-1 ">
+      <EffectGlobalMap></EffectGlobalMap>
     </div>
     <section class="relative pt-40 pb-20 md:pt-40 md:pb-32 px-4 z-2">
       <div class="container mx-auto text-center max-w-5xl">
@@ -34,7 +32,7 @@
         </div>
       </div>
     </section>
-    <div class="border-y border-base-content/5 bg-base-content/2 z-2">
+    <div class="relative border-y border-base-content/5 bg-base-content/2 z-2">
       <div class="container mx-auto px-4 py-12">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div v-for="(stat, index) in stats" :key="index" class="text-center group cursor-default">
@@ -46,7 +44,7 @@
         </div>
       </div>
     </div>
-    <section class="py-32 px-4">
+    <section class="relative py-32 px-4 z-2">
       <div class="container mx-auto max-w-6xl">
         <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div class="max-w-xl">
@@ -154,7 +152,6 @@
               <div
                 class="absolute inset-0 bg-linear-to-b from-base-content/5 to-transparent rounded-[3rem] pointer-events-none">
               </div>
-
               <div class="flex justify-between items-center mb-12 relative z-10">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-full bg-base-200 flex items-center justify-center text-primary">
