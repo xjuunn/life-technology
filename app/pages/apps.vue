@@ -65,7 +65,7 @@
             </div>
           </div>
 
-          <div class="w-full lg:w-2/5 flex justify-center relative order-1 lg:order-2">
+          <!-- <div class="w-full lg:w-2/5 flex justify-center relative order-1 lg:order-2">
             <div
               class="relative w-full max-w-[180px] sm:max-w-[220px] lg:max-w-[260px] xl:max-w-[300px] flex items-center justify-center">
               <div
@@ -75,6 +75,24 @@
                 class="w-full h-auto drop-shadow-2xl object-contain hover:scale-105 transition-transform duration-700 z-10"
                 src="/imgs/app.png" alt="App Preview">
               </nuxt-img>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="w-full lg:w-2/5 flex justify-center relative order-1 lg:order-2">
+          <div
+              class="relative w-full max-w-[180px] sm:max-w-[220px] lg:max-w-[260px] xl:max-w-[300px] flex items-center justify-center">
+              <div
+                class="absolute inset-0 bg-gradient-to-tr from-primary/30 to-secondary/30 rounded-full blur-2xl animate-pulse lg:hidden">
+              </div>
+              <div class="mockup-phone scale-75 lg:scale-90 xl:scale-100 transform transition-transform duration-700 z-10 hover:scale-105">
+                <div class="mockup-phone-camera"></div>
+                <div class="mockup-phone-display text-white grid place-content-center bg-neutral-800">
+                  <div class="text-center p-6">
+                    <div class="text-2xl font-bold mb-4">It's Glowtime.</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
