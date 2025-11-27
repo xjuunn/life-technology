@@ -24,7 +24,7 @@
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
-            class="btn btn-primary btn-lg rounded-full px-10 min-w-[180px] text-primary-content border-none shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
+            class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-10 min-w-[180px] text-primary-content border-none shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
             {{ t('hero.btn_start') }}
           </button>
           <button
