@@ -17,7 +17,7 @@
               <div
                 class="absolute inset-0 bg-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               </div>
-              <nuxt-img src="/favicon.png" class="w-16 h-14 scale-110 object-contain"></nuxt-img>
+              <nuxt-img src="/favicon.png" class="w-16 h-14 scale-125 object-contain"></nuxt-img>
             </div>
             <div class="flex flex-col leading-none">
               <span class="text-2xl text-base-content relative"
