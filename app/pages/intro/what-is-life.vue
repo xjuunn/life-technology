@@ -16,10 +16,10 @@
           </div>
           <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] mb-8">
             什么是
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">LIFE</span>
+            <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">LIFE</span>
           </h1>
           <p class="text-xl text-base-content/70 leading-relaxed max-w-2xl">
-            LIFE是一个革命性的区块链生态系统，旨在通过去中心化技术重新定义数字生活体验，让每个人都能掌控自己的数字资产和身份。
+            LIFE是一个革命性的区块链生态系统,旨在通过去中心化技术重新定义数字生活体验,让每个人都能掌控自己的数字资产和身份。
           </p>
         </div>
       </div>
@@ -80,9 +80,9 @@
                 <div 
                   class="w-full h-full"
                   :class="{
-                    'bg-gradient-to-r from-primary to-primary/50': concept.color === 'primary',
-                    'bg-gradient-to-r from-secondary to-secondary/50': concept.color === 'secondary',
-                    'bg-gradient-to-r from-accent to-accent/50': concept.color === 'accent'
+                    'bg-linear-to-r from-primary to-primary/50': concept.color === 'primary',
+                    'bg-linear-to-r from-secondary to-secondary/50': concept.color === 'secondary',
+                    'bg-linear-to-r from-accent to-accent/50': concept.color === 'accent'
                   }"
                 ></div>
               </div>
@@ -177,15 +177,15 @@
           </div>
           
           <div class="w-full lg:w-1/2 relative">
-            <div class="absolute -inset-8 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl blur-3xl opacity-30"></div>
+            <div class="absolute -inset-8 bg-linear-to-br from-primary/20 to-secondary/20 rounded-3xl blur-3xl opacity-30"></div>
             <div class="relative bg-base-100 border border-base-content/10 rounded-3xl p-8 aspect-square flex items-center justify-center">
               <div class="text-center">
-                <div class="w-32 h-32 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-8">
+                <div class="w-32 h-32 bg-linear-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-8">
                   <Icon name="mingcute:leaf-fill" class="text-white" size="48" />
                 </div>
                 <h3 class="text-2xl font-bold mb-4">LIFE代币</h3>
                 <p class="text-base-content/60">
-                  LIFE代币是整个生态系统的核心，用于治理、交易手续费、生态激励等多个场景。
+                  LIFE代币是整个生态系统的核心,用于治理、交易手续费、生态激励等多个场景。
                 </p>
               </div>
             </div>
