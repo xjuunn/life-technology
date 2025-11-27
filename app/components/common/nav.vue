@@ -17,10 +17,11 @@
               <div
                 class="absolute inset-0 bg-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               </div>
-              <nuxt-img src="/favicon.png" class="w-8 h-8 object-contain"></nuxt-img>
+              <nuxt-img src="/favicon.png" class="w-16 h-14 scale-110 object-contain"></nuxt-img>
             </div>
             <div class="flex flex-col leading-none">
-              <span class="font-black text-2xl tracking-tighter text-base-content relative">
+              <span class="text-2xl text-base-content relative"
+                style="-webkit-text-stroke: 0.5px currentColor;">
                 LIFE
               </span>
             </div>
@@ -41,12 +42,22 @@
                   {{ t('nav.intro') }}</div>
                 <ul tabindex="-1"
                   class="dropdown-content bg-base-200 menu border border-base-content/10 rounded-box z-1 w-52 p-2 shadow-sm">
-                  <li><NuxtLink to="/intro/what-is-life"><a>{{ t('nav.whatIsLife') }}</a></NuxtLink></li>
-                  <li><NuxtLink to="/intro/what-life-do">{{ t('nav.whatLifeCanDo') }}</NuxtLink></li>
-                  <li><NuxtLink to="/intro/how-to-use-life">{{ t('nav.howToUseLife') }}</NuxtLink></li>
-                  <li><NuxtLink to="/intro/need-know"><a>{{ t('nav.thingsYouNeedToKnow') }}</a></NuxtLink></li>
-                  <li><NuxtLink to="/intro/white-book"><a>{{ t('nav.whitepaper') }}</a></NuxtLink></li>
-                 </ul>
+                  <li>
+                    <NuxtLink to="/intro/what-is-life"><a>{{ t('nav.whatIsLife') }}</a></NuxtLink>
+                  </li>
+                  <li>
+                    <NuxtLink to="/intro/what-life-do">{{ t('nav.whatLifeCanDo') }}</NuxtLink>
+                  </li>
+                  <li>
+                    <NuxtLink to="/intro/how-to-use-life">{{ t('nav.howToUseLife') }}</NuxtLink>
+                  </li>
+                  <li>
+                    <NuxtLink to="/intro/need-know"><a>{{ t('nav.thingsYouNeedToKnow') }}</a></NuxtLink>
+                  </li>
+                  <li>
+                    <NuxtLink to="/intro/white-book"><a>{{ t('nav.whitepaper') }}</a></NuxtLink>
+                  </li>
+                </ul>
               </nuxt-link>
             </li>
             <li>
