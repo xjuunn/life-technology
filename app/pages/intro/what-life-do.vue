@@ -141,7 +141,7 @@ const useCases = [
           </div>
           <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] mb-8">
             LIFE 能为你
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">做什么</span>
+            <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">做什么</span>
           </h1>
           <p class="text-xl text-base-content/70 leading-relaxed max-w-2xl">
             从数字资产管理到 Web3 生态探索，LIFE 为您提供全方位的数字生活解决方案，让您在区块链世界中游刃有余。
@@ -205,9 +205,9 @@ const useCases = [
                 <div 
                   class="w-full h-full"
                   :class="{
-                    'bg-gradient-to-r from-primary to-primary/50': capability.color === 'primary',
-                    'bg-gradient-to-r from-secondary to-secondary/50': capability.color === 'secondary',
-                    'bg-gradient-to-r from-accent to-accent/50': capability.color === 'accent'
+                    'bg-linear-to-r from-primary to-primary/50': capability.color === 'primary',
+                    'bg-linear-to-r from-secondary to-secondary/50': capability.color === 'secondary',
+                    'bg-linear-to-r from-accent to-accent/50': capability.color === 'accent'
                   }"
                 ></div>
               </div>
@@ -223,7 +223,7 @@ const useCases = [
         <div class="text-center mb-16 max-w-2xl mx-auto">
           <h2 class="text-3xl md:text-5xl font-bold mb-6">适用场景</h2>
           <p class="text-base-content/60 text-lg">
-            无论您是个人用户、开发者还是企业，LIFE 都能满足您的不同需求
+            无论您是个人用户、开发者还是企业,LIFE 都能满足您的不同需求
           </p>
         </div>
 
@@ -238,10 +238,10 @@ const useCases = [
                 <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
                   <Icon 
                     :name="[
-                      'mingcute:user-4-fill',
-                      'mingcute:code-fill', 
-                      'mingcute:building-4-fill'
-                    ][index]" 
+                  'mingcute:user-4-fill',
+                  'mingcute:code-fill', 
+                  'mingcute:building-4-fill'
+                ][index] || 'mingcute:question-fill'" 
                     size="24" 
                   />
                 </div>
@@ -306,10 +306,10 @@ const useCases = [
           </div>
           
           <div class="w-full lg:w-1/2 relative">
-            <div class="absolute -inset-8 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl blur-3xl opacity-30"></div>
+            <div class="absolute -inset-8 bg-linear-to-br from-primary/20 to-secondary/20 rounded-3xl blur-3xl opacity-30"></div>
             <div class="relative bg-base-100 border border-base-content/10 rounded-3xl p-8 aspect-square flex items-center justify-center">
               <div class="text-center">
-                <div class="w-32 h-32 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-8">
+                <div class="w-32 h-32 bg-linear-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-8">
                   <Icon name="mingcute:heart-fill" class="text-white" size="48" />
                 </div>
                 <h3 class="text-2xl font-bold mb-4">您的数字生活助手</h3>
