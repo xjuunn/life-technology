@@ -8,9 +8,7 @@
       ]" :title="item.title" :disabled="disabled" type="button">
         <Icon :name="item.icon" class="w-4 h-4" />
       </button>
-
       <div class="w-px h-5 bg-base-content/10 mx-1"></div>
-
       <button @click="editor.chain().focus().undo().run()"
         :disabled="!editor.can().chain().focus().undo().run() || disabled"
         class="btn btn-sm btn-ghost btn-square min-h-8 h-8 w-8 rounded-lg text-base-content/70">
@@ -21,29 +19,26 @@
         class="btn btn-sm btn-ghost btn-square min-h-8 h-8 w-8 rounded-lg text-base-content/70">
         <Icon name="mingcute:forward-line" class="w-4 h-4" />
       </button>
-
       <slot name="toolbar" :editor="editor"></slot>
-
       <div class="ml-auto flex items-center gap-2">
         <slot name="toolbar-end" :editor="editor"></slot>
       </div>
     </div>
-
     <editor-content :editor="editor"
       class="flex-1 overflow-y-auto min-h-[150px] max-h-[600px] p-4 cursor-text prose max-w-none focus:outline-none" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useEditor, EditorContent } from '@tiptap/vue-3'
+import { useEditor, EditorContent, type JSONContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import type { AnyExtension } from '@tiptap/core'
 import { watch, onBeforeUnmount, computed, type PropType } from 'vue'
 
 const props = defineProps({
   modelValue: {
-    type: String,
-    default: '',
+    type: Object as PropType<JSONContent>,
+    default: () => ({ type: 'doc', content: [] }),
   },
   placeholder: {
     type: String,
@@ -58,9 +53,7 @@ const props = defineProps({
     default: () => [],
   }
 })
-
 const emit = defineEmits(['update:modelValue', 'change'])
-
 const editor = useEditor({
   content: props.modelValue,
   editable: !props.disabled,
@@ -76,17 +69,18 @@ const editor = useEditor({
     },
   },
   onUpdate: ({ editor }) => {
-    const html = editor.getHTML()
-    emit('update:modelValue', html)
-    emit('change', html)
+    const json = editor.getJSON()
+    emit('update:modelValue', json)
+    emit('change', json)
   },
 })
-
 watch(() => props.modelValue, (newValue) => {
-  if (editor.value && newValue !== editor.value.getHTML()) {
+  if (!editor.value) return
+  const currentContent = editor.value.getJSON()
+  if (JSON.stringify(currentContent) !== JSON.stringify(newValue)) {
     editor.value.commands.setContent(newValue)
   }
-})
+}, { deep: true })
 
 watch(() => props.disabled, (val) => {
   editor.value?.setEditable(!val)
