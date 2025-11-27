@@ -298,7 +298,13 @@
             "options": {
                 "newest": "最新發佈",
                 "popular": "最多閱讀",
-                "oldest": "最早發佈"
+                "oldest": "最早發佈",
+                "most_liked": "最多點贊",
+                "most_commented": "最多評論"
+            },
+            "order": {
+                "asc": "升序",
+                "desc": "降序"
             }
         },
         "tags": {

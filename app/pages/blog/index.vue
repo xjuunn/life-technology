@@ -8,6 +8,8 @@ const blogCategories = ref<string[]>([]);
 const currentPage = ref(1);
 const itemsPerPage = ref(8); // 默认每页显示8个博客
 const loading = ref(false);
+const sortBy = ref<'createdAt' | 'viewCount' | 'likeCount' | 'commentCount'>('createdAt'); // 默认排序字段
+const sortOrder = ref<'asc' | 'desc'>('desc'); // 默认排序方向
 
 const popularTags = computed(() => [
   t('blog_page.tags.blockchain'),
@@ -30,7 +32,12 @@ const pagination = ref({
 const fetchBlogs = async (page: number = 1) => {
   loading.value = true;
   try {
-    const result = await list({ page, limit: itemsPerPage.value });
+    const result = await list({ 
+      page, 
+      limit: itemsPerPage.value,
+      sortBy: sortBy.value,
+      sortOrder: sortOrder.value
+    });
     
     // 更新博客数据
     blogs.value = result.data.blogs;
@@ -74,6 +81,26 @@ const changePage = (page: number | string) => {
 // 更改每页显示数量
 const changeItemsPerPage = (limit: number) => {
   itemsPerPage.value = limit;
+  currentPage.value = 1; // 重置到第一页
+  fetchBlogs(1);
+};
+
+// 更改排序方式
+const changeSortBy = (field: 'createdAt' | 'viewCount' | 'likeCount' | 'commentCount', order?: 'asc' | 'desc') => {
+  sortBy.value = field;
+  
+  // 如果提供了排序方向，则使用提供的方向，否则保持当前方向
+  if (order) {
+    sortOrder.value = order;
+  }
+  
+  currentPage.value = 1; // 重置到第一页
+  fetchBlogs(1);
+};
+
+// 更改排序方向
+const toggleSortOrder = () => {
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
   currentPage.value = 1; // 重置到第一页
   fetchBlogs(1);
 };
@@ -155,7 +182,7 @@ onMounted(async () => {
           </div>
 
           <div
-            class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-base-200/50 dark:bg-base-200/30 backdrop-blur-xl border border-base-content/5 p-2 sm:p-2.5 rounded-2xl lg:rounded-3xl shadow-lg">
+            class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-base-200/50 dark:bg-base-200/30 backdrop-blur-xl border border-base-content/5 p-2 sm:p-2.5 rounded-2xl lg:rounded-3xl shadow-lg relative z-10">
             <div class="relative flex-1">
               <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
                 <Icon name="heroicons:magnifying-glass" class="w-4 h-4 sm:w-5 sm:h-5 text-base-content/40" />
@@ -164,7 +191,7 @@ onMounted(async () => {
                 class="input input-sm sm:input-md w-full pl-9 sm:pl-11 bg-transparent border-0 focus:bg-base-100 dark:focus:bg-base-300/50 rounded-xl transition-colors placeholder:text-base-content/30 text-sm sm:text-base" />
             </div>
 
-            <div class="flex items-center justify-center gap-1 sm:gap-2 shrink-0">
+            <div class="flex items-center justify-center gap-1 sm:gap-2 shrink-0 relative" style="z-index: 1000;">
               <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button"
                   class="btn btn-ghost btn-xs sm:btn-sm rounded-full font-normal text-base-content/70 gap-1 sm:gap-2 px-2 sm:px-3">
@@ -173,7 +200,7 @@ onMounted(async () => {
                   <Icon name="heroicons:chevron-down" class="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                 </div>
                 <ul tabindex="0"
-                  class="dropdown-content z-1 menu p-2 shadow-xl bg-base-100 dark:bg-base-200 rounded-xl w-44 sm:w-52 border border-base-content/5 mt-2 text-sm">
+                  class="dropdown-content menu p-2 shadow-xl bg-base-100 dark:bg-base-200 rounded-xl w-44 sm:w-52 border border-base-content/5 mt-2 text-sm">
 
                   <li v-for="category in blogCategories" :key="category">
                     <a class="rounded-lg">{{ category }}</a>
@@ -188,12 +215,20 @@ onMounted(async () => {
                   class="btn btn-ghost btn-xs sm:btn-sm rounded-full font-normal text-base-content/70 gap-1 sm:gap-2 px-2 sm:px-3">
                   <Icon name="heroicons:arrows-up-down" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span class="hidden sm:inline">{{ t('blog_page.sort.label') }}</span>
+                  <Icon :name="sortOrder === 'asc' ? 'heroicons:arrow-up' : 'heroicons:arrow-down'" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <ul tabindex="0"
-                  class="dropdown-content z-1 menu p-2 shadow-xl bg-base-100 dark:bg-base-200 rounded-xl w-44 sm:w-52 border border-base-content/5 mt-2 text-sm">
-                  <li><a class="rounded-lg">{{ t('blog_page.sort.options.newest') }}</a></li>
-                  <li><a class="rounded-lg">{{ t('blog_page.sort.options.popular') }}</a></li>
-                  <li><a class="rounded-lg">{{ t('blog_page.sort.options.oldest') }}</a></li>
+                  class="dropdown-content menu p-2 shadow-xl bg-base-100 dark:bg-base-200 rounded-xl w-44 sm:w-52 border border-base-content/5 mt-2 text-sm">
+                  <li><a class="rounded-lg" @click="changeSortBy('createdAt', 'desc')">{{ t('blog_page.sort.options.newest') }}</a></li>
+                  <li><a class="rounded-lg" @click="changeSortBy('viewCount', 'desc')">{{ t('blog_page.sort.options.popular') }}</a></li>
+                  <li><a class="rounded-lg" @click="changeSortBy('likeCount', 'desc')">{{ t('blog_page.sort.options.most_liked') }}</a></li>
+                  <li><a class="rounded-lg" @click="changeSortBy('commentCount', 'desc')">{{ t('blog_page.sort.options.most_commented') }}</a></li>
+                  <li><a class="rounded-lg" @click="changeSortBy('createdAt', 'asc')">{{ t('blog_page.sort.options.oldest') }}</a></li>
+                  <div class="divider my-1"></div>
+                  <li><a class="rounded-lg flex items-center justify-between" @click="toggleSortOrder">
+                    {{ sortOrder === 'asc' ? t('blog_page.sort.order.asc') : t('blog_page.sort.order.desc') }}
+                    <Icon :name="sortOrder === 'asc' ? 'heroicons:arrow-up' : 'heroicons:arrow-down'" class="w-4 h-4" />
+                  </a></li>
                 </ul>
               </div>
             </div>

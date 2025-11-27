@@ -298,7 +298,13 @@
             "options": {
                 "newest": "Newest",
                 "popular": "Most Read",
-                "oldest": "Oldest"
+                "oldest": "Oldest",
+                "most_liked": "Most Liked",
+                "most_commented": "Most Commented"
+            },
+            "order": {
+                "asc": "Ascending",
+                "desc": "Descending"
             }
         },
         "tags": {
