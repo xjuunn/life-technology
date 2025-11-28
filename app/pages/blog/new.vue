@@ -218,7 +218,8 @@ const loadCategories = async () => {
     if (data && data.categories) {
       categories.value = data.categories;
     }
-  } catch (error) {
+  } catch (error: any) {
+    useToast().error(error.message || t('blog.create.error_general'));
     console.error('Failed to load categories', error);
   }
 };
@@ -234,7 +235,7 @@ const handleCoverUpload = async (event: Event) => {
   if (!file) return;
 
   if (file.size > 5 * 1024 * 1024) {
-    alert(t('blog.create.error_file_size'));
+    useToast().error(t('blog.create.error_file_size'));
     if (fileInputRef.value) fileInputRef.value.value = '';
     return;
   }
@@ -249,7 +250,7 @@ const handleCoverUpload = async (event: Event) => {
     }
   } catch (error: any) {
     console.error("Upload error:", error);
-    alert(error.message || t('blog.create.error_upload'));
+    useToast().error(error.message || t('blog.create.error_upload'));
   } finally {
     uploading.value = false;
     if (fileInputRef.value) fileInputRef.value.value = '';
@@ -270,15 +271,31 @@ const removeTag = (index: number) => {
 
 const handleSubmit = async () => {
   if (!form.title.trim()) {
-    alert(t('blog.create.error_title'));
+    useToast().error(t('blog.create.error_title'));
     return;
   }
   if (!form.content.content || form.content.content.length === 0) {
-    alert(t('blog.create.error_content'));
+    useToast().error(t('blog.create.error_content'));
     return;
   }
   if (!form.category) {
-    alert(t('blog.create.error_category'));
+    useToast().error(t('blog.create.error_category'));
+    return;
+  }
+  if (form.title.length < 5) {
+    useToast().error('标题长度不能少于5个字符');
+    return;
+  }
+  if (form.content.length < 10) {
+    useToast().error('内容长度不能少于10个字符');
+    return;
+  }
+  if (form.title.length > 50) {
+    useToast().error('标题太长了');
+    return;
+  }
+  if (form.summary.length > 200) {
+    useToast().error('摘要太长了');
     return;
   }
 
@@ -289,15 +306,13 @@ const handleSubmit = async () => {
       content: JSON.stringify(form.content),
       status: form.status as Status
     };
-
     const { success } = await ApiList.blog.create(payload);
-
     if (success) {
       navigateTo('/blog', { replace: true });
     }
   } catch (error: any) {
     console.error(error);
-    alert(error.message || t('blog.create.error_general'));
+    useToast().error(error.message || t('blog.create.error_general'));
   } finally {
     loading.value = false;
   }
