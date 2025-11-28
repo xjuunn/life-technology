@@ -1,26 +1,9 @@
 <template>
-  <editor-content :editor="editor" class="prose max-w-none mt-4" />
+  <common-editor v-model="data" />
+  <pre class="text-sm mt-4">{{ JSON.stringify(data, null, 2) }}</pre>
 </template>
-
 <script setup lang="ts">
-import { EditorContent, useEditor} from "@tiptap/vue-3"
-import StarterKit from "@tiptap/starter-kit"
-const editor = useEditor({
-  editable: false,
-  extensions: [StarterKit],
-  content: {
-  "type": "doc",
-  "content": [
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "123123"
-        }
-      ]
-    }
-  ]
-},
-})
+import { type JSONContent } from "@tiptap/vue-3"
+const data = ref<JSONContent>()
+
 </script>

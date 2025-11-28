@@ -161,6 +161,12 @@
                 </nuxt-link>
               </li>
               <li>
+                <nuxt-link to="/blog/new" class="py-3 font-medium hover:bg-base-content/5">
+                  <Icon name="mingcute:edit-2-fill" class="w-5 h-5" />
+                  {{ t('nav.new_blog') }}
+                </nuxt-link>
+              </li>
+              <li>
                 <nuxt-link to="/user/profile" class="py-3 font-medium hover:bg-base-content/5">
                   <Icon name="mingcute:profile-fill" class="w-5 h-5" />
                   {{ t('nav.profile') }}
