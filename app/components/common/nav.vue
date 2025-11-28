@@ -113,7 +113,7 @@
 
           <!-- 未登录状态 -->
           <nuxt-link v-if="!userStore.user" to="/auth/login"
-            class="btn btn-primary btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
+            class="btn bg-linear-to-r from-primary to-secondary btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
             <span>{{ t('nav.login') }}</span>
           </nuxt-link>
 

@@ -25,10 +25,10 @@
             class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-10 min-w-[180px] text-primary-content border-none shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
             {{ t('hero.btn_start') }}
           </button>
-          <button
-            class="btn btn-ghost btn-lg rounded-full px-10 min-w-[180px] border border-base-content/10 hover:bg-base-content hover:text-base-100">
+          <nuxt-link to="/intro/white-book"
+            class="btn btn-ghost btn-lg rounded-full px-10 min-w-[180px] border border-base-content/30 hover:bg-base-content hover:text-base-100">
             {{ t('hero.btn_whitepaper') }}
-          </button>
+          </nuxt-link>
         </div>
       </div>
     </section>
@@ -283,7 +283,7 @@
           <h3 class="text-3xl md:text-5xl font-bold mb-10">{{ t('cta.title') }}</h3>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              class="btn btn-primary btn-lg rounded-full px-12 min-w-[200px] text-primary-content shadow-lg shadow-primary/20">
+              class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-12 min-w-[200px] text-primary-content shadow-lg shadow-primary/20">
               {{ t('cta.btn_download') }}
             </button>
             <button
