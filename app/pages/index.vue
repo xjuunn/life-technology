@@ -58,7 +58,7 @@
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div class="w-20 h-20 rounded-2xl bg-base-100 flex items-center justify-center shadow-sm text-primary">
-                <Icon name="heroicons:circle-stack" class="!w-10 !h-10" />
+                <Icon name="heroicons:circle-stack" class="w-10! h-10!" />
               </div>
               <div>
                 <h4 class="text-3xl font-bold mb-3">{{ t('trends.assets.title') }}</h4>
@@ -78,7 +78,7 @@
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-secondary">
-                <Icon name="heroicons:chart-bar-square" class="!w-10 !h-10" />
+                <Icon name="heroicons:chart-bar-square" class="w-10! h-10!" />
               </div>
               <div>
                 <h4 class="text-2xl font-bold mb-3">{{ t('trends.quantified.title') }}</h4>
@@ -93,7 +93,7 @@
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-accent">
-                <Icon name="heroicons:user-group" class="!w-10 !h-10" />
+                <Icon name="heroicons:user-group" class="w-10! h-10!" />
               </div>
               <div>
                 <h4 class="text-2xl font-bold mb-3">{{ t('trends.credit.title') }}</h4>
@@ -111,7 +111,7 @@
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div
                 class="w-20 h-20 rounded-2xl bg-white/10 flex items-center justify-center backdrop-blur-md text-white">
-                <Icon name="heroicons:shield-check" class="!w-10 !h-10" />
+                <Icon name="heroicons:shield-check" class="w-10! h-10!" />
               </div>
               <div>
                 <h4 class="text-3xl font-bold mb-3 text-white">{{ t('trends.security.title') }}</h4>

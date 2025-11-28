@@ -180,7 +180,7 @@ onMounted(async () => {
                 <Icon name="mingcute:close-line" class="w-4 h-4" />
               </button>
             </div>
-
+            <button class="btn btn-primary btn-ghost" @click="performSearch">{{ t('blog_page.search') }}</button>
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end px-2">
               <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-sm rounded-lg font-normal gap-2">
@@ -342,6 +342,7 @@ onMounted(async () => {
         "title_highlight": "Web3 视界",
         "subtitle": "洞察行业趋势，掌握技术前沿，与 LIFE 一起定义数字未来"
       },
+      "search": "搜索",
       "search_placeholder": "搜索文章、教程或观点...",
       "filter": {
         "category_label": "分类",
@@ -382,6 +383,7 @@ onMounted(async () => {
         "title_highlight": "Web3 視界",
         "subtitle": "洞察行業趨勢，掌握技術前沿，與 LIFE 一起定義數字未來"
       },
+      "search": "搜索",
       "search_placeholder": "搜尋文章、教程或觀點...",
       "filter": {
         "category_label": "分類",
@@ -422,6 +424,7 @@ onMounted(async () => {
         "title_highlight": "Web3 Vision",
         "subtitle": "Insight into industry trends, mastering frontier technology, defining the digital future with LIFE"
       },
+      "search": "Search",
       "search_placeholder": "Search articles, tutorials, or views...",
       "filter": {
         "category_label": "Category",
