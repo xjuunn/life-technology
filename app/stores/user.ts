@@ -25,6 +25,7 @@ export const useUserStore = defineStore('user', () => {
    * 登出
    */
   async function logout() {
+    navigateTo('/auth/login', { replace: true });
     const result = await ApiList.auth.logout();
     if (!result.success) {
       console.warn("退出登录异常：", result.error?.message)

@@ -38,7 +38,20 @@ import { watch, onBeforeUnmount, computed, type PropType } from 'vue'
 const props = defineProps({
   modelValue: {
     type: Object as PropType<JSONContent>,
-    default: () => ({ type: 'doc', content: [] }),
+    default: () => ({
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "#"
+            }
+          ]
+        }
+      ]
+    }),
   },
   placeholder: {
     type: String,

@@ -32,7 +32,6 @@ interface RequestConfig extends AxiosRequestConfig {
 class Request {
   private instance: AxiosInstance
   private baseConfig: AxiosRequestConfig = {
-    // baseURL: useRuntimeConfig().public.base_url,
     baseURL: import.meta.env.VITE_BACKBASE_URL,
     timeout: 15000,
     headers: {
@@ -64,16 +63,15 @@ class Request {
         if (res.success) {
           return res as unknown as AxiosResponse
         } else {
-          const errorMsg = res.message || '请求处理失败'
-          return Promise.reject(new Error(errorMsg))
+          const message = errorHandler(res) || '未知错误'
+          useToast().error(message);
+          return Promise.reject(new Error(message))
         }
       },
       (error: AxiosError) => {
-        let message = '网络连接故障'
-        if (error.response && error.response.data) {
-          const errData = error.response.data as any
-          message = errData.message || errData.error || error.message
-        }
+        const res = error.response?.data as ApiResponse<any>
+        const message = errorHandler(res) || '未知错误';
+        useToast().error(message);
         return Promise.reject(new Error(message))
       }
     )
@@ -108,3 +106,52 @@ export const api = new Request()
 
 export default Request
 
+/**
+ * 错误处理函数
+ * @param res 错误的响应
+ * @returns 错误信息
+ */
+function errorHandler(res: ApiResponse<any>): string {
+  const code = res.code.toString()
+  let message = res.message || '请求出错'
+
+  switch (code) {
+    case StatusCode.REFRESH_TOKEN_INVALID:
+      message = '刷新令牌无效或已过期，请重新登录'
+      navigateTo('/auth/login', { replace: true })
+      break
+    case StatusCode.NO_REFRESH_TOKEN:
+      message = '未检测到刷新令牌，请重新登录'
+      navigateTo('/auth/login', { replace: true })
+      break
+    case StatusCode.ADMIN_REQUIRED:
+      message = '需要管理员权限才能进行此操作'
+      break
+    case StatusCode.EXPIRED_TOKEN:
+      message = '登录已过期，请重新登录'
+      // navigateTo('/auth/login', { replace: true })
+      useUserStore().refreshToken().catch(() => {
+        navigateTo('/auth/login', { replace: true })
+      })
+      break
+    case StatusCode.INVALID_TOKEN:
+      message = '无效的登录状态，请重新登录'
+      navigateTo('/auth/login', { replace: true })
+      break
+    case StatusCode.NO_TOKEN:
+      message = '未检测到登录状态，请登录后重试'
+      navigateTo('/auth/login', { replace: true })
+      break
+    case StatusCode.REALNAME_REQUIRED:
+      message = '需要实名认证才能进行此操作'
+      break
+    case StatusCode.USER_DISABLED:
+      message = '账户已被禁用，无法进行此操作'
+      break
+    case StatusCode.USER_NOT_FOUND:
+      message = '用户不存在或已被删除'
+      break
+  }
+
+  return message
+}
