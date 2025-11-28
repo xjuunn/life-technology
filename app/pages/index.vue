@@ -339,3 +339,312 @@ const faqs = computed(() => [
   { question: t('faq.list.q3'), answer: t('faq.list.a3') },
 ])
 </script>
+
+<i18n lang="json">{
+  "zh-CN": {
+    "hero": {
+      "subtitle": "Web3 Digital Economy",
+      "title_prefix": "守护",
+      "title_highlight": "数据价值",
+      "title_suffix": "重塑数字生命",
+      "description": "LIFE 致力于构建可信的数字未来。利用区块链分布式账本技术，将个人数据转化为可视化的数字资产，打造安全、合规的数字管理终端，提升个人数据的价值与意义。",
+      "btn_start": "开启数字之旅",
+      "btn_whitepaper": "了解技术白皮书"
+    },
+    "stats": {
+      "users": "用户数",
+      "distributed_records": "分布式账本记录",
+      "autonomy": "数据自主权",
+      "accidents": "安全事故"
+    },
+    "trends": {
+      "subtitle": "Industry Trends",
+      "title": "赋予生命更深意义",
+      "read_more": "查看详情",
+      "assets": {
+        "title": "数据要素资产化",
+        "desc": "打破“数据孤岛”，通过确权与流通机制，将日常行为转化为可量化的数字权益，赋予个体对自身数字生命的价值回收权。"
+      },
+      "quantified": {
+        "title": "量化自我",
+        "desc": "通过客观数据反馈促进健康行为正循环，使「管理身体」成为可量化的终身事业，实现数字技术赋能。"
+      },
+      "credit": {
+        "title": "信用价值",
+        "desc": "突破物理限制，通过链上行为积累信用资本，在数字生态中获得社会影响力与共创未来的参与感。"
+      },
+      "security": {
+        "title": "安全与合规",
+        "desc": "严格遵循《区块链信息服务管理规定》备案，采用AES-256加密与分布式存储，确保技术合规性与生态稳健性，让数据回归用户。"
+      }
+    },
+    "features": {
+      "title": "核心功能",
+      "subtitle": "LIFE 为用户提供安全、可信的数字管家服务，构建您的 Web3 数字化身。",
+      "list": {
+        "brain": {
+          "title": "数字大脑",
+          "desc": "AI 驱动的数据分析引擎，将您的生活足迹转化为可视化数据报告与建议。"
+        },
+        "did": {
+          "title": "数字身份 (DID)",
+          "desc": "基于区块链的去中心化数字身份，一次认证，全生态通用，告别繁琐账号。"
+        },
+        "body": {
+          "title": "数字身体",
+          "desc": "连接智能穿戴设备，让健康数据上链，将良好的生活习惯转化为可视化的数字权益。"
+        },
+        "key": {
+          "title": "私钥自持",
+          "desc": "私钥离线生成并存储于用户本地设备，平台无法触碰，确保资产安全与隐私。"
+        },
+        "cross": {
+          "title": "跨链兼容",
+          "desc": "支持主流联盟链及公链技术标准，实现不同生态间的数据互通与价值流转。"
+        },
+        "privacy": {
+          "title": "隐私计算",
+          "desc": "采用零知识证明与可信执行环境技术，确保数据在“可用不可见”的前提下创造价值。"
+        }
+      }
+    },
+    "app": {
+      "secure_status": "Secure",
+      "points_label_en": "Digital Points",
+      "points_label": "生态权益积分",
+      "card_id": "数字身份认证",
+      "card_id_status": "已上链存证",
+      "card_health": "健康数据报告",
+      "card_health_status": "加密存储中",
+      "title_prefix": "打造全球更安全的",
+      "title_highlight": "数字资产管家",
+      "description": "全球化数字经济体系下，安全是技术挑战与信任承诺。LIFE 客户端集成 AES-256 加密与 ECDSA 签名算法，通过离线私钥存储，保障您的数字权益万无一失。",
+      "feature_control_title": "自主掌控",
+      "feature_control_desc": "用户数据实施端到端加密并分布式存储，结合用户自主授权机制，真正实现数据主权。",
+      "feature_compliance_title": "技术合規",
+      "feature_compliance_desc": "严格遵循国内区块链信息服务管理规定，确保技术应用合法合规，稳健运行。"
+    },
+    "faq": {
+      "title": "了解 LIFE",
+      "subtitle": "专业的区块链技术服务，值得信赖的选择",
+      "list": {
+        "q1": "什么是 LIFE 平台？",
+        "a1": "LIFE 是一个基于区块链技术的去中心化数字生态系统，旨在为用户提供安全、隐私、自主的数据管理体验。它不是传统意义上的金融工具，而是您的个人数据资产管家。",
+        "q2": "LIFE 积分有什么用？",
+        "a2": "LIFE 积分是生态内的权益凭证，用于奖励用户对生态的数据贡献（如健康数据上传）。积分可用于兑换生态内的服务、参与社区治理投票，不可用于非法买卖。",
+        "q3": "如何保障我的数据安全？",
+        "a3": "我们采用军工级 AES-256 加密技术，您的核心数据和私钥仅存储在您的本地设备上。未经您授权，任何人（包括平台方）都无法查看或调用您的数据。"
+      }
+    },
+    "cta": {
+      "title": "准备好进入数字经济时代了吗？",
+      "btn_download": "下载客户端",
+      "btn_contact": "联系商务合作",
+      "disclaimer": "* LIFE 严格遵守当地法律法规，仅提供技术服务，不涉及非法金融活动。"
+    }
+  },
+  "zh-TW": {
+    "hero": {
+      "subtitle": "Web3 Digital Economy",
+      "title_prefix": "守護",
+      "title_highlight": "數據價值",
+      "title_suffix": "重塑數字生命",
+      "description": "LIFE 致力於構建可信的數字未來。利用區塊鏈分佈式賬本技術，將個人數據轉化為可視化的數字資產，打造安全、合規的數字管理終端，提升個人數據的價值與意義。",
+      "btn_start": "開啟數字之旅",
+      "btn_whitepaper": "了解技術白皮書"
+    },
+    "stats": {
+      "users": "用户数",
+      "distributed_records": "分布式帳本記錄",
+      "autonomy": "數據自主權",
+      "accidents": "安全事故"
+    },
+    "trends": {
+      "subtitle": "Industry Trends",
+      "title": "賦予生命更深意義",
+      "read_more": "查看詳情",
+      "assets": {
+        "title": "數據要素資產化",
+        "desc": "打破「數據孤島」，通過確權與流通機制，將日常行為轉化為可量化的數字權益，賦予個體對自身數字生命的價值回收權。"
+      },
+      "quantified": {
+        "title": "量化自我",
+        "desc": "通過客觀數據反饋促進健康行為正循環，使「管理身體」成為可量化的終身事業，實現數字技術賦能。"
+      },
+      "credit": {
+        "title": "信用價值",
+        "desc": "突破物理限制，通過鏈上行為積累信用資本，在數字生態中獲得社會影響力與共創未來的參與感。"
+      },
+      "security": {
+        "title": "安全與合規",
+        "desc": "嚴格遵循《區塊鏈信息服務管理規定》備案，採用 AES-256 加密與分佈式存儲，確保技術合規性與生態穩健性，讓數據回歸用戶。"
+      }
+    },
+    "features": {
+      "title": "核心功能",
+      "subtitle": "LIFE 為用戶提供安全、可信的數字管家服務，構建您的 Web3 數字化身。",
+      "list": {
+        "brain": {
+          "title": "數字大腦",
+          "desc": "AI 驅動的數據分析引擎，將您的生活足跡轉化為可視化數據報告與建議。"
+        },
+        "did": {
+          "title": "數字身份 (DID)",
+          "desc": "基於區塊鏈的去中心化數字身份，一次認證，全生態通用，告別繁瑣帳號。"
+        },
+        "body": {
+          "title": "數字身體",
+          "desc": "連接智能穿戴設備，讓健康數據上鏈，將良好的生活習慣轉化為可視化的數字權益。"
+        },
+        "key": {
+          "title": "私鑰自持",
+          "desc": "私鑰離線生成並存儲於用戶本地設備，平台無法觸碰，確保資產安全與隱私。"
+        },
+        "cross": {
+          "title": "跨鏈兼容",
+          "desc": "支持主流聯盟鏈及公鏈技術標準，實現不同生態間的數據互通與價值流轉。"
+        },
+        "privacy": {
+          "title": "隱私計算",
+          "desc": "採用零知識證明與可信執行環境技術，確保數據在「可用不可見」的前提下創造價值。"
+        }
+      }
+    },
+    "app": {
+      "secure_status": "Secure",
+      "points_label_en": "Digital Points",
+      "points_label": "生態權益積分",
+      "card_id": "數字身份認證",
+      "card_id_status": "已上鏈存證",
+      "card_health": "健康數據報告",
+      "card_health_status": "加密存儲中",
+      "title_prefix": "打造全球更安全的",
+      "title_highlight": "數字資產管家",
+      "description": "全球化數字經濟體系下，安全是技術挑戰與信任承諾。LIFE 客戶端集成 AES-256 加密與 ECDSA 簽名算法，通過離線私鑰存儲，保障您的數字權益萬無一失。",
+      "feature_control_title": "自主掌控",
+      "feature_control_desc": "用戶數據實施端到端加密並分佈式存儲，結合用戶自主授權機制，真正實現數據主權。",
+      "feature_compliance_title": "技術合規",
+      "feature_compliance_desc": "嚴格遵循國內區塊鏈信息服務管理規定，確保技術應用合法合規，穩健運行。"
+    },
+    "faq": {
+      "title": "了解 LIFE",
+      "subtitle": "專業的區塊鏈技術服務，值得信賴的選擇",
+      "list": {
+        "q1": "什麼是 LIFE 平台？",
+        "a1": "LIFE 是一個基於區塊鏈技術的去中心化數字生態系統，旨在為用戶提供安全、隱私、自主的數據管理體驗。它不是傳統意義上的金融工具，而是您的個人數據資產管家。",
+        "q2": "LIFE 積分有什麼用？",
+        "a2": "LIFE 積分是生態內的權益憑證，用於獎勵用戶對生態的數據貢獻（如健康數據上傳）。積分可用於兌換生態內的服務、參與社區治理投票，不可用於非法買賣。",
+        "q3": "如何保障我的數據安全？",
+        "a3": "我們採用軍工級 AES-256 加密技術，您的核心數據和私鑰僅存儲在您的本地設備上。未經您授權，任何人（包括平台方）都無法查看或調用您的數據。"
+      }
+    },
+    "cta": {
+      "title": "準備好進入數字經濟時代了嗎？",
+      "btn_download": "下載客戶端",
+      "btn_contact": "聯繫商務合作",
+      "disclaimer": "* LIFE 嚴格遵守當地法律法規，僅提供技術服務，不涉及非法金融活動。"
+    }
+  },
+  "en": {
+    "hero": {
+      "subtitle": "Web3 Digital Economy",
+      "title_prefix": "Guard ",
+      "title_highlight": "Data Value",
+      "title_suffix": "Reshape Digital Life",
+      "description": "LIFE is committed to building a trusted digital future. Utilizing blockchain distributed ledger technology, we transform personal data into visual digital assets, creating a secure and compliant digital management terminal to enhance the value and significance of personal data.",
+      "btn_start": "Start Digital Journey",
+      "btn_whitepaper": "Read Whitepaper"
+    },
+    "stats": {
+      "users": "User Count",
+      "distributed_records": "Distributed Ledger Records",
+      "autonomy": "Data Autonomy",
+      "accidents": "Security Accidents"
+    },
+    "trends": {
+      "subtitle": "Industry Trends",
+      "title": "Giving Life Deeper Meaning",
+      "read_more": "Read More",
+      "assets": {
+        "title": "Data Capitalization",
+        "desc": "Breaking 'data silos' through ownership confirmation and circulation mechanisms, transforming daily behaviors into quantifiable digital rights, and empowering individuals to reclaim the value of their digital lives."
+      },
+      "quantified": {
+        "title": "Quantified Self",
+        "desc": "Promoting a positive cycle of healthy behaviors through objective data feedback, making 'body management' a quantifiable lifelong career empowered by digital technology."
+      },
+      "credit": {
+        "title": "Credit Value",
+        "desc": "Breaking physical limits, accumulating credit capital through on-chain behaviors, and gaining social influence and participation in co-creating the future within the digital ecosystem."
+      },
+      "security": {
+        "title": "Security & Compliance",
+        "desc": "Strictly adhering to Blockchain Information Service regulations, employing AES-256 encryption and distributed storage to ensure technical compliance and ecosystem stability, returning data ownership to users."
+      }
+    },
+    "features": {
+      "title": "Core Features",
+      "subtitle": "LIFE provides secure and trusted digital stewardship services, building your Web3 digital avatar.",
+      "list": {
+        "brain": {
+          "title": "Digital Brain",
+          "desc": "AI-driven data analysis engine transforming your life footprints into visual data reports and suggestions."
+        },
+        "did": {
+          "title": "Digital Identity (DID)",
+          "desc": "Blockchain-based decentralized digital identity. One-time authentication for universal ecosystem access, saying goodbye to cumbersome accounts."
+        },
+        "body": {
+          "title": "Digital Body",
+          "desc": "Connect smart wearable devices to upload health data on-chain, transforming good life habits into visual digital rights."
+        },
+        "key": {
+          "title": "Self-Held Private Key",
+          "desc": "Private keys are generated offline and stored on your local device. The platform cannot touch them, ensuring asset security and privacy."
+        },
+        "cross": {
+          "title": "Cross-Chain Compatibility",
+          "desc": "Supports mainstream consortium and public chain technical standards, realizing data interoperability and value transfer between different ecosystems."
+        },
+        "privacy": {
+          "title": "Privacy Computing",
+          "desc": "Adopting Zero-Knowledge Proofs and Trusted Execution Environment technology to create value while ensuring data remains 'usable but invisible'."
+        }
+      }
+    },
+    "app": {
+      "secure_status": "Secure",
+      "points_label_en": "Digital Points",
+      "points_label": "Eco Rights Points",
+      "card_id": "Digital ID",
+      "card_id_status": "On-chain Verified",
+      "card_health": "Health Report",
+      "card_health_status": "Encrypted Storage",
+      "title_prefix": "Building a Safer Global",
+      "title_highlight": "Digital Asset Steward",
+      "description": "In the global digital economy, security is both a technical challenge and a trust commitment. The LIFE client integrates AES-256 encryption and ECDSA signature algorithms, safeguarding your digital rights through offline private key storage.",
+      "feature_control_title": "Autonomous Control",
+      "feature_control_desc": "User data is end-to-end encrypted and distributedly stored. Combined with user autonomous authorization mechanisms, true data sovereignty is achieved.",
+      "feature_compliance_title": "Technical Compliance",
+      "feature_compliance_desc": "Strictly following domestic blockchain information service management regulations to ensure legal, compliant, and stable technical operations."
+    },
+    "faq": {
+      "title": "Learn About LIFE",
+      "subtitle": "Professional blockchain technology services, a trustworthy choice",
+      "list": {
+        "q1": "What is the LIFE platform?",
+        "a1": "LIFE is a decentralized digital ecosystem based on blockchain technology, designed to provide users with a secure, private, and autonomous data management experience. It is not a financial tool in the traditional sense, but your personal data asset steward.",
+        "q2": "What are LIFE points used for?",
+        "a2": "LIFE points are proofs of rights within the ecosystem, used to reward users for data contributions (such as health data uploads). Points can be used to redeem ecosystem services and participate in community governance voting, but cannot be used for illegal trading.",
+        "q3": "How is my data security guaranteed?",
+        "a3": "We use military-grade AES-256 encryption technology. Your core data and private keys are stored only on your local device. Without your authorization, no one (including the platform) can view or access your data."
+      }
+    },
+    "cta": {
+      "title": "Ready to enter the digital economy era?",
+      "btn_download": "Download Client",
+      "btn_contact": "Contact Business",
+      "disclaimer": "* LIFE strictly complies with local laws and regulations, providing only technical services and not involving illegal financial activities."
+    }
+  }
+}</i18n>

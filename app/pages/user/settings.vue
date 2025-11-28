@@ -236,3 +236,57 @@ const saveProfile = async () => {
   opacity: 0;
 }
 </style>
+
+<i18n lang="json">{
+  "en": {
+    "settings": {
+      "title": "Edit Profile",
+      "subtitle": "Update your personal information",
+      "btn_save": "Save Changes",
+      "username": "Display Name",
+      "username_placeholder": "Enter your username",
+      "bio": "Bio",
+      "bio_placeholder": "Brief description for your profile...",
+      "change_avatar": "Change",
+      "upload_hint": "Click or drag image to upload",
+      "upload_success": "Avatar uploaded",
+      "save_success": "Saved successfully",
+      "error_image_type": "Invalid image format",
+      "error_image_size": "Image too large (Max 5MB)"
+    }
+  },
+  "zh-CN": {
+    "settings": {
+      "title": "编辑资料",
+      "subtitle": "更新您的个人信息",
+      "btn_save": "保存修改",
+      "username": "显示昵称",
+      "username_placeholder": "请输入昵称",
+      "bio": "个人简介",
+      "bio_placeholder": "一句话介绍你自己...",
+      "change_avatar": "更换头像",
+      "upload_hint": "点击或拖拽图片以上传",
+      "upload_success": "头像上传成功",
+      "save_success": "保存成功",
+      "error_image_type": "图片格式无效",
+      "error_image_size": "图片过大 (最大 5MB)"
+    }
+  },
+  "zh-TW": {
+    "settings": {
+      "title": "編輯資料",
+      "subtitle": "更新您的個人資訊",
+      "btn_save": "儲存變更",
+      "username": "顯示暱稱",
+      "username_placeholder": "請輸入暱稱",
+      "bio": "個人簡介",
+      "bio_placeholder": "一句話介紹你自己...",
+      "change_avatar": "更換頭像",
+      "upload_hint": "點擊或拖曳圖片以上傳",
+      "upload_success": "頭像上傳成功",
+      "save_success": "儲存成功",
+      "error_image_type": "圖片格式無效",
+      "error_image_size": "圖片過大 (最大 5MB)"
+    }
+  }
+}</i18n>

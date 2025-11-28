@@ -141,7 +141,7 @@ const highlights = computed(() => [
     <section class="py-24 px-4 md:px-8 bg-base-content text-base-100 relative overflow-hidden">
       <div class="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
         <div
-          class="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_50%,transparent_75%,transparent_100%)] bg-size-[250%_250%] animate-shine">
+          class="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%] animate-shine">
         </div>
       </div>
 

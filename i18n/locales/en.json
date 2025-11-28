@@ -1,28 +1,4 @@
 {
-    "nav": {
-        "home": "Home",
-        "intro": "About",
-        "apps": "Apps",
-        "blog": "Blog",
-        "login": "Login",
-        "connect_wallet": "Connect Assets",
-        "connect": "Connect",
-        "brand": "LIFE TECHNOLOGY",
-        "new_blog": "New Blog",
-        "admin_panel": "Admin Panel",
-        "profile": "My Profile",
-        "settings": "Settings",
-        "logout": "Log Out",
-        "whatIsLife": "What is LIFE",
-        "whatLifeCanDo": "What LIFE Can Do for You",
-        "howToUseLife": "How to Use LIFE",
-        "thingsYouNeedToKnow": "Things You Need to Know",
-        "whitepaper": "LIFE Token White Paper"
-    },
-    "footer": {
-        "copyright": "LIFE Blockchain Technology Co., Ltd. All Rights Reserved.",
-        "compliance": "ICP Filing: Beijing ICP No. XXXXXXXX-1 | Blockchain Service Filing: Beijing Cyberspace No. XXXXXXXX"
-    },
     "hero": {
         "subtitle": "Web3 Digital Economy",
         "title_prefix": "Guard ",
@@ -122,36 +98,5 @@
         "btn_download": "Download Client",
         "btn_contact": "Contact Business",
         "disclaimer": "* LIFE strictly complies with local laws and regulations, providing only technical services and not involving illegal financial activities."
-    },
-    "download_page": {
-        "title_line1": "Explore Web3",
-        "title_line2": "Within Reach",
-        "description": "LIFE Wallet provides professional-grade data sovereignty protection and multi-chain asset management. Secure, private, and all-in-one. Start your digital journey now.",
-        "android_sub": "Download APK",
-        "android_label": "Download for Android",
-        "ios_sub": "Installer",
-        "ios_label": "Download for iOS",
-        "qr_title": "Scan to Install",
-        "qr_desc": "Use camera or browser to scan",
-        "features": {
-            "aes": "AES-256",
-            "multichain": "Multi-Chain",
-            "custodial": "Non-Custodial"
-        }
-    },
-    "settings": {
-        "title": "Edit Profile",
-        "subtitle": "Update your personal information",
-        "btn_save": "Save Changes",
-        "username": "Display Name",
-        "username_placeholder": "Enter your username",
-        "bio": "Bio",
-        "bio_placeholder": "Brief description for your profile...",
-        "change_avatar": "Change",
-        "upload_hint": "Click or drag image to upload",
-        "upload_success": "Avatar uploaded",
-        "save_success": "Saved successfully",
-        "error_image_type": "Invalid image format",
-        "error_image_size": "Image too large (Max 5MB)"
     }
 }

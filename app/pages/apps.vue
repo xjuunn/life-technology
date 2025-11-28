@@ -1,23 +1,20 @@
 <template>
   <div
     class="min-h-full h-[calc(100vh-90px)] bg-base-100 text-base-content font-sans relative overflow-hidden selection:bg-primary selection:text-primary-content flex flex-col">
-     <div class="absolute inset-0 bg-base-100 z-0"></div>
-    <!--背景图片--> 
-    <div 
-      class="absolute inset-y-0 right-0 w-2/3 z-0 "
-      :style="{
-        backgroundImage: 'url(/imgs/background.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'left center',
-        backgroundRepeat: 'no-repeat'
-      }"
-    > 
+    <div class="absolute inset-0 bg-base-100 z-0"></div>
+    <!--背景图片-->
+    <div class="absolute inset-y-0 right-0 w-2/3 z-0 " :style="{
+      backgroundImage: 'url(/imgs/background.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'left center',
+      backgroundRepeat: 'no-repeat'
+    }">
     </div>
-     <div class="absolute inset-0 z-0">     
+    <div class="absolute inset-0 z-0">
       <!-- 中心高亮点 -->
       <div class="absolute right-1/4 top-1/3 w-32 h-32 bg-primary/20 rounded-full blur-2xl"></div>
     </div>
-    
+
     <main class="flex-1 w-full flex items-center py-8 sm:py-12 lg:py-0 overflow-y-auto overflow-x-hidden">
       <div class="container mx-auto sm:px-6">
         <div class="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12 xl:gap-16">
@@ -81,14 +78,11 @@
               </span>
             </div>
           </div>
-        <div class="w-full lg:w-2/5 flex justify-center relative order-1 lg:order-2">
-          <div
-             class="relative w-full max-w-[390px] lg:max-w-[400px] xl:max-w-[450px] flex items-center justify-center">
-             <img 
-                src="/imgs/phonea.png" 
-                alt="LifeChain App Preview" 
-                class="w-full h-auto object-contain transform transition-transform duration-700 hover:scale-105 z-20 relative"
-              >
+          <div class="w-full lg:w-2/5 flex justify-center relative order-1 lg:order-2">
+            <div
+              class="relative w-full max-w-[390px] lg:max-w-[400px] xl:max-w-[450px] flex items-center justify-center">
+              <img src="/imgs/phonea.png" alt="LifeChain App Preview"
+                class="w-full h-auto object-contain transform transition-transform duration-700 hover:scale-105 z-20 relative">
               <!-- 手机图片中心高亮 -->
               <div class="absolute inset-0 flex items-center justify-center z-10">
                 <div class="w-64 h-64 bg-primary/40 rounded-full blur-2xl animate-pulse"></div>
@@ -105,3 +99,60 @@
 <script setup>
 const { t } = useAppI18n();
 </script>
+
+<i18n lang="json">{
+  "en": {
+    "download_page": {
+      "title_line1": "Explore Web3",
+      "title_line2": "Within Reach",
+      "description": "LIFE Wallet provides professional-grade data sovereignty protection and multi-chain asset management. Secure, private, and all-in-one. Start your digital journey now.",
+      "android_sub": "Download APK",
+      "android_label": "Download for Android",
+      "ios_sub": "Installer",
+      "ios_label": "Download for iOS",
+      "qr_title": "Scan to Install",
+      "qr_desc": "Use camera or browser to scan",
+      "features": {
+        "aes": "AES-256",
+        "multichain": "Multi-Chain",
+        "custodial": "Non-Custodial"
+      }
+    }
+  },
+  "zh-CN": {
+    "download_page": {
+      "title_line1": "畅游 Web3",
+      "title_line2": "触手可及",
+      "description": "LIFE 钱包为您提供专业级的数据主权保护与多链资产管理。安全、隐私、一站式，即刻开启您的数字之旅。",
+      "android_sub": "Download APK",
+      "android_label": "Android 下载",
+      "ios_sub": "Installer",
+      "ios_label": "iOS 下载",
+      "qr_title": "手机扫码安装",
+      "qr_desc": "推荐使用系统相机或浏览器扫码",
+      "features": {
+        "aes": "AES-256 加密",
+        "multichain": "多链支持",
+        "custodial": "非托管"
+      }
+    }
+  },
+  "zh-TW": {
+    "download_page": {
+      "title_line1": "暢遊 Web3",
+      "title_line2": "觸手可及",
+      "description": "LIFE 錢包為您提供專業級的數據主權保護與多鏈資產管理。安全、隱私、一站式，即刻開啟您的數字之旅。",
+      "android_sub": "Download APK",
+      "android_label": "Android 下載",
+      "ios_sub": "Installer",
+      "ios_label": "iOS 下載",
+      "qr_title": "手機掃碼安裝",
+      "qr_desc": "推薦使用系統相機或瀏覽器掃碼",
+      "features": {
+        "aes": "AES-256 加密",
+        "multichain": "多鏈支持",
+        "custodial": "非託管"
+      }
+    }
+  }
+}</i18n>
