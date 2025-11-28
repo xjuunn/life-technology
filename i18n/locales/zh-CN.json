@@ -278,44 +278,6 @@
             "custodial": "非托管"
         }
     },
-    "blog_page": {
-        "hero": {
-            "title_prefix": "探索",
-            "title_highlight": "Web3 视界",
-            "subtitle": "洞察行业趋势，掌握技术前沿，与 LIFE 一起定义数字未来"
-        },
-        "search_placeholder": "搜索文章、教程或观点...",
-        "filter": {
-            "category_label": "分类",
-            "options": {
-                "all": "全部文章",
-                "tech": "技术科普",
-                "industry": "行业动态",
-                "security": "安全指南"
-            }
-        },
-        "sort": {
-            "label": "排序",
-            "options": {
-                "newest": "最新发布",
-                "popular": "最多阅读",
-                "oldest": "最早发布",
-                "most_liked": "最多点赞",
-                "most_commented": "最多评论"
-            },
-            "order": {
-                "asc": "升序",
-                "desc": "降序"
-            }
-        },
-        "tags": {
-            "blockchain": "#区块链",
-            "sovereignty": "#数据主权",
-            "dao": "#DAO",
-            "nft": "#NFT",
-            "defi": "#DeFi"
-        }
-    },
     "auth": {
         "welcome_back": "欢迎回来",
         "login_subtitle": "请输入您的账户信息以登录",

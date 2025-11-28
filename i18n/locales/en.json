@@ -278,44 +278,6 @@
             "custodial": "Non-Custodial"
         }
     },
-    "blog_page": {
-        "hero": {
-            "title_prefix": "Explore",
-            "title_highlight": "Web3 Horizon",
-            "subtitle": "Gain insights into industry trends, master frontier technologies, and define the digital future with LIFE."
-        },
-        "search_placeholder": "Search articles, tutorials, or views...",
-        "filter": {
-            "category_label": "Category",
-            "options": {
-                "all": "All Articles",
-                "tech": "Tech Education",
-                "industry": "Industry News",
-                "security": "Security Guide"
-            }
-        },
-        "sort": {
-            "label": "Sort",
-            "options": {
-                "newest": "Newest",
-                "popular": "Most Read",
-                "oldest": "Oldest",
-                "most_liked": "Most Liked",
-                "most_commented": "Most Commented"
-            },
-            "order": {
-                "asc": "Ascending",
-                "desc": "Descending"
-            }
-        },
-        "tags": {
-            "blockchain": "#Blockchain",
-            "sovereignty": "#Data Sovereignty",
-            "dao": "#DAO",
-            "nft": "#NFT",
-            "defi": "#DeFi"
-        }
-    },
     "auth": {
         "welcome_back": "Welcome Back",
         "login_subtitle": "Enter your credentials to access your account",
