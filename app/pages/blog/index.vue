@@ -191,6 +191,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  
   <div
     class="min-h-screen text-base-content font-sans relative overflow-x-hidden selection:bg-primary selection:text-primary-content">
     <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
@@ -334,7 +335,8 @@ onMounted(async () => {
         <!-- 博客列表 -->
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
           <div v-for="blog in blogs" :key="blog.id"
-            class="card bg-base-300 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer">
+            class="card bg-base-300 border border-base-content/5 rounded-2xl lg:rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+            @click="$router.push(`/blog/${blog.id}`)" >
             <div class="p-3  bg-base-300 sm:p-4">
               <div class="relative w-full rounded-xl lg:rounded-2xl overflow-hidden" style="aspect-ratio: 16/10;">
     <img :src="blog.coverImage" :alt="blog.title" class="absolute inset-0 w-full h-full object-cover"></img>
