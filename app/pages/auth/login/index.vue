@@ -126,3 +126,75 @@ const navigateToForgot = () => {
   navigateTo('/auth/forgot-password', { replace: false })
 };
 </script>
+
+<i18n lang="json">{
+  "en": {
+    "auth": {
+      "welcome_back": "Welcome Back",
+      "login_subtitle": "Enter your credentials to access your account",
+      "email_label": "Email Address",
+      "password_label": "Password",
+      "forgot_password": "Forgot password?",
+      "btn_login": "Sign In",
+      "or": "OR",
+      "no_account": "Don't have an account?",
+      "create_account": "Create Account",
+      "register_subtitle": "Start your journey with us today",
+      "username_label": "Username",
+      "username_placeholder": "johndoe",
+      "btn_register": "Sign Up",
+      "has_account": "Already have an account?",
+      "login_link": "Sign In",
+      "code_label": "Verification Code",
+      "code_placeholder": "Enter verification code",
+      "send_code": "Send Code",
+      "email_required": "Please enter your email address first"
+    }
+  },
+  "zh-TW": {
+    "auth": {
+      "welcome_back": "歡迎回來",
+      "login_subtitle": "請輸入您的帳戶資訊以登入",
+      "email_label": "電子郵件",
+      "password_label": "登入密碼",
+      "forgot_password": "忘記密碼？",
+      "btn_login": "立即登入",
+      "or": "或",
+      "no_account": "還沒有帳戶？",
+      "create_account": "註冊新帳戶",
+      "register_subtitle": "立即開啟您的數位旅程",
+      "username_label": "使用者名稱",
+      "username_placeholder": "您的暱稱",
+      "btn_register": "立即註冊",
+      "has_account": "已有帳戶？",
+      "login_link": "前往登入",
+      "code_label": "驗證碼",
+      "code_placeholder": "請輸入驗證碼",
+      "send_code": "發送驗證碼",
+      "email_required": "請先輸入電子郵件地址"
+    }
+  },
+  "zh-CN": {
+    "auth": {
+      "welcome_back": "欢迎回来",
+      "login_subtitle": "请输入您的账户信息以登录",
+      "email_label": "电子邮箱",
+      "password_label": "登录密码",
+      "forgot_password": "忘记密码？",
+      "btn_login": "立即登录",
+      "or": "或",
+      "no_account": "还没有账户？",
+      "create_account": "注册新账户",
+      "register_subtitle": "立即开启您的数字之旅",
+      "username_label": "用户名",
+      "username_placeholder": "您的昵称",
+      "btn_register": "立即注册",
+      "has_account": "已有账户？",
+      "login_link": "去登录",
+      "code_label": "验证码",
+      "code_placeholder": "请输入验证码",
+      "send_code": "发送验证码",
+      "email_required": "请先输入电子邮箱地址"
+    }
+  }
+}</i18n>

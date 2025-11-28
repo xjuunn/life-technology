@@ -1,192 +1,136 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+const { t } = useAppI18n();
+
+const features = computed(() => [
+  {
+    title: t('what_is_life.app.features.multichain.title'),
+    desc: t('what_is_life.app.features.multichain.desc'),
+    icon: 'mingcute:currency-bitcoin-fill'
+  },
+  {
+    title: t('what_is_life.app.features.storage.title'),
+    desc: t('what_is_life.app.features.storage.desc'),
+    icon: 'mingcute:key-2-fill'
+  },
+  {
+    title: t('what_is_life.app.features.control.title'),
+    desc: t('what_is_life.app.features.control.desc'),
+    icon: 'mingcute:user-auth-fill'
+  },
+  {
+    title: t('what_is_life.app.features.privacy.title'),
+    desc: t('what_is_life.app.features.privacy.desc'),
+    icon: 'mingcute:incognito-mode-fill'
+  },
+  {
+    title: t('what_is_life.app.features.dapp.title'),
+    desc: t('what_is_life.app.features.dapp.desc'),
+    icon: 'mingcute:compass-fill'
+  },
+  {
+    title: t('what_is_life.app.features.audit.title'),
+    desc: t('what_is_life.app.features.audit.desc'),
+    icon: 'mingcute:safe-shield-fill'
+  },
+  {
+    title: t('what_is_life.app.features.opensource.title'),
+    desc: t('what_is_life.app.features.opensource.desc'),
+    icon: 'mingcute:github-fill'
+  }
+]);
+
+const highlights = computed(() => [
+  { text: t('what_is_life.intro.highlight1'), icon: 'mingcute:shield-shape-fill' },
+  { text: t('what_is_life.intro.highlight2'), icon: 'mingcute:eye-close-fill' },
+  { text: t('what_is_life.intro.highlight3'), icon: 'mingcute:plugin-2-fill' }
+]);
+</script>
+
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans selection:bg-primary selection:text-primary-content">
-    <!-- 背景装饰 -->
     <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
-      <div class="absolute top-0 right-0 w-[50vw] h-[50vw] bg-primary/5 rounded-full blur-[100px] opacity-50"></div>
-      <div class="absolute bottom-0 left-0 w-[50vw] h-[50vw] bg-secondary/5 rounded-full blur-[100px] opacity-50"></div>
-      <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
+      <div class="absolute -top-[20%] -right-[10%] w-[70vw] h-[70vw] bg-primary/5 rounded-full blur-[120px] opacity-40">
+      </div>
+      <div
+        class="absolute -bottom-[20%] -left-[10%] w-[70vw] h-[70vw] bg-secondary/5 rounded-full blur-[120px] opacity-40">
+      </div>
+      <div
+        class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay">
+      </div>
     </div>
 
-    <!-- Hero 区域 -->
     <section class="relative pt-32 pb-20 px-4 md:px-8">
       <div class="container mx-auto max-w-6xl">
-        <div class="max-w-3xl">
-          <div class="badge badge-primary badge-outline mb-6 font-bold tracking-wider py-4 px-4">
-            探索数字未来
+        <div class="max-w-4xl">
+          <div class="badge badge-primary badge-outline mb-6 font-bold tracking-wider py-4 px-4 uppercase">
+            {{ t('what_is_life.hero.badge') }}
           </div>
           <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] mb-8">
-            什么是
-            <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">LIFE</span>
+            {{ t('what_is_life.hero.title') }}
+            <br />
+            <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">
+              {{ t('what_is_life.hero.subtitle') }}
+            </span>
           </h1>
-          <p class="text-xl text-base-content/70 leading-relaxed max-w-2xl">
-            LIFE是一个革命性的区块链生态系统,旨在通过去中心化技术重新定义数字生活体验,让每个人都能掌控自己的数字资产和身份。
-          </p>
         </div>
       </div>
     </section>
 
-    <!-- 核心概念区域 -->
-    <section class="py-16 px-4 md:px-8">
+    <section class="py-16 px-4 md:px-8 bg-base-200/30">
       <div class="container mx-auto max-w-6xl">
-        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          <div 
-            v-for="concept in coreConcepts" 
-            :key="concept.id"
-            class="card bg-base-100 border border-base-content/5 shadow-lg hover:shadow-2xl transition-all duration-300 group"
-            :class="{
-              'hover:border-primary/20': concept.color === 'primary',
-              'hover:border-secondary/20': concept.color === 'secondary',
-              'hover:border-accent/20': concept.color === 'accent'
-            }"
-          >
-            <div class="card-body p-8">
-              <!-- 图标区域 -->
-              <div 
-                class="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300"
-                :class="{
-                  'bg-primary/10 text-primary': concept.color === 'primary',
-                  'bg-secondary/10 text-secondary': concept.color === 'secondary',
-                  'bg-accent/10 text-accent': concept.color === 'accent'
-                }"
-              >
-                <Icon :name="concept.icon" size="32" />
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="prose prose-lg dark:prose-invert">
+            <h2 class="text-3xl font-bold mb-6">{{ t('what_is_life.intro.title') }}</h2>
+            <p class="text-base-content/80 leading-relaxed text-lg">
+              {{ t('what_is_life.intro.desc') }}
+            </p>
+          </div>
+          <div class="grid gap-4">
+            <div v-for="(item, index) in highlights" :key="index"
+              class="flex items-center gap-4 p-4 rounded-xl bg-base-100 border border-base-content/5 shadow-sm hover:border-primary/20 transition-colors">
+              <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                <Icon :name="item.icon" size="20" />
               </div>
-
-              <!-- 标题和描述 -->
-              <h3 class="card-title text-xl font-bold mb-3">{{ concept.title }}</h3>
-              <p class="text-base-content/60 mb-6 leading-relaxed">{{ concept.description }}</p>
-
-              <!-- 特性列表 -->
-              <div class="space-y-3">
-                <div 
-                  v-for="(feature, index) in concept.features" 
-                  :key="index"
-                  class="flex items-center gap-3 text-sm"
-                >
-                  <div 
-                    class="w-2 h-2 rounded-full shrink-0"
-                    :class="{
-                      'bg-primary': concept.color === 'primary',
-                      'bg-secondary': concept.color === 'secondary',
-                      'bg-accent': concept.color === 'accent'
-                    }"
-                  ></div>
-                  <span class="text-base-content/80">{{ feature }}</span>
-                </div>
-              </div>
-
-              <!-- 悬浮效果指示器 -->
-              <div class="absolute bottom-0 left-0 w-full h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div 
-                  class="w-full h-full"
-                  :class="{
-                    'bg-linear-to-r from-primary to-primary/50': concept.color === 'primary',
-                    'bg-linear-to-r from-secondary to-secondary/50': concept.color === 'secondary',
-                    'bg-linear-to-r from-accent to-accent/50': concept.color === 'accent'
-                  }"
-                ></div>
-              </div>
+              <span class="font-medium">{{ item.text }}</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 技术架构区域 -->
-    <section class="py-24 px-4 md:px-8 bg-base-200/30">
-      <div class="container mx-auto max-w-6xl">
-        <div class="text-center mb-16 max-w-2xl mx-auto">
-          <h2 class="text-3xl md:text-5xl font-bold mb-6">技术架构</h2>
-          <p class="text-base-content/60 text-lg">
-            基于先进的多层区块链架构，确保系统的高性能、安全性和可扩展性
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div 
-            v-for="(layer, index) in techArchitecture" 
-            :key="index"
-            class="card bg-base-100 border border-base-content/5 shadow-lg hover:shadow-xl transition-all duration-300 group hover:-translate-y-2"
-          >
-            <div class="card-body p-8">
-              <div class="text-center mb-6">
-                <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
-                  <Icon 
-                    :name="layer.icon" 
-                    size="24" 
-                  />
-                </div>
-                <h3 class="text-xl font-bold text-primary">{{ layer.name }}</h3>
-              </div>
-
-              <div class="space-y-4">
-                <div 
-                  v-for="(component, cIndex) in layer.components" 
-                  :key="cIndex"
-                  class="flex items-start gap-3 p-3 rounded-lg bg-base-200/50 group-hover:bg-base-200 transition-colors duration-300"
-                >
-                  <Icon name="mingcute:check-2-fill" class="text-primary shrink-0 mt-0.5" size="16" />
-                  <span class="text-base-content/80 text-sm leading-relaxed">{{ component }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 生态系统区域 -->
     <section class="py-24 px-4 md:px-8">
       <div class="container mx-auto max-w-6xl">
-        <div class="flex flex-col lg:flex-row items-center gap-16">
-          <div class="w-full lg:w-1/2">
-            <div class="badge badge-primary mb-4">生态系统</div>
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">构建完整的Web3生态系统</h2>
-            
-            <div class="space-y-6">
-              <div class="flex items-start gap-4 p-6 rounded-2xl bg-base-200/50 hover:bg-base-200 transition-colors duration-300">
-                <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                  <Icon name="mingcute:wallet-3-fill" size="24" />
-                </div>
-                <div>
-                  <h4 class="font-bold text-lg mb-2">多链钱包</h4>
-                  <p class="text-base-content/60">支持主流区块链网络，统一管理您的数字资产。</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start gap-4 p-6 rounded-2xl bg-base-200/50 hover:bg-base-200 transition-colors duration-300">
-                <div class="w-12 h-12 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
-                  <Icon name="mingcute:user-safe-fill" size="24" />
-                </div>
-                <div>
-                  <h4 class="font-bold text-lg mb-2">数字身份</h4>
-                  <p class="text-base-content/60">去中心化身份系统，让您完全掌控个人数据。</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start gap-4 p-6 rounded-2xl bg-base-200/50 hover:bg-base-200 transition-colors duration-300">
-                <div class="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
-                  <Icon name="mingcute:earth-fill" size="24" />
-                </div>
-                <div>
-                  <h4 class="font-bold text-lg mb-2">DApp生态</h4>
-                  <p class="text-base-content/60">丰富的去中心化应用，满足各种数字生活需求。</p>
-                </div>
-              </div>
-            </div>
+        <div
+          class="card bg-linear-to-br from-base-200/80 to-base-100 border border-base-content/5 shadow-xl overflow-hidden relative">
+          <div
+            class="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2">
           </div>
-          
-          <div class="w-full lg:w-1/2 relative">
-            <div class="absolute -inset-8 bg-linear-to-br from-primary/20 to-secondary/20 rounded-3xl blur-3xl opacity-30"></div>
-            <div class="relative bg-base-100 border border-base-content/10 rounded-3xl p-8 aspect-square flex items-center justify-center">
-              <div class="text-center">
-                <div class="w-32 h-32 bg-linear-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-8">
-                  <Icon name="mingcute:leaf-fill" class="text-white" size="48" />
-                </div>
-                <h3 class="text-2xl font-bold mb-4">LIFE代币</h3>
-                <p class="text-base-content/60">
-                  LIFE代币是整个生态系统的核心,用于治理、交易手续费、生态激励等多个场景。
+          <div class="card-body p-8 md:p-12 relative z-10">
+            <div class="flex flex-col md:flex-row gap-12 items-start">
+              <div
+                class="w-16 h-16 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
+                <Icon name="mingcute:coin-2-fill" size="36" />
+              </div>
+              <div>
+                <h2 class="text-3xl font-bold mb-6">{{ t('what_is_life.token.title') }}</h2>
+                <p class="text-base-content/70 leading-relaxed mb-6">
+                  {{ t('what_is_life.token.desc_p1') }}
                 </p>
+                <div class="grid sm:grid-cols-3 gap-6 pt-4">
+                  <div class="p-4 rounded-xl bg-base-100/50 border border-base-content/5">
+                    <h4 class="font-bold text-primary mb-1">{{ t('what_is_life.token.utility.payment') }}</h4>
+                    <span class="text-xs opacity-60">Global Circulation</span>
+                  </div>
+                  <div class="p-4 rounded-xl bg-base-100/50 border border-base-content/5">
+                    <h4 class="font-bold text-secondary mb-1">{{ t('what_is_life.token.utility.governance') }}</h4>
+                    <span class="text-xs opacity-60">Community Voting</span>
+                  </div>
+                  <div class="p-4 rounded-xl bg-base-100/50 border border-base-content/5">
+                    <h4 class="font-bold text-accent mb-1">{{ t('what_is_life.token.utility.incentive') }}</h4>
+                    <span class="text-xs opacity-60">Ecosystem Rewards</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -194,21 +138,58 @@
       </div>
     </section>
 
-    <!-- 白皮书区域 -->
-    <section class="py-20 px-4 md:px-8 bg-base-content text-base-100">
+    <section class="py-24 px-4 md:px-8 bg-base-content text-base-100 relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+        <div
+          class="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_50%,transparent_75%,transparent_100%)] bg-size-[250%_250%] animate-shine">
+        </div>
+      </div>
+
+      <div class="container mx-auto max-w-6xl relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-base-100/10 border border-base-100/20 text-xs font-bold uppercase tracking-widest mb-6">
+            <Icon name="mingcute:safe-flash-fill" />
+            {{ t('what_is_life.app.badge') }}
+          </div>
+          <h2 class="text-3xl md:text-5xl font-bold mb-6">{{ t('what_is_life.app.title') }}</h2>
+          <p class="text-base-100/70 text-lg">
+            {{ t('what_is_life.app.desc') }}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div v-for="(feature, index) in features" :key="index"
+            class="group p-6 rounded-2xl bg-base-100/5 border border-base-100/10 hover:bg-base-100/10 transition-colors">
+            <div
+              class="mb-4 w-12 h-12 rounded-lg bg-base-100/10 flex items-center justify-center text-base-100 group-hover:scale-110 transition-transform">
+              <Icon :name="feature.icon" size="24" />
+            </div>
+            <h4 class="text-xl font-bold mb-2">{{ feature.title }}</h4>
+            <p class="text-sm text-base-100/60 leading-relaxed">{{ feature.desc }}</p>
+          </div>
+        </div>
+
+        <div class="mt-16 text-center">
+          <p class="text-lg font-medium text-base-100/90 mb-8 max-w-2xl mx-auto">
+            {{ t('what_is_life.app.summary') }}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 px-4 md:px-8">
       <div class="container mx-auto max-w-4xl text-center">
-        <h2 class="text-3xl md:text-5xl font-bold mb-6">深入了解LIFE</h2>
-        <p class="text-base-100/60 text-lg mb-8 max-w-2xl mx-auto">
-          阅读我们的白皮书，详细了解LIFE的技术细节、经济模型和未来规划
+        <div class="mb-8">
+          <Icon name="mingcute:rocket-fill" size="48" class="text-primary animate-bounce" />
+        </div>
+        <h2 class="text-3xl md:text-5xl font-bold mb-6">{{ t('what_is_life.future.title') }}</h2>
+        <p class="text-lg text-base-content/70 mb-10 leading-relaxed">
+          {{ t('what_is_life.future.desc') }}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button class="btn btn-primary btn-lg rounded-full px-8 text-white">
-            下载白皮书
-            <Icon name="mingcute:arrow-down-circle-fill" size="20" />
-          </button>
-          <button class="btn btn-primary btn-lg rounded-full px-8 text-white hover:bg-blue-600">
-            技术文档
-            <Icon name="mingcute:book-open-fill" size="20" />
+          <button class="btn btn-primary btn-lg rounded-full px-8 shadow-lg shadow-primary/20">
+            {{ t('what_is_life.future.join_btn') }}
           </button>
         </div>
       </div>
@@ -216,154 +197,219 @@
   </div>
 </template>
 
-<script setup lang="ts">
-// 定义核心概念类型接口
-interface CoreConcept {
-  id: number;
-  icon: string;
-  title: string;
-  description: string;
-  features: string[];
-  color: 'primary' | 'secondary' | 'accent';
-}
-
-// 核心概念数据
-const coreConcepts: CoreConcept[] = [
-  {
-    id: 1,
-    icon: "mingcute:blockchain-fill",
-    title: "去中心化网络",
-    description: "基于区块链技术构建的完全去中心化网络",
-    features: [
-      "分布式账本技术",
-      "共识机制保障安全",
-      "节点去中心化运营",
-      "抗审查特性"
-    ],
-    color: "primary"
-  },
-  {
-    id: 2,
-    icon: "mingcute:token-fill",
-    title: "LIFE代币经济",
-    description: "创新的代币经济模型驱动生态发展",
-    features: [
-      "治理投票权",
-      "交易手续费",
-      "生态激励奖励",
-      "价值存储媒介"
-    ],
-    color: "secondary"
-  },
-  {
-    id: 3,
-    icon: "mingcute:safe-shield-fill",
-    title: "安全与隐私",
-    description: "企业级安全防护与隐私保护技术",
-    features: [
-      "零知识证明技术",
-      "多重签名机制",
-      "硬件级私钥保护",
-      "匿名交易功能"
-    ],
-    color: "accent"
-  },
-  {
-    id: 4,
-    icon: "mingcute:rocket-2-fill",
-    title: "高性能架构",
-    description: "高吞吐量低延迟的区块链基础设施",
-    features: [
-      "分片技术扩展",
-      "Layer2解决方案",
-      "跨链互操作性",
-      "即时交易确认"
-    ],
-    color: "primary"
-  },
-  {
-    id: 5,
-    icon: "mingcute:community-fill",
-    title: "社区治理",
-    description: "由社区共同治理的去中心化自治组织",
-    features: [
-      "提案与投票系统",
-      "国库资金管理",
-      "生态发展决策",
-      "社区激励计划"
-    ],
-    color: "secondary"
-  },
-  {
-    id: 6,
-    icon: "mingcute:ecology-fill",
-    title: "可持续发展",
-    description: "环保节能的区块链解决方案",
-    features: [
-      "权益证明机制",
-      "能源效率优化",
-      "碳足迹抵消",
-      "绿色技术采用"
-    ],
-    color: "accent"
-  }
-];
-
-// 技术架构数据
-const techArchitecture = [
-  {
-    name: "应用层",
-    icon: "mingcute:app-fill",
-    components: [
-      "DApp浏览器",
-      "钱包界面",
-      "治理面板",
-      "市场应用"
-    ]
-  },
-  {
-    name: "合约层",
-    icon: "mingcute:code-fill",
-    components: [
-      "智能合约引擎",
-      "虚拟机环境",
-      "合约模板库",
-      "安全审计"
-    ]
-  },
-  {
-    name: "共识层",
-    icon: "mingcute:network-fill",
-    components: [
-      "PoS共识机制",
-      "节点验证",
-      "区块生产",
-      "网络同步"
-    ]
-  }
-];
-
-// SEO配置
-useSeoMeta({
-  title: '什么是LIFE - LIFE代币介绍',
-  description: '了解LIFE代币的核心概念、技术架构和生态系统',
-  ogTitle: '什么是LIFE - LIFE代币介绍',
-  ogDescription: '了解LIFE代币的核心概念、技术架构和生态系统',
-});
-</script>
-
 <style scoped>
-/* 自定义动画效果 */
-.card {
-  transition: all 0.3s ease;
+@keyframes shine {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: 0 100%;
+  }
 }
 
-.card:hover {
-  transform: translateY(-4px);
-}
-
-/* 确保图标动画流畅 */
-.group:hover .group-hover\:scale-110 {
-  transform: scale(1.1);
+.animate-shine {
+  animation: shine 8s linear infinite;
 }
 </style>
+
+<i18n lang="json">{
+  "zh-CN": {
+    "what_is_life": {
+      "hero": {
+        "badge": "认识 LIFE",
+        "title": "专业的区块链服务",
+        "subtitle": "值得信赖的选择"
+      },
+      "intro": {
+        "title": "什么是 LIFE？",
+        "desc": "LIFE 是一个基于区块链技术的去中心化生态系统，旨在为全球用户提供安全、隐私、自主的数据与数字资产管理体验。LIFE 不仅是一个数字资产管家，更是一个开放的 Web3 平台，致力于推动个人数据主权、数字身份、资产自由流通和创新应用的普及。",
+        "highlight1": "100% 用户自主管理私钥和数据，平台无权访问。",
+        "highlight2": "强调隐私保护与合规，支持最小化授权。",
+        "highlight3": "支持多链资产管理、NFT、DAO、AI 等丰富生态。"
+      },
+      "token": {
+        "title": "什么是 LIFE 资产",
+        "desc_p1": "LIFE 是 LIFE 生态系统的原生加密资产，在生态内承担多重核心功能。作为基础流通媒介，它支持各类支付、转账和兑换场景；同时赋予持有者治理权，使其能通过提案和投票参与生态决策。LIF还构建了完整的激励体系，用于奖励开发者、内容创作者及节点维护者等。此外，该代币用于覆盖链上交易及智能合约交互产生的手续费，保障网络高效稳定运转。",
+        "utility": {
+          "payment": "支付流通",
+          "governance": "生态治理",
+          "incentive": "激励体系"
+        }
+      },
+      "app": {
+        "badge": "核心产品",
+        "title": "什么是 LIFE 数字资产管家？",
+        "desc": "LIFE 数字资产管家是 LIFE 生态的官方应用，专为数据主权和资产安全设计。",
+        "features": {
+          "multichain": {
+            "title": "多链支持",
+            "desc": "一站式管理以太坊、BSC、Polygon 等多链资产。"
+          },
+          "storage": {
+            "title": "私钥本地存储",
+            "desc": "私钥和助记词仅存于用户设备，杜绝云端风险。"
+          },
+          "control": {
+            "title": "数据自主管理",
+            "desc": "用户可自主授权、撤销第三方访问权限，真正掌控数据。"
+          },
+          "privacy": {
+            "title": "隐私保护",
+            "desc": "内置隐私交易、匿名转账、零知识证明等前沿技术。"
+          },
+          "dapp": {
+            "title": "DApp 浏览器",
+            "desc": "安全访问 NFT、DAO 等丰富的 Web3 创新应用。"
+          },
+          "audit": {
+            "title": "安全审计",
+            "desc": "核心代码和合约均通过权威第三方安全审计。"
+          },
+          "opensource": {
+            "title": "开源透明",
+            "desc": "核心代码完全开源，接受全球社区监督。"
+          }
+        },
+        "summary": "LIFE 数字资产管家不仅是资产的安全堡垒，更是你通往 Web3 世界的入口。无论是资产管理、身份认证、数据授权还是参与创新应用，都能为你提供一站式体验。"
+      },
+      "future": {
+        "title": "LIFE 生态的未来",
+        "desc": "LIFE 致力于打造一个开放、包容、创新的 Web3 生态系统。未来，LIFE 将持续拓展多链兼容性、隐私保护、合规治理、跨界合作等能力，推动个人数据主权和数字经济的普及。我们欢迎全球开发者、用户、机构共同参与 LIFE 生态建设。",
+        "join_btn": "加入我们"
+      }
+    }
+  },
+  "zh-TW": {
+    "what_is_life": {
+      "hero": {
+        "badge": "認識 LIFE",
+        "title": "專業的區塊鏈服務",
+        "subtitle": "值得信賴的選擇"
+      },
+      "intro": {
+        "title": "什麼是 LIFE？",
+        "desc": "LIFE 是一個基於區塊鏈技術的去中心化生態系統，旨在為全球用戶提供安全、隱私、自主的數據與數位資產管理體驗。LIFE 不僅是一個數位資產管家，更是一個開放的 Web3 平台，致力於推動個人數據主權、數位身份、資產自由流通和創新應用的普及。",
+        "highlight1": "100% 用戶自主管理私鑰和數據，平台無權訪問。",
+        "highlight2": "強調隱私保護與合規，支持最小化授權。",
+        "highlight3": "支持多鏈資產管理、NFT、DAO、AI 等豐富生態。"
+      },
+      "token": {
+        "title": "什麼是 LIFE 資產",
+        "desc_p1": "LIFE 是 LIFE 生態系統的原生加密資產，在生態內承擔多重核心功能。作為基礎流通媒介，它支持各類支付、轉賬和兌換場景；同時賦予持有者治理權，使其能通過提案和投票參與生態決策。LIF還構建了完整的激勵體系，用於獎勵開發者、內容創作者及節點維護者等。此外，該代幣用於覆蓋鏈上交易及智能合約交互產生的手續費，保障網絡高效穩定運轉。",
+        "utility": {
+          "payment": "支付流通",
+          "governance": "生態治理",
+          "incentive": "激勵體系"
+        }
+      },
+      "app": {
+        "badge": "核心產品",
+        "title": "什麼是 LIFE 數位資產管家？",
+        "desc": "LIFE 數位資產管家是 LIFE 生態的官方應用，專為數據主權和資產安全設計。",
+        "features": {
+          "multichain": {
+            "title": "多鏈支持",
+            "desc": "一站式管理以太坊、BSC、Polygon 等多鏈資產。"
+          },
+          "storage": {
+            "title": "私鑰本地存儲",
+            "desc": "私鑰和助記詞僅存於用戶設備，杜絕雲端風險。"
+          },
+          "control": {
+            "title": "數據自主管理",
+            "desc": "用戶可自主授權、撤銷第三方訪問權限，真正掌控數據。"
+          },
+          "privacy": {
+            "title": "隱私保護",
+            "desc": "內置隱私交易、匿名轉賬、零知識證明等前沿技術。"
+          },
+          "dapp": {
+            "title": "DApp 瀏覽器",
+            "desc": "安全訪問 NFT、DAO 等豐富的 Web3 創新應用。"
+          },
+          "audit": {
+            "title": "安全審計",
+            "desc": "核心代碼和合約均通過權威第三方安全審計。"
+          },
+          "opensource": {
+            "title": "開源透明",
+            "desc": "核心代碼完全開源，接受全球社區監督。"
+          }
+        },
+        "summary": "LIFE 數位資產管家不僅是資產的安全堡壘，更是你通往 Web3 世界的入口。無論是資產管理、身份認證、數據授權還是參與創新應用，都能為你提供一站式體驗。"
+      },
+      "future": {
+        "title": "LIFE 生態的未來",
+        "desc": "LIFE 致力於打造一個開放、包容、創新的 Web3 生態系統。未來，LIFE 將持續拓展多鏈兼容性、隱私保護、合規治理、跨界合作等能力，推動個人數據主權和數字經濟的普及。我們歡迎全球開發者、用戶、機構共同參與 LIFE 生態建設。",
+        "join_btn": "加入我們"
+      }
+    }
+  },
+  "en": {
+    "what_is_life": {
+      "hero": {
+        "badge": "About LIFE",
+        "title": "Professional Blockchain Services",
+        "subtitle": "A Trustworthy Choice"
+      },
+      "intro": {
+        "title": "What is LIFE?",
+        "desc": "LIFE is a decentralized ecosystem based on blockchain technology, designed to provide global users with a secure, private, and autonomous experience in data and digital asset management. LIFE is not just a digital asset manager but an open Web3 platform committed to promoting personal data sovereignty, digital identity, free circulation of assets, and the adoption of innovative applications.",
+        "highlight1": "100% user-controlled private keys and data, no platform access.",
+        "highlight2": "Emphasis on privacy protection and compliance, supporting minimized authorization.",
+        "highlight3": "Supports multi-chain asset management, NFTs, DAOs, AI, and a rich ecosystem."
+      },
+      "token": {
+        "title": "What is LIFE Asset?",
+        "desc_p1": "LIFE is the native crypto asset of the LIFE ecosystem, performing multiple core functions within the ecosystem. As a basic medium of circulation, it supports various payment, transfer, and exchange scenarios; at the same time, it grants holders governance rights, enabling them to participate in ecological decisions through proposals and voting. LIF also builds a complete incentive system to reward developers, content creators, and node maintainers. Additionally, the token is used to cover fees generated by on-chain transactions and smart contract interactions, ensuring the network operates efficiently and stably.",
+        "utility": {
+          "payment": "Payment",
+          "governance": "Governance",
+          "incentive": "Incentives"
+        }
+      },
+      "app": {
+        "badge": "Core Product",
+        "title": "What is LIFE Digital Asset Manager?",
+        "desc": "LIFE Digital Asset Manager is the official application of the LIFE ecosystem, designed specifically for data sovereignty and asset security.",
+        "features": {
+          "multichain": {
+            "title": "Multi-Chain Support",
+            "desc": "One-stop management for Ethereum, BSC, Polygon, and other multi-chain assets."
+          },
+          "storage": {
+            "title": "Local Key Storage",
+            "desc": "Private keys and mnemonic phrases exist only on user devices, eliminating cloud risks."
+          },
+          "control": {
+            "title": "Autonomous Data Management",
+            "desc": "Users can autonomously authorize and revoke third-party access rights, truly controlling their data."
+          },
+          "privacy": {
+            "title": "Privacy Protection",
+            "desc": "Built-in cutting-edge technologies like private transactions, anonymous transfers, and zero-knowledge proofs."
+          },
+          "dapp": {
+            "title": "DApp Browser",
+            "desc": "Securely access rich Web3 innovative applications like NFTs and DAOs."
+          },
+          "audit": {
+            "title": "Security Audits",
+            "desc": "Core code and contracts have passed authoritative third-party security audits."
+          },
+          "opensource": {
+            "title": "Open Source & Transparent",
+            "desc": "Core code is fully open source, accepting supervision from the global community."
+          }
+        },
+        "summary": "LIFE Digital Asset Manager is not only a secure fortress for assets but also your gateway to the Web3 world. Whether it's asset management, identity authentication, data authorization, or participating in innovative applications, it provides a one-stop experience."
+      },
+      "future": {
+        "title": "The Future of LIFE Ecosystem",
+        "desc": "LIFE is committed to building an open, inclusive, and innovative Web3 ecosystem. In the future, LIFE will continue to expand capabilities in multi-chain compatibility, privacy protection, compliance governance, and cross-industry cooperation, promoting the popularization of personal data sovereignty and the digital economy. We welcome global developers, users, and institutions to participate in the construction of the LIFE ecosystem.",
+        "join_btn": "Join Us"
+      }
+    }
+  }
+}</i18n>
