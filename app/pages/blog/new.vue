@@ -293,7 +293,7 @@ const handleSubmit = async () => {
     const { success } = await ApiList.blog.create(payload);
 
     if (success) {
-      router.push('/blogs');
+      navigateTo('/blog', { replace: true });
     }
   } catch (error: any) {
     console.error(error);
