@@ -239,7 +239,7 @@ onMounted(async () => {
             
             <button 
               @click="performSearch"
-              class="btn btn-primary btn-sm sm:btn-md rounded-xl font-medium whitespace-nowrap">
+              class="btn bg-linear-to-r from-primary to-secondary/90 btn-sm sm:btn-md rounded-lg font-medium whitespace-nowrap">
              <Icon name="heroicons:magnifying-glass" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-200" />
               <span class="hidden sm:inline ml-2 text-gray-800 dark:text-gray-100">搜索</span>
             </button>
@@ -317,7 +317,7 @@ onMounted(async () => {
               <div class="aspect-16/10 w-full rounded-xl lg:rounded-2xl bg-base-content/10"></div>
               <div class="pt-4 space-y-3">
                 <div class="flex flex-wrap gap-2">
-                  <div class="badge badge-outline badge-sm rounded-full bg-base-content/10 w-12 h-4"></div>
+                  <div class="badge badge-ghost badge-sm rounded-full bg-base-content/10 w-12 h-4"></div>
                 </div>
                 <div class="space-y-2">
                   <div class="h-5 bg-base-content/10 rounded w-3/4"></div>

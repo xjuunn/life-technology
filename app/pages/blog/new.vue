@@ -334,8 +334,7 @@ const handleSubmit = async () => {
 }
 </style>
 
-<i18n>
-{
+<i18n lang="json">{
   "zh-CN": {
     "common": {
       "cancel": "取消"
@@ -432,5 +431,4 @@ const handleSubmit = async () => {
       }
     }
   }
-}
-</i18n>
+}</i18n>

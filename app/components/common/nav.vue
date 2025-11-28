@@ -106,7 +106,7 @@
 
           <!-- 连接钱包 (独立显示) -->
           <button
-            class="btn btn-primary btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 hidden sm:flex">
+            class="btn bg-linear-to-r from-primary to-secondary btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 hidden sm:flex">
             <span>{{ t('nav.connect_wallet') }}</span>
             <Icon name="mingcute:wallet-3-fill" class="w-4 h-4" />
           </button>
