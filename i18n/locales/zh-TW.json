@@ -278,44 +278,6 @@
             "custodial": "非託管"
         }
     },
-    "blog_page": {
-        "hero": {
-            "title_prefix": "探索",
-            "title_highlight": "Web3 視界",
-            "subtitle": "洞察行業趨勢，掌握技術前沿，與 LIFE 一起定義數字未來"
-        },
-        "search_placeholder": "搜索文章、教程或觀點...",
-        "filter": {
-            "category_label": "分類",
-            "options": {
-                "all": "全部文章",
-                "tech": "技術科普",
-                "industry": "行業動態",
-                "security": "安全指南"
-            }
-        },
-        "sort": {
-            "label": "排序",
-            "options": {
-                "newest": "最新發佈",
-                "popular": "最多閱讀",
-                "oldest": "最早發佈",
-                "most_liked": "最多點贊",
-                "most_commented": "最多評論"
-            },
-            "order": {
-                "asc": "升序",
-                "desc": "降序"
-            }
-        },
-        "tags": {
-            "blockchain": "#區塊鏈",
-            "sovereignty": "#數據主權",
-            "dao": "#DAO",
-            "nft": "#NFT",
-            "defi": "#DeFi"
-        }
-    },
     "auth": {
         "welcome_back": "歡迎回來",
         "login_subtitle": "請輸入您的帳戶資訊以登入",
