@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 const { t } = useAppI18n();
-import { list, categories } from '~/api/blog';
+import { list, categories, like } from '~/api/blog';
+import { useBlogLikeStore } from '~/stores/blogLike';
 
 const blogs = ref<any[]>([]);
 const blogCategories = ref<string[]>([]);
@@ -12,6 +13,9 @@ const sortBy = ref<'createdAt' | 'viewCount' | 'likeCount' | 'commentCount'>('cr
 const sortOrder = ref<'asc' | 'desc'>('desc'); // 默认排序方向
 const searchKeyword = ref(''); // 搜索关键字
 const selectedCategory = ref<string | null>(null); // 选中的分类
+
+const likeStore = useBlogLikeStore();
+const likingBlogs =  ref<Set<string>>(new Set());
 
 const popularTags = computed(() => [
   t('blog_page.tags.blockchain'),
@@ -178,6 +182,42 @@ const getPageNumbers = () => {
   
   return pages;
 };
+
+// 点赞处理函数
+const handleBlogLike = async (blog: any, event: Event) => {
+  event.stopPropagation();
+  
+  // 防止重复点击
+  if (likingBlogs.value.has(blog.id)) return;
+  
+  likingBlogs.value.add(blog.id);
+  
+  try {
+    const response = await like(blog.id);
+    
+    // 更新store状态
+    likeStore.setLiked(blog.id, response.data.isLiked);
+    if (response.data.isLiked) {
+      likeStore.updateLikeCount(blog.id, 1);
+    } else {
+      likeStore.updateLikeCount(blog.id, -1);
+    }
+    
+  } catch (error) {
+    console.error('点赞失败:', error);
+  } finally {
+    likingBlogs.value.delete(blog.id);
+  }
+};
+
+watch(blogs, (newBlogs) => {
+  newBlogs.forEach(blog => {
+    if (likeStore.getLikeCount(blog.id) === undefined) {
+      likeStore.setLiked(blog.id, blog.isLiked || false);
+      likeStore.setLikeCount(blog.id, blog.likeCount || 0);
+    }
+  });
+}, { immediate: true, deep: true });
 
 // 在组件挂载时获取博客列表
 onMounted(async () => {
@@ -375,14 +415,28 @@ onMounted(async () => {
                   {{ blog.createdAt ? blog.createdAt.split('-').slice(0, 2).join('-') : '' }}
                 </div>
               </div>
-              <div class="flex justify-end mt-2">
-                <div class="badge badge-xs bg-base-300 text-xs flex items-center justify-center">
-                  {{ blog.category }}
-                </div>
+
+              <!-- 在底部添加点赞按钮 -->
+              <div class="flex justify-between items-center mt-2">
+              <div class="badge badge-xs bg-base-300 text-xs flex items-center justify-center">
+                {{ blog.category }}
               </div>
+              <button
+                @click.stop="handleBlogLike(blog, $event)"
+                class="flex items-center gap-1 px-3 py-1.5 rounded-full text-sm transition-all duration-300 hover:scale-105 active:scale-95"
+                :class="{
+                  'text-red-500 bg-red-50 border-red-200': likeStore.isLiked(blog.id),
+                  'text-gray-500 bg-base-100 border border-base-300 hover:bg-base-200': !likeStore.isLiked(blog.id)
+                }"
+                :disabled="loading"
+              >
+                <span>{{ likeStore.isLiked(blog.id) ? '❤️' : '🤍' }}</span>
+                <span>{{ likeStore.getLikeCount(blog.id) }}</span>
+              </button>
             </div>
           </div>
         </div>
+      </div>
 
         <!-- 分页控件 -->
         <div v-if="pagination.totalPages > 1" class="flex flex-col items-center mt-10 lg:mt-16 gap-4">

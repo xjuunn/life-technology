@@ -1,6 +1,5 @@
-<!-- pages/blog/[id].vue -->
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed , h , defineComponent} from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getBlogDetails, like, share } from '~/api/blog'
 import { EditorContent, useEditor } from "@tiptap/vue-3"
@@ -8,11 +7,14 @@ import StarterKit from "@tiptap/starter-kit"
 
 const route = useRoute()
 const router = useRouter()
+const { data: post } = await useFetch(`/api/posts/${route.params.id}`)
 
 // 博客详情数据
 const blog = ref<any>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
+
+
 
 // Tiptap 编辑器实例（只读模式）
 const editor = useEditor({
@@ -32,11 +34,11 @@ const fetchBlogDetail = async () => {
     
     // 设置编辑器内容
     if (blog.value.content) {
-    
+      
       if (typeof blog.value.content === 'object') {
         editor.value?.commands.setContent(blog.value.content)
       } else {
-       
+      
         editor.value?.commands.setContent(blog.value.content)
       }
     }
@@ -99,17 +101,46 @@ const shareBlog = async () => {
 }
 
 // 点赞功能
-const likeBlog = async () => {
-  if (!blog.value) return
-  
-  try {
-    const result = await like(blog.value.id)
-    blog.value.likeCount = result.data.isLiked ? blog.value.likeCount + 1 : blog.value.likeCount - 1
-    blog.value.isLiked = result.data.isLiked
-  } catch (err) {
-    console.error('点赞失败:', err)
-  }
+interface LikeButtonProps {
+  postId?: string
 }
+
+const LikeButton = defineComponent({
+  name: 'LikeButton',
+  props: {
+    postId: {
+      type: String,
+      required: false
+    }
+  },
+  setup(props: LikeButtonProps) {
+    const isLiked = ref(false)
+    const likesCount = ref(0)
+    
+    const toggleLike = () => {
+      isLiked.value = !isLiked.value
+      likesCount.value += isLiked.value ? 1 : -1
+    }
+    
+    return () => h('button', {
+      class: [
+        'like-button', 
+        'btn', 
+        'btn-outline', 
+        'btn-sm',
+        { 
+          'btn-primary': isLiked.value,
+          'btn-ghost': !isLiked.value
+        }
+      ],
+      onClick: toggleLike
+    }, [
+      h('span', { class: 'like-icon mr-2' }, isLiked.value ? '❤️' : '🤍'),
+      h('span', { class: 'like-count' }, likesCount.value)
+    ])
+  }
+})
+
 
 // 组件挂载时获取数据
 onMounted(() => {
@@ -233,19 +264,11 @@ onMounted(() => {
         </article>
 
         <!-- 互动区域 -->
-        <div class="flex flex-wrap items-center justify-between gap-4 py-6 border-t border-b border-base-content/10 mb-8">
+         <div class="flex flex-wrap items-center justify-between gap-4 py-6 border-t border-b border-base-content/10 mb-8">
           <div class="flex items-center gap-4">
-            <button 
-              @click="likeBlog" 
-              class="btn btn-ghost btn-sm gap-2"
-              :class="{ 'text-primary': blog.isLiked }"
-            >
-              <Icon 
-                :name="blog.isLiked ? 'heroicons:heart-solid' : 'heroicons:heart'" 
-                class="w-5 h-5" 
+              <LikeButton 
+               :post-id="blog?.id" 
               />
-              <span>{{ blog.likeCount || 0 }}</span>
-            </button>
           </div>
           
           <button 

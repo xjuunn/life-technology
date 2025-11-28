@@ -62,7 +62,7 @@ export interface BlogAuthor {
 }
 
 export interface BlogListResponse {
-  pagination: Pagination;
+  pagination: { currentPage: number; totalPages: number; totalBlogs: number; hasNextPage: boolean; hasPrevPage: boolean; limit: number; } | { currentPage: number; totalPages: number; totalBlogs: number; hasNextPage: boolean; hasPrevPage: boolean; limit: number; };
   blogs: Blog[];
 }
 
