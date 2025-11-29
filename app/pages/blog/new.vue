@@ -16,8 +16,50 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
         <div class="lg:col-span-8 flex flex-col">
-          <common-editor v-model="form.content" :placeholder="t('blog.create.content_placeholder')"
-            class="h-full min-h-[calc(100vh-5rem)] shadow-lg bg-base-100/80! custom-editor-height" />
+          <div class="tabs tabs-boxed bg-base-100/60 backdrop-blur-md p-1 mb-4 w-fit border border-base-content/5">
+            <a class="tab transition-all duration-300"
+              :class="{ 'tab-active bg-primary text-primary-content shadow-md': activeTab === 'edit' }"
+              @click="activeTab = 'edit'">
+              <Icon name="mingcute:edit-2-line" class="mr-2" /> {{ t('blog.create.tab_edit') }}
+            </a>
+            <a class="tab transition-all duration-300"
+              :class="{ 'tab-active bg-primary text-primary-content shadow-md': activeTab === 'preview' }"
+              @click="activeTab = 'preview'">
+              <Icon name="mingcute:eye-2-line" class="mr-2" /> {{ t('blog.create.tab_preview') }}
+            </a>
+          </div>
+
+          <div v-show="activeTab === 'edit'" class="h-full">
+            <common-editor v-model="form.content" :placeholder="t('blog.create.content_placeholder')"
+              class="h-full min-h-[calc(100vh-8rem)] shadow-lg bg-base-100/80! custom-editor-height" />
+          </div>
+
+          <div v-show="activeTab === 'preview'"
+            class="card bg-base-100/80 backdrop-blur-xl shadow-lg border border-base-content/10 p-6 md:p-10 min-h-[calc(100vh-8rem)] animate-fade-in-up">
+            <article class="max-w-none">
+              <h1 class="text-3xl md:text-5xl font-black mb-6 font-title leading-tight">
+                {{ form.title || t('blog.create.title_placeholder') }}
+              </h1>
+
+              <div class="flex flex-wrap gap-3 mb-8">
+                <span v-if="form.category" class="badge badge-primary badge-lg">{{ form.category }}</span>
+                <span v-for="tag in form.tags" :key="tag" class="badge badge-neutral badge-lg">#{{ tag }}</span>
+              </div>
+
+              <div v-if="form.coverImage" class="w-full aspect-video rounded-2xl overflow-hidden mb-8 shadow-xl">
+                <img :src="form.coverImage" class="w-full h-full object-cover" />
+              </div>
+
+              <div v-if="form.summary"
+                class="bg-base-200/50 p-6 rounded-xl mb-10 border-l-4 border-primary text-lg italic leading-relaxed text-base-content/80">
+                {{ form.summary }}
+              </div>
+
+              <div class="prose prose-base md:prose-xl max-w-none prose-img:rounded-2xl prose-headings:font-title">
+                <editor-content :editor="editor" />
+              </div>
+            </article>
+          </div>
         </div>
 
         <div class="lg:col-span-4 flex flex-col gap-4 lg:sticky lg:top-6">
@@ -166,9 +208,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import type { JSONContent } from '@tiptap/vue-3';
+import { EditorContent, useEditor, type JSONContent } from '@tiptap/vue-3';
+import StarterKit from '@tiptap/starter-kit';
 import type { BlogCreateRequest, Status } from '~/api/blog';
 
 const { t } = useAppI18n();
@@ -179,6 +222,7 @@ const uploading = ref(false);
 const categories = ref<string[]>([]);
 const tagInput = ref('');
 const fileInputRef = ref<HTMLInputElement | null>(null);
+const activeTab = ref<'edit' | 'preview'>('edit');
 
 const form = reactive({
   title: '',
@@ -206,6 +250,18 @@ const form = reactive({
 const isPublished = computed({
   get: () => form.status === 'published',
   set: (val: boolean) => form.status = val ? 'published' : 'draft'
+});
+
+const editor = useEditor({
+  extensions: [StarterKit],
+  content: form.content,
+  editable: false,
+});
+
+watch(activeTab, (val) => {
+  if (val === 'preview' && editor.value) {
+    editor.value.commands.setContent(form.content);
+  }
 });
 
 onMounted(async () => {
@@ -363,7 +419,9 @@ const handleSubmit = async () => {
         "error_category": "请选择文章分类",
         "error_file_size": "图片大小不能超过 5MB",
         "error_upload": "图片上传失败，请重试",
-        "error_general": "发布失败，请稍后重试"
+        "error_general": "发布失败，请稍后重试",
+        "tab_edit": "编辑",
+        "tab_preview": "预览"
       }
     }
   },
@@ -395,7 +453,9 @@ const handleSubmit = async () => {
         "error_category": "請選擇文章分類",
         "error_file_size": "圖片大小不能超過 5MB",
         "error_upload": "圖片上傳失敗，請重試",
-        "error_general": "發布失敗，請稍後重試"
+        "error_general": "發布失敗，請稍後重試",
+        "tab_edit": "編輯",
+        "tab_preview": "預覽"
       }
     }
   },
@@ -427,7 +487,9 @@ const handleSubmit = async () => {
         "error_category": "Category is required",
         "error_file_size": "File size limit: 5MB",
         "error_upload": "Upload failed, please try again",
-        "error_general": "Publish failed, please try again"
+        "error_general": "Publish failed, please try again",
+        "tab_edit": "Edit",
+        "tab_preview": "Preview"
       }
     }
   }
