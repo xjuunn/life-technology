@@ -15,9 +15,119 @@
     <div class="relative z-10 container mx-auto px-4 py-6 lg:py-10 max-w-7xl">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-        <div class="lg:col-span-8 flex flex-col">
-          <common-editor v-model="form.content" :placeholder="t('blog.create.content_placeholder')"
-            class="h-full min-h-[calc(100vh-5rem)] shadow-lg bg-base-100/80! custom-editor-height" />
+        <div class="lg:col-span-8 flex flex-col h-full">
+          <div class="tabs tabs-boxed bg-base-100/60 backdrop-blur-md p-1 mb-4 w-fit border border-base-content/5">
+            <a class="tab transition-all duration-300"
+              :class="{ 'tab-active bg-primary text-primary-content shadow-md': activeTab === 'edit' }"
+              @click="activeTab = 'edit'">
+              <Icon name="mingcute:edit-2-line" class="mr-2" /> {{ t('blog.create.tab_edit') }}
+            </a>
+            <a class="tab transition-all duration-300"
+              :class="{ 'tab-active bg-primary text-primary-content shadow-md': activeTab === 'preview' }"
+              @click="switchTab('preview')">
+              <Icon name="mingcute:eye-2-line" class="mr-2" /> {{ t('blog.create.tab_preview') }}
+            </a>
+          </div>
+
+          <div v-show="activeTab === 'edit'"
+            class="card bg-base-100/80 backdrop-blur-xl shadow-lg border border-base-content/10 flex flex-col min-h-[calc(100vh-10rem)] h-full">
+
+            <div v-if="editor"
+              class="p-2 border-b border-base-content/10 flex flex-wrap gap-1 sticky top-0 z-20 bg-base-100/95 backdrop-blur-sm rounded-t-xl">
+              <button @click="editor.chain().focus().toggleBold().run()"
+                :class="{ 'bg-base-200 text-primary': editor.isActive('bold') }"
+                class="btn btn-sm btn-ghost btn-square">
+                <Icon name="mingcute:bold-line" size="18" />
+              </button>
+              <button @click="editor.chain().focus().toggleItalic().run()"
+                :class="{ 'bg-base-200 text-primary': editor.isActive('italic') }"
+                class="btn btn-sm btn-ghost btn-square">
+                <Icon name="mingcute:italic-line" size="18" />
+              </button>
+              <button @click="editor.chain().focus().toggleStrike().run()"
+                :class="{ 'bg-base-200 text-primary': editor.isActive('strike') }"
+                class="btn btn-sm btn-ghost btn-square">
+                <Icon name="mingcute:strikethrough-line" size="18" />
+              </button>
+              <div class="divider divider-horizontal mx-0"></div>
+
+              <button @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+                :class="{ 'bg-base-200 text-primary': editor.isActive('heading', { level: 1 }) }"
+                class="btn btn-sm btn-ghost btn-square">
+                <Icon name="mingcute:heading-1-fill" size="18" />
+              </button>
+              <button @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+                :class="{ 'bg-base-200 text-primary': editor.isActive('heading', { level: 2 }) }"
+                class="btn btn-sm btn-ghost btn-square">
+                <Icon name="mingcute:heading-2-fill" size="18" />
+              </button>
+
+              <div class="divider divider-horizontal mx-0"></div>
+              <button @click="editor.chain().focus().toggleBulletList().run()"
+                :class="{ 'bg-base-200 text-primary': editor.isActive('bulletList') }"
+                class="btn btn-sm btn-ghost btn-square">
+                <Icon name="mingcute:list-check-line" size="18" />
+              </button>
+              <button @click="editor.chain().focus().toggleOrderedList().run()"
+                :class="{ 'bg-base-200 text-primary': editor.isActive('orderedList') }"
+                class="btn btn-sm btn-ghost btn-square">
+                <Icon name="mingcute:list-ordered-line" size="18" />
+              </button>
+              <button @click="editor.chain().focus().toggleBlockquote().run()"
+                :class="{ 'bg-base-200 text-primary': editor.isActive('blockquote') }"
+                class="btn btn-sm btn-ghost btn-square">
+                <Icon name="mingcute:quote-left-line" size="18" />
+              </button>
+              <div class="divider divider-horizontal mx-0"></div>
+
+              <button @click="triggerContentImageInput" class="btn btn-sm btn-ghost btn-square tooltip tooltip-bottom"
+                :data-tip="t('blog.create.insert_image')">
+                <Icon name="mingcute:pic-line" size="18" />
+              </button>
+              <input ref="contentImageInputRef" type="file" accept="image/*" class="hidden"
+                @change="handleContentImageUpload" />
+
+              <div class="ml-auto flex items-center gap-2">
+                <button @click="editor.chain().focus().undo().run()" :disabled="!editor.can().undo()"
+                  class="btn btn-sm btn-ghost btn-square">
+                  <Icon name="mingcute:back-line" size="18" />
+                </button>
+                <button @click="editor.chain().focus().redo().run()" :disabled="!editor.can().redo()"
+                  class="btn btn-sm btn-ghost btn-square">
+                  <Icon name="mingcute:forward-line" size="18" />
+                </button>
+              </div>
+            </div>
+
+            <editor-content :editor="editor" class="flex-1 flex flex-col h-full w-full m-4 custom-editor" />
+          </div>
+
+          <div v-show="activeTab === 'preview'"
+            class="card bg-base-100/80 backdrop-blur-xl shadow-lg border border-base-content/10 p-6 md:p-10 min-h-[calc(100vh-8rem)] animate-fade-in-up">
+            <article class="max-w-none">
+              <h1 class="text-3xl md:text-5xl font-black mb-6 font-title leading-tight">
+                {{ form.title || t('blog.create.title_placeholder') }}
+              </h1>
+
+              <div class="flex flex-wrap gap-3 mb-8">
+                <span v-if="form.category" class="badge badge-primary badge-lg">{{ form.category }}</span>
+                <span v-for="tag in form.tags" :key="tag" class="badge badge-neutral badge-lg">#{{ tag }}</span>
+              </div>
+
+              <div v-if="form.coverImage" class="w-full aspect-video rounded-2xl overflow-hidden mb-8 shadow-xl">
+                <img :src="form.coverImage" class="w-full h-full object-cover" />
+              </div>
+
+              <div v-if="form.summary"
+                class="bg-base-200/50 p-6 rounded-xl mb-10 border-l-4 border-primary text-lg italic leading-relaxed text-base-content/80">
+                {{ form.summary }}
+              </div>
+
+              <div
+                class="prose prose-base md:prose-xl max-w-none prose-img:rounded-2xl prose-headings:font-title break-words"
+                v-html="previewHtml"></div>
+            </article>
+          </div>
         </div>
 
         <div class="lg:col-span-4 flex flex-col gap-4 lg:sticky lg:top-6">
@@ -166,9 +276,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import type { JSONContent } from '@tiptap/vue-3';
+import { EditorContent, useEditor, type JSONContent } from '@tiptap/vue-3';
+import { GlobalEditorExtensions } from '~/utils/editor.util.ts';
 import type { BlogCreateRequest, Status } from '~/api/blog';
 
 const { t } = useAppI18n();
@@ -179,6 +289,9 @@ const uploading = ref(false);
 const categories = ref<string[]>([]);
 const tagInput = ref('');
 const fileInputRef = ref<HTMLInputElement | null>(null);
+const contentImageInputRef = ref<HTMLInputElement | null>(null);
+const activeTab = ref<'edit' | 'preview'>('edit');
+const previewHtml = ref('');
 
 const form = reactive({
   title: '',
@@ -187,12 +300,7 @@ const form = reactive({
     "content": [
       {
         "type": "paragraph",
-        "content": [
-          {
-            "type": "text",
-            "text": "#"
-          }
-        ]
+        "content": []
       }
     ]
   } as JSONContent,
@@ -208,9 +316,100 @@ const isPublished = computed({
   set: (val: boolean) => form.status = val ? 'published' : 'draft'
 });
 
+const editor = useEditor({
+  extensions: GlobalEditorExtensions,
+  editorProps: {
+    attributes: {
+      class: 'focus:outline-none min-h-[300px] h-full',
+    },
+    handleDOMEvents: {
+      paste: (view, event) => {
+        const items = event.clipboardData?.items;
+        if (!items) return false;
+
+        for (const item of items) {
+          if (item.type.startsWith('image/')) {
+            event.preventDefault();
+            const file = item.getAsFile();
+            if (file) uploadAndInsertImage(file);
+            return true;
+          }
+        }
+        return false;
+      },
+      drop: (view, event) => {
+        const files = event.dataTransfer?.files;
+        if (!files || files.length === 0) return false;
+
+        let hasImage = false;
+        for (const file of files) {
+          if (file.type.startsWith('image/')) {
+            hasImage = true;
+            event.preventDefault();
+            uploadAndInsertImage(file);
+          }
+        }
+        return hasImage;
+      }
+    }
+  },
+  onUpdate({ editor }) {
+    form.content = editor.getJSON();
+  },
+  content: form.content,
+  editable: true,
+});
+
+const switchTab = (tab: 'edit' | 'preview') => {
+  activeTab.value = tab;
+  if (tab === 'preview' && editor.value) {
+    previewHtml.value = editor.value.getHTML();
+  }
+};
+
 onMounted(async () => {
   await loadCategories();
 });
+
+const triggerContentImageInput = () => {
+  contentImageInputRef.value?.click();
+};
+
+const handleContentImageUpload = async (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    await uploadAndInsertImage(file);
+    target.value = '';
+  }
+};
+
+const uploadAndInsertImage = async (file: File) => {
+  if (file.size > 5 * 1024 * 1024) {
+    useToast().error(t('blog.create.error_file_size'));
+    return;
+  }
+
+  const toastId = 'upload-' + Date.now();
+  useToast().info(t('blog.create.uploading'));
+
+  try {
+    const res = await ApiList.upload.cover(file);
+
+    if (res.success && res.data?.fullUrl) {
+      const url = res.data.fullUrl;
+      if (editor.value && !editor.value.isDestroyed) {
+        editor.value.chain().focus().setImage({ src: url }).run();
+        useToast().success('图片上传成功');
+      }
+    } else {
+      throw new Error(res.message || 'Upload failed');
+    }
+  } catch (err: any) {
+    console.error(err);
+    useToast().error(err.message || t('blog.create.error_upload'));
+  }
+};
 
 const loadCategories = async () => {
   try {
@@ -274,28 +473,19 @@ const handleSubmit = async () => {
     useToast().error(t('blog.create.error_title'));
     return;
   }
-  if (!form.content.content || form.content.content.length === 0) {
+
+  const jsonString = JSON.stringify(form.content);
+  if (jsonString.length < 50 && (!form.content.content || form.content.content.length <= 1)) {
     useToast().error(t('blog.create.error_content'));
     return;
   }
+
   if (!form.category) {
     useToast().error(t('blog.create.error_category'));
     return;
   }
   if (form.title.length < 5) {
     useToast().error('标题长度不能少于5个字符');
-    return;
-  }
-  if (form.content.length < 10) {
-    useToast().error('内容长度不能少于10个字符');
-    return;
-  }
-  if (form.title.length > 50) {
-    useToast().error('标题太长了');
-    return;
-  }
-  if (form.summary.length > 200) {
-    useToast().error('摘要太长了');
     return;
   }
 
@@ -308,7 +498,8 @@ const handleSubmit = async () => {
     };
     const { success } = await ApiList.blog.create(payload);
     if (success) {
-      navigateTo('/blog', { replace: true });
+      useToast().success('发布成功');
+      router.push('/blog');
     }
   } catch (error: any) {
     console.error(error);
@@ -321,16 +512,31 @@ const handleSubmit = async () => {
 
 <style scoped>
 :deep(.ProseMirror) {
-  min-height: 500px !important;
+  min-height: 500px;
+  height: 100%;
+  outline: none;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+.custom-editor {
+  display: flex;
+  flex-direction: column;
 }
 
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.custom-editor :deep(.ProseMirror) {
+  flex: 1 1 auto;
+  padding-bottom: 2rem;
+}
+
+:deep(.ProseMirror p.is-editor-empty:first-child::before) {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+.custom-editor :deep(img.ProseMirror-selectednode) {
+  outline: 3px solid oklch(var(--p));
 }
 </style>
 
@@ -358,12 +564,15 @@ const handleSubmit = async () => {
         "status_pub_desc": "内容对所有人可见",
         "status_draft_desc": "仅您自己可见",
         "submit": "发布文章",
+        "insert_image": "插入图片",
         "error_title": "文章标题不能为空",
         "error_content": "文章内容不能为空",
         "error_category": "请选择文章分类",
         "error_file_size": "图片大小不能超过 5MB",
         "error_upload": "图片上传失败，请重试",
-        "error_general": "发布失败，请稍后重试"
+        "error_general": "发布失败，请稍后重试",
+        "tab_edit": "编辑",
+        "tab_preview": "预览"
       }
     }
   },
@@ -390,12 +599,15 @@ const handleSubmit = async () => {
         "status_pub_desc": "內容對所有人可見",
         "status_draft_desc": "僅您自己可見",
         "submit": "發布文章",
+        "insert_image": "插入圖片",
         "error_title": "文章標題不能為空",
         "error_content": "文章內容不能為空",
         "error_category": "請選擇文章分類",
         "error_file_size": "圖片大小不能超過 5MB",
         "error_upload": "圖片上傳失敗，請重試",
-        "error_general": "發布失敗，請稍後重試"
+        "error_general": "發布失敗，請稍後重試",
+        "tab_edit": "編輯",
+        "tab_preview": "預覽"
       }
     }
   },
@@ -422,12 +634,15 @@ const handleSubmit = async () => {
         "status_pub_desc": "Visible to everyone",
         "status_draft_desc": "Only visible to you",
         "submit": "Publish",
+        "insert_image": "Insert Image",
         "error_title": "Title is required",
         "error_content": "Content cannot be empty",
         "error_category": "Category is required",
         "error_file_size": "File size limit: 5MB",
         "error_upload": "Upload failed, please try again",
-        "error_general": "Publish failed, please try again"
+        "error_general": "Publish failed, please try again",
+        "tab_edit": "Edit",
+        "tab_preview": "Preview"
       }
     }
   }

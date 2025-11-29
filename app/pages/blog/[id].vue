@@ -4,6 +4,7 @@ import { listBlogComments ,create, del , updateComment } from '~/api/comment'
 import { useUserStore } from '~/stores/user'
 import { EditorContent, useEditor } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
+import { GlobalEditorExtensions } from '~/utils/editor.util.ts';
 
 const { t } = useI18n()
 const route = useRoute()
@@ -40,7 +41,7 @@ const expandedComments = ref<Record<string, boolean>>({})
 
 const editor = useEditor({
   editable: false,
-  extensions: [StarterKit],
+  extensions: GlobalEditorExtensions,
   editorProps: {
     attributes: {
       class: 'prose prose-base md:prose-lg max-w-none focus:outline-none dark:prose-invert prose-headings:font-bold prose-p:leading-relaxed prose-img:rounded-xl prose-img:shadow-sm prose-a:text-primary prose-a:no-underline hover:prose-a:underline'
@@ -196,12 +197,12 @@ const formatCommentDate = (dateString: string) => {
   const date = new Date(dateString)
   const now = new Date()
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-  
+
   if (diffInSeconds < 60) return t('blog.detail.just_now')
   if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}${t('blog.detail.minutes_ago')}`
   if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}${t('blog.detail.hours_ago')}`
   if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}${t('blog.detail.days_ago')}`
-  
+
   return date.toLocaleDateString(undefined, {
     year: 'numeric',
     month: 'short',
@@ -239,7 +240,7 @@ const fetchBlogDetail = async () => {
 
 const fetchComments = async () => {
   if (!blog.value?.id) return
-  
+
   commentsLoading.value = true
   commentsError.value = null
 
@@ -270,7 +271,7 @@ const fetchComments = async () => {
       commentsPagination.value.total = 0
       console.log('No comments found for this blog')
     }
-  } catch (err:any) {
+  } catch (err: any) {
     if (err.message && err.message.includes('评论不存在')) {
       comments.value = []
       commentsPagination.value.total = comments.value.length
@@ -449,6 +450,8 @@ onMounted(() => {
           </span>
         </div>
         
+        <div class="border-t border-base-content/10 pt-10 pb-8">
+
         <div class="border-t border-base-content/10 pt-10 pb-8">
           <div class="mb-8">
             <h3 class="text-2xl font-bold text-base-content mb-2">
@@ -643,6 +646,7 @@ onMounted(() => {
               </div>
 
               <div v-if="comment.replies && comment.replies.length > 0" class="ml-14 mt-4 space-y-4">
+              <div v-if="comment.replies && comment.replies.length > 0" class="ml-14 mt-4 space-y-4">
                 <div v-for="reply in comment.replies" :key="reply.id" class="flex gap-4">
                   <div class="avatar flex-shrink-0">
                     <div class="w-8 h-8 rounded-full ring-2 ring-base-content/5">
@@ -739,7 +743,7 @@ onMounted(() => {
         <div class="border-t border-base-content/10 pt-10 pb-20">
           <div class="flex flex-col items-center gap-6">
             <h3 class="text-sm font-bold uppercase tracking-widest text-base-content/40">{{ t('blog.detail.like_share')
-              }}</h3>
+            }}</h3>
 
             <div class="flex items-center gap-4">
               <button @click="handleLike" class="btn h-14 px-8 rounded-full transition-all duration-300 gap-3"
@@ -790,7 +794,7 @@ onMounted(() => {
         "login_required": "请先登录后点赞",
         "action_failed": "操作失败，请稍后重试",
         "link_copied": "链接已复制",
-         "comments": "评论",
+        "comments": "评论",
         "comments_description": "加入讨论，分享你的想法",
         "comments_load_failed": "评论加载失败",
         "no_comments": "暂无评论",

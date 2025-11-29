@@ -38,6 +38,7 @@
                   <Icon name="heroicons:user" class="w-5 h-5" />
                 </div>
                 <input v-model="formData.username" type="text" :placeholder="t('auth.username_placeholder')"
+                  minlength="3" maxlength="30"
                   class="input input-bordered w-full pl-11 rounded-xl bg-base-200/50 focus:bg-base-100 focus:border-primary focus:shadow-lg focus:shadow-primary/10 transition-all duration-300 focus-within:outline-0"
                   required :disabled="isLoading" />
               </div>
@@ -46,7 +47,7 @@
             <div class="form-control">
               <label class="label pt-0">
                 <span class="label-text font-bold text-xs uppercase tracking-wider opacity-70">{{ t('auth.email_label')
-                  }}</span>
+                }}</span>
               </label>
               <div class="relative group">
                 <div
