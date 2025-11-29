@@ -450,6 +450,28 @@ onMounted(() => {
           </span>
         </div>
         
+        <!-- 点赞与分享区域上移 -->
+        <div class="border-t border-base-content/10 pt-10 pb-20">
+          <div class="flex flex-col items-center gap-6">
+            <h3 class="text-sm font-bold uppercase tracking-widest text-base-content/40">{{ t('blog.detail.like_share')
+            }}</h3>
+
+            <div class="flex items-center gap-4">
+              <button @click="handleLike" class="btn h-14 px-8 rounded-full transition-all duration-300 gap-3"
+                :class="isLiked ? 'btn-primary shadow-lg shadow-primary/20' : 'btn-outline border-base-content/20 hover:border-primary hover:text-primary'">
+                <Icon :name="isLiked ? 'mingcute:thumb-up-2-fill' : 'mingcute:thumb-up-2-line'" class="w-6 h-6" />
+                <span class="text-lg font-bold">{{ likesCount }}</span>
+              </button>
+
+              <button @click="shareBlog"
+                class="btn btn-circle btn-outline h-14 w-14 border-base-content/20 hover:border-base-content hover:bg-base-content hover:text-base-100 transition-all">
+                <Icon name="mingcute:share-forward-line" class="w-6 h-6" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 评论区域下移 -->
         <div class="border-t border-base-content/10 pt-10 pb-8">
           <div class="mb-8">
             <h3 class="text-2xl font-bold text-base-content mb-2">
@@ -657,6 +679,11 @@ onMounted(() => {
                       <span class="text-sm text-base-content/60">{{ formatCommentDate(reply.createdAt) }}</span>
                     </div>
                     
+                    <!-- 显示回复给谁 -->
+                    <div class="text-sm text-base-content/60 mb-1">
+                      回复 @{{ comment.author.username }}
+                    </div>
+                    
                     <div v-if="editingCommentId === reply.id" class="mb-3">
                       <textarea 
                         v-model="editingCommentContent"
@@ -698,13 +725,6 @@ onMounted(() => {
                         <span>{{ reply.likeCount }}</span>
                       </button>
                       
-                      <button @click="replyingToCommentId = replyingToCommentId === comment.id ? null : comment.id" 
-                        class="flex items-center gap-1 hover:text-primary transition-colors"
-                        >
-                        <Icon name="mingcute:chat-3-line" class="w-4 h-4" />
-                        <span>{{ comment.replies?.length || 0 }}</span>
-                      </button>
-
                       <div v-if="isCommentAuthor(reply.author.id)" class="flex items-center gap-2 ml-2">
                         <button 
                           @click="startEditComment(reply)"
@@ -733,26 +753,6 @@ onMounted(() => {
           </div>
             <h4 class="text-lg font-medium text-base-content mb-2">{{ t('blog.detail.no_comments') }}</h4>
               <p class="text-base-content/60">{{ t('blog.detail.no_comments_description') }}</p>
-          </div>
-        </div>
-
-        <div class="border-t border-base-content/10 pt-10 pb-20">
-          <div class="flex flex-col items-center gap-6">
-            <h3 class="text-sm font-bold uppercase tracking-widest text-base-content/40">{{ t('blog.detail.like_share')
-            }}</h3>
-
-            <div class="flex items-center gap-4">
-              <button @click="handleLike" class="btn h-14 px-8 rounded-full transition-all duration-300 gap-3"
-                :class="isLiked ? 'btn-primary shadow-lg shadow-primary/20' : 'btn-outline border-base-content/20 hover:border-primary hover:text-primary'">
-                <Icon :name="isLiked ? 'mingcute:thumb-up-2-fill' : 'mingcute:thumb-up-2-line'" class="w-6 h-6" />
-                <span class="text-lg font-bold">{{ likesCount }}</span>
-              </button>
-
-              <button @click="shareBlog"
-                class="btn btn-circle btn-outline h-14 w-14 border-base-content/20 hover:border-base-content hover:bg-base-content hover:text-base-100 transition-all">
-                <Icon name="mingcute:share-forward-line" class="w-6 h-6" />
-              </button>
-            </div>
           </div>
         </div>
       </article>
