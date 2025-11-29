@@ -1,9 +1,8 @@
 <template>
   <div>
-    admin
+    用户管理
   </div>
 </template>
-
 <script setup lang="ts">
 definePageMeta({
   layout: 'admin',

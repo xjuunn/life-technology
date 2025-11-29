@@ -1,10 +1,10 @@
 <template>
   <div>
-    admin
+    系统设置
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 definePageMeta({
   layout: 'admin',
 })

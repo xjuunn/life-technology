@@ -1,10 +1,10 @@
 <template>
   <div>
-    admin
+    博客管理
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 definePageMeta({
   layout: 'admin',
 })

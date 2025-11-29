@@ -124,7 +124,7 @@
               </div>
 
               <div
-                class="prose prose-base md:prose-xl max-w-none prose-img:rounded-2xl prose-headings:font-title break-words"
+                class="prose prose-base md:prose-xl max-w-none prose-img:rounded-2xl prose-headings:font-title wrap-break-word"
                 v-html="previewHtml"></div>
             </article>
           </div>
