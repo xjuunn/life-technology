@@ -61,7 +61,7 @@ export function listBlogComments(id: string, data: CommentListRequest) {
             author: Author;
             replies: Comment[]
         }
-    }>(base + '/' + id, data);
+    }>(base + '/blog/' + id, data);
 }
 
 export interface ListUserCommentsRequest {
