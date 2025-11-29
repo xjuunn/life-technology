@@ -1,0 +1,343 @@
+---
+
+# `animejs_coding_rules.md`
+
+# Anime.js v4 — LLM 代码生成规范（Coding Rules）
+
+本文件用于约束 LLM 在生成 Anime.js v4 代码时必须严格遵守的规则，确保写出的代码 **正确、可运行、无过时 API、无 v3 语法污染**。
+
+LLM 在生成任何 Anime.js 相关代码时必须遵守本规范。
+
+---
+
+# 1. **必须使用 Anime.js v4 模块化 API**
+
+所有 import 必须符合 Anime.js v4 模块结构：
+
+### 正确示例
+
+```ts
+import { animate, stagger, splitText } from 'animejs';
+import { createTimeline } from 'animejs/timeline';
+import { createTimer } from 'animejs/timer';
+import { createAnimatable } from 'animejs/animatable';
+```
+
+### 禁止（v3 写法）
+
+```js
+anime({...});
+anime.timeline();
+anime.stagger();
+anime.easings;
+```
+
+---
+
+# 2. **必须使用模块导入，不允许 CDN 或全局 anime 对象**
+
+✔ 正确：
+
+```ts
+import { animate } from 'animejs/animation';
+```
+
+禁止：
+
+```html
+<script src="anime.min.js"></script>
+```
+
+---
+
+# 3. **所有动画必须使用 v4 参数名**
+
+| v3 旧写法       | v4 正确写法            |
+| ------------ | ------------------ |
+| `translateX` | `x`                |
+| `translateY` | `y`                |
+| `scaleX`     | `scaleX`（相同，但必须明确） |
+| `easing`     | `ease`             |
+
+---
+
+# 4. **必须提供完整 import，不允许省略**
+
+任何代码示例都必须包含完整 import。
+
+禁止：
+
+```ts
+animate('.box', { x: 200 });
+```
+
+✔ 正确：
+
+```ts
+import { animate } from 'animejs';
+
+animate('.box', { x: 200 });
+```
+
+---
+
+# 5. **Timeline 必须使用 createTimeline() 而非 anime.timeline()**
+
+✔ 正确：
+
+```ts
+import { createTimeline } from 'animejs/timeline';
+
+const tl = createTimeline();
+tl.add('.box', { x: 200 });
+```
+
+禁止：
+
+```ts
+anime.timeline();
+```
+
+---
+
+# 6. **禁止使用全部 Anime.js v3 风格 API**
+
+以下语法一律禁止：
+
+* `anime({...})`
+* `anime.timeline()`
+* `anime.stagger()`
+* `anime.set()`
+* `anime.random()`
+* `anime.easings`
+* `anime.speed`
+* `anime.running`
+* 使用 `targets:` 作为参数名
+
+你必须使用 v4 的：
+
+* `animate()`
+* `utils.stagger()`
+* `utils.set()`
+* `utils.random()`
+* modular import
+
+---
+
+# 7. **所有动画属性必须符合 v4 官方支持的 Animatable Properties**
+
+例如：
+
+✔ 支持：
+
+* `x`
+* `y`
+* `scale`, `scaleX`, `scaleY`
+* `rotate`
+* `opacity`
+* CSS 数值属性
+
+禁止：
+
+* `translateX`（用 `x`）
+* `translateY`（用 `y`）
+* 未在文档出现的属性名
+
+---
+
+# 8. **Keyframes 必须使用 v4 正确格式**
+
+✔ 正确：
+
+```ts
+y: [
+  { to: '-2rem', ease: 'outExpo', duration: 600 },
+  { to: 0, ease: 'outBounce', duration: 800 }
+]
+```
+
+禁止：
+
+```ts
+keyframes: [...]
+```
+
+---
+
+# 9. **所有 easing 必须使用 v4 的 ease 参数**
+
+✔ 正确：
+
+```ts
+ease: 'out(3)';
+```
+
+✔ 自定义：
+
+```ts
+import { cubicBezier } from 'animejs/easings';
+
+ease: cubicBezier(.7, .2, .4, .8);
+```
+
+禁止：
+
+```ts
+easing: 'easeOutQuad';
+```
+
+---
+
+# 10. **WAAPI 动画必须正确区分功能限制**
+
+使用 WAAPI 时必须提示其功能较少，并禁止使用 JS 版独有功能：
+
+✔ 正确：
+
+```ts
+import { waapi } from 'animejs';
+
+waapi.animate('.box', { x: 200 });
+```
+
+禁止在 WAAPI 内使用（例如）：
+
+* `loopDelay`
+* `alternate`
+* `keyframe-specific ease`
+* `playbackEase`
+
+---
+
+# 11. **必须提醒用户：targets 是 animate() 的第一个参数**
+
+✔ 正确：
+
+```ts
+animate('.box', { x: 100 });
+```
+
+禁止：
+
+```ts
+animate({ targets: '.box', x: 100 });
+```
+
+---
+
+# 12. **Utils 使用规则**
+
+必须从 `animejs/utils` 或主模块导入：
+
+✔ 正确：
+
+```ts
+import { stagger, random, clamp } from 'animejs/utils';
+```
+
+禁止使用旧 v3：
+
+```ts
+anime.random();
+anime.stagger();
+```
+
+---
+
+# 13. **Text 动画必须使用 splitText()**
+
+✔ 正确：
+
+```ts
+import { splitText } from 'animejs/text';
+
+const { chars } = splitText('h2');
+```
+
+禁止：
+
+```ts
+anime.text();
+```
+
+---
+
+# 14. **SVG 功能必须使用 animejs/svg 模块**
+
+✔ 正确：
+
+```ts
+import { morphTo, createMotionPath } from 'animejs/svg';
+```
+
+---
+
+# 15. **Draggable 使用规范**
+
+✔ 正确：
+
+```ts
+import { createDraggable } from 'animejs/draggable';
+
+createDraggable('.box');
+```
+
+---
+
+# 16. **Scope 必须使用 createScope()**
+
+✔ 正确：
+
+```ts
+import { createScope } from 'animejs/scope';
+```
+
+---
+
+# 17. **必须避免使用所有废弃 API**
+
+包括：
+
+* `begin`
+* `update`
+* `complete`
+* `easing`（旧）
+* `anime.random()`
+* `anime.stagger()`
+
+全部必须改用 v4 对应写法。
+
+---
+
+# 18. **所有生成的代码必须可立即运行**
+
+你作为 LLM 生成的任何 Anime.js 代码必须：
+
+* 有 import
+* 属性名正确
+* 参数名正确
+* 目标元素（targets）存在
+* 没有 v3 写法
+* 模块路径正确
+
+---
+
+# LLM 生成规则总结
+
+当 LLM 生成 Anime.js 代码时：
+
+### **必须：**
+
+* 模块式 import
+* 使用 v4 API
+* 使用 `animate()`, `createTimeline()`, `createTimer()` 等新接口
+* 使用正确 animatable 属性名（如 `x`、`y`）
+* 提供完整示例
+
+### **禁止：**
+
+* 出现任何旧版 v3 API
+* 省略 import
+* 使用不存在的 API
+* 混合旧属性（如 translateX）
+* 返回不可运行代码

@@ -1,0 +1,196 @@
+life-technology – 项目开发规范（AI 专用提示词）
+
+以下规则用于 life-technology 前端项目开发，请严格遵照执行。
+你生成的所有代码、结构、规范均必须满足以下要求。
+
+1. 类型安全（Mandatory）
+所有页面、组件、API、工具函数必须使用 TypeScript。
+禁止 any。如遇不确定类型，必须：
+定义接口
+或使用类型推断
+返回结构必须显式声明类型。
+
+2. 命名规范
+2.1 文件与目录（kebab-case）
+user-profile.vue
+wallet-address.ts
+
+2.2 组件（PascalCase）
+<UserCard />
+<LoginButton />
+
+2.3 变量（camelCase）
+2.4 常量（UPPER_SNAKE_CASE）
+DEFAULT_LANGUAGE
+API_TIMEOUT
+
+2.5 Store 名称
+useUserStore
+useAppStore
+useWalletStore
+
+3. 组件开发规范
+3.1 文件结构顺序
+<script setup lang="ts">
+<template>
+<style scoped>
+
+3.2 Props 必须声明类型
+const props = defineProps<{
+  disabled: boolean
+  modelValue: string
+}>()
+
+3.3 组件必须保持纯粹
+组件不能直接调用 API
+业务逻辑必须放在 ~/app/composables/
+
+4. 页面开发规范
+4.1 所有页面必须支持 i18n
+所有出现的文字必须使用：
+{{ t('login.button') }}
+
+
+页面内必须提供语言包：
+简体 zh-CN
+繁体 zh-TW
+English
+格式示例：
+
+<i18n lang="json">
+{
+  "zh-CN": {},
+  "zh-TW": {},
+  "en": {}
+}
+</i18n>
+
+5. API 规范
+5.1 所有接口必须放在：
+~/app/api/
+
+5.2 每个模块独立文件
+auth.ts
+upload.ts
+
+5.3 必须使用统一 axios 封装
+~/app/utils/api.util.ts
+
+5.4 请求体 & 响应必须声明类型
+export interface LoginRequest {
+  email: string
+  password: string
+}
+
+export interface LoginResponse {
+  token: string
+}
+
+5.5 所有 API 必须通过 ApiList 导出并自动导入
+6. Pinia 状态管理
+所有 Store 必须放在：
+~/app/stores/
+必须使用类型
+Store 保持轻量，不得放入与 UI 无关的大型逻辑
+业务逻辑放在 composables
+
+7. 图标规范
+使用 @nuxt/icon
+Mingcute 图标必须使用：
+<Icon name="mingcute:flower-4-fill" />
+
+
+非 Mingcute 图标必须使用本地 SVG，不得使用 CDN
+
+8. Git 提交规范（Conventional Commits）
+feat: 新增功能
+fix: 修复 bug
+refactor: 重构
+style: 样式调整，不影响逻辑
+docs: 文档
+chore: 杂项
+
+9. UI 风格规范（非常重要）
+9.1 整体风格
+使用 Aurora 弥散光背景
+卡片使用毛玻璃（bg-base-100/50, backdrop-blur）
+Beno Grid 布局，留白充分
+重要内容使用渐变
+微动效（hover 上浮、小范围缩放）
+必须使用 daisyUI 内置组件
+
+10. 已安装主要库
+Tailwind + daisyUI
+VueUse
+animejs
+axios
+TipTap
+motion-v
+Nuxt Image
+iconify
+OGL
+Pinia
+
+11. 已封装工具
+Toast
+useToast().success('成功')
+useToast().info('提示')
+useToast().error('错误')
+useToast().warning('警告')
+
+Api 通用响应类型
+export interface ApiResponse<T = any> {
+  code: number
+  data: T
+  success: boolean
+  message: string
+  error: null | { message: string, [k: string]: any }
+  [k: string]: any
+}
+
+export interface Pagination {
+  currentPage: number
+  totalPages: number
+  totalBlogs: number
+  hasNextPage: boolean
+  hasPrevPage: boolean
+  limit: number
+}
+
+12. 页面编写要求（AI 生成页面时必须遵守）
+页面必须美观并符合上面全部 UI 风格
+使用 daisyUI 内置颜色
+支持 移动端适配
+不能重复顶部导航与底部 footer（它们已存在 Layout）
+禁止写注释
+允许细微动效
+组件必须类型安全
+所有路径必须准确
+文件必须每个功能模块独立且可扩展
+
+13. 当 AI 给我封装代码时必须遵循的格式
+你必须告诉我：
+在哪个路径
+创建什么文件
+该文件完整内容
+若需修改现有文件，则说明：
+修改哪个文件
+修改什么位置
+替换为哪些内容
+所有代码必须可直接复制使用。
+最终要求
+
+你必须严格按照本提示词执行，不允许出现偏离、模糊、不符合结构的回答。
+所有生成代码必须满足：
+✔ Nuxt4
+✔ TypeScript
+✔ daisyUI
+✔ 移动端适配
+✔ 组件纯净
+✔ i18n
+✔ 高可读性
+✔ 高扩展性
+✔ 文件路径明确
+✔ 不产生错误
+
+==这里可选的粘贴上下文代码，api封装等==
