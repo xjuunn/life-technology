@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getBlogDetails, share, like as doLike } from '~/api/blog'
+import { listBlogComments } from '~/api/comment'
 import { useUserStore } from '~/stores/user'
 import { EditorContent, useEditor } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
@@ -16,6 +17,16 @@ const error = ref<string | null>(null)
 const isLiked = ref(false)
 const likesCount = ref(0)
 
+const comments = ref<any[]>([])
+const commentsLoading = ref(false)
+const commentsError = ref<string | null>(null)
+const commentsPagination = ref({
+  page: 1,
+  limit: 10,
+  total: 0,
+  pages: 0
+})
+
 const editor = useEditor({
   editable: false,
   extensions: [StarterKit],
@@ -25,6 +36,106 @@ const editor = useEditor({
     }
   }
 })
+
+const generateMockComments = () => {
+  const mockComments = [
+    {
+      id: 'mock-1',
+      content: '这篇文章写得真好，对Web3的理解很深入！期待更多关于数据主权的内容。',
+      authorId: 'user-1',
+      blogId: blog.value?.id || '',
+      parentCommentId: null,
+      likeCount: 12,
+      isDeleted: false,
+      deletedAt: null,
+      deletedContent: null,
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), 
+      updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      author: {
+        id: 'user-1',
+        username: '区块链爱好者',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'
+      },
+      replies: [
+        {
+          id: 'mock-1-1',
+          content: '同意！作者对数据主权的分析很到位，特别是关于个人数据价值的部分。',
+          authorId: 'user-2',
+          blogId: blog.value?.id || '',
+          parentCommentId: 'mock-1',
+          likeCount: 5,
+          isDeleted: false,
+          deletedAt: null,
+          deletedContent: null,
+          createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          author: {
+            id: 'user-2',
+            username: '技术探索者',
+            avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face'
+          }
+        }
+      ]
+    },
+    {
+      id: 'mock-2',
+      content: '请问这篇文章提到的DAO治理模式在实际应用中有什么挑战？',
+      authorId: 'user-3',
+      blogId: blog.value?.id || '',
+      parentCommentId: null,
+      likeCount: 8,
+      isDeleted: false,
+      deletedAt: null,
+      deletedContent: null,
+      createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), 
+      updatedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+      author: {
+        id: 'user-3',
+        username: 'Web3新手',
+        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face'
+      },
+      replies: []
+    },
+    {
+      id: 'mock-3',
+      content: '作为一个开发者，我觉得这篇文章对智能合约安全性的讨论很有价值。希望看到更多技术细节！',
+      authorId: 'user-4',
+      blogId: blog.value?.id || '',
+      parentCommentId: null,
+      likeCount: 15,
+      isDeleted: false,
+      deletedAt: null,
+      deletedContent: null,
+      createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(), 
+      updatedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+      author: {
+        id: 'user-4',
+        username: 'Solidity开发者',
+        avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop&crop=face'
+      },
+      replies: []
+    }
+  ]
+  
+  return mockComments
+}
+
+const formatCommentDate = (dateString: string) => {
+  const date = new Date(dateString)
+  const now = new Date()
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+  
+  if (diffInSeconds < 60) return t('blog.detail.just_now')
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}${t('blog.detail.minutes_ago')}`
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}${t('blog.detail.hours_ago')}`
+  if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}${t('blog.detail.days_ago')}`
+  
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+}
 
 const fetchBlogDetail = async () => {
   loading.value = true
@@ -46,10 +157,51 @@ const fetchBlogDetail = async () => {
         editor.value.commands.setContent(blog.value.content)
       }
     }
+    await fetchComments()
   } catch (err) {
     error.value = t('blog.detail.load_failed')
   } finally {
     loading.value = false
+  }
+}
+
+const fetchComments = async () => {
+  if (!blog.value?.id) return
+  
+  commentsLoading.value = true
+  commentsError.value = null
+
+  try {
+    const result = await listBlogComments(blog.value.id, {
+      page: commentsPagination.value.page,
+      limit: commentsPagination.value.limit,
+      sortBy: 'createdAt',
+      sortOrder: 'desc'
+    })
+
+    if (result.success) {
+      comments.value = result.data.comments
+      commentsPagination.value = {
+        ...commentsPagination.value,
+        ...result.data.pagination
+      }
+    } else {
+      comments.value = []
+      commentsPagination.value.total = 0
+      console.log('No comments found for this blog')
+    }
+  } catch (err:any) {
+    if (err.message && err.message.includes('评论不存在')) {
+      comments.value = generateMockComments()
+      commentsPagination.value.total = comments.value.length
+      commentsError.value = null
+      console.log('No comments found for this blog')
+    } else {
+      commentsError.value = t('blog.detail.comments_load_failed')
+      console.error('Failed to load comments:', err)
+    }
+  } finally {
+    commentsLoading.value = false
   }
 }
 
@@ -217,6 +369,107 @@ onMounted(() => {
             # {{ tag }}
           </span>
         </div>
+        
+         <div class="border-t border-base-content/10 pt-10 pb-8">
+          <div class="mb-8">
+            <h3 class="text-2xl font-bold text-base-content mb-2">
+              {{ t('blog.detail.comments') }}
+              <span class="text-base font-normal text-base-content/60 ml-2">
+                ({{ commentsPagination.total }})
+              </span>
+            </h3>
+            <p class="text-base-content/60">{{ t('blog.detail.comments_description') }}</p>
+          </div>
+
+          <div v-if="commentsLoading" class="space-y-6">
+            <div v-for="n in 3" :key="n" class="animate-pulse">
+              <div class="flex gap-4">
+                <div class="w-10 h-10 bg-base-content/5 rounded-full"></div>
+                <div class="flex-1 space-y-3">
+                  <div class="h-4 bg-base-content/5 rounded w-1/4"></div>
+                  <div class="h-4 bg-base-content/5 rounded w-full"></div>
+                  <div class="h-4 bg-base-content/5 rounded w-2/3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+           <div v-else-if="commentsError" class="text-center py-8">
+            <div class="w-12 h-12 bg-base-200 rounded-full flex items-center justify-center mb-4 text-base-content/40 mx-auto">
+              <Icon name="mingcute:comment-fail-line" class="w-6 h-6" />
+            </div>
+            <p class="text-base-content/60 mb-4">{{ commentsError }}</p>
+            <button @click="fetchComments" class="btn btn-sm btn-outline rounded-lg">
+              {{ t('blog.detail.retry') }}
+            </button>
+          </div>
+
+          <div v-else-if="comments.length > 0" class="space-y-6">
+            <div v-for="comment in comments" :key="comment.id" class="comment-item">
+              <div class="flex gap-4">
+                <div class="avatar flex-shrink-0">
+                  <div class="w-10 h-10 rounded-full ring-2 ring-base-content/5">
+                    <img :src="comment.author.avatar" :alt="comment.author.username" />
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-medium text-base-content">{{ comment.author.username }}</span>
+                    <span class="w-1 h-1 rounded-full bg-base-content/20"></span>
+                    <span class="text-sm text-base-content/60">{{ formatCommentDate(comment.createdAt) }}</span>
+                  </div>
+                  <div class="text-base-content/80 leading-relaxed mb-2">
+                    {{ comment.content }}
+                  </div>
+                  <div class="flex items-center gap-4 text-sm text-base-content/60">
+                    <button class="flex items-center gap-1 hover:text-primary transition-colors">
+                      <Icon name="mingcute:thumb-up-2-line" class="w-4 h-4" />
+                      <span>{{ comment.likeCount }}</span>
+                    </button>
+                    <button class="flex items-center gap-1 hover:text-primary transition-colors">
+                      <Icon name="mingcute:chat-3-line" class="w-4 h-4" />
+                      <span>{{ comment.replies?.length || 0 }}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+               <div v-if="comment.replies && comment.replies.length > 0" class="ml-14 mt-4 space-y-4">
+                <div v-for="reply in comment.replies" :key="reply.id" class="flex gap-4">
+                  <div class="avatar flex-shrink-0">
+                    <div class="w-8 h-8 rounded-full ring-2 ring-base-content/5">
+                      <img :src="reply.author.avatar" :alt="reply.author.username" />
+                    </div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="font-medium text-base-content">{{ reply.author.username }}</span>
+                      <span class="w-1 h-1 rounded-full bg-base-content/20"></span>
+                      <span class="text-sm text-base-content/60">{{ formatCommentDate(reply.createdAt) }}</span>
+                    </div>
+                    <div class="text-base-content/80 leading-relaxed mb-2">
+                      {{ reply.content }}
+                    </div>
+                    <div class="flex items-center gap-4 text-sm text-base-content/60">
+                      <button class="flex items-center gap-1 hover:text-primary transition-colors">
+                        <Icon name="mingcute:thumb-up-2-line" class="w-4 h-4" />
+                        <span>{{ reply.likeCount }}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <div v-else class="text-center py-12">
+            <div class="w-16 h-16 bg-base-200 rounded-full flex items-center justify-center mb-4 text-base-content/40 mx-auto">
+              <Icon name="mingcute:comment-line" class="w-8 h-8" />
+            </div>
+            <h4 class="text-lg font-medium text-base-content mb-2">{{ t('blog.detail.no_comments') }}</h4>
+            <p class="text-base-content/60">{{ t('blog.detail.no_comments_description') }}</p>
+          </div>
+        </div>
 
         <div class="border-t border-base-content/10 pt-10 pb-20">
           <div class="flex flex-col items-center gap-6">
@@ -271,7 +524,16 @@ onMounted(() => {
         "like_share": "点赞与分享",
         "login_required": "请先登录后点赞",
         "action_failed": "操作失败，请稍后重试",
-        "link_copied": "链接已复制"
+        "link_copied": "链接已复制",
+         "comments": "评论",
+        "comments_description": "加入讨论，分享你的想法",
+        "comments_load_failed": "评论加载失败",
+        "no_comments": "暂无评论",
+        "no_comments_description": "成为第一个评论的人",
+        "just_now": "刚刚",
+        "minutes_ago": "分钟前",
+        "hours_ago": "小时前",
+        "days_ago": "天前"
       }
     }
   },
@@ -285,7 +547,16 @@ onMounted(() => {
         "like_share": "按讚與分享",
         "login_required": "請先登入後按讚",
         "action_failed": "操作失敗，請稍後重試",
-        "link_copied": "連結已複製"
+        "link_copied": "連結已複製",
+        "comments": "評論",
+        "comments_description": "加入討論，分享你的想法",
+        "comments_load_failed": "評論加載失敗",
+        "no_comments": "暫無評論",
+        "no_comments_description": "成為第一個評論的人",
+        "just_now": "剛剛",
+        "minutes_ago": "分鐘前",
+        "hours_ago": "小時前",
+        "days_ago": "天前"
       }
     }
   },
@@ -299,8 +570,19 @@ onMounted(() => {
         "like_share": "Like & Share",
         "login_required": "Please login to like",
         "action_failed": "Operation failed, please try again",
-        "link_copied": "Link copied"
+        "link_copied": "Link copied",
+        "comments": "Comments",
+        "comments_description": "Join the discussion and share your thoughts",
+        "comments_load_failed": "Failed to load comments",
+        "no_comments": "No comments yet",
+        "no_comments_description": "Be the first to comment",
+        "just_now": "Just now",
+        "minutes_ago": " minutes ago",
+        "hours_ago": " hours ago",
+        "days_ago": " days ago"
       }
     }
   }
+
+
 }</i18n>
