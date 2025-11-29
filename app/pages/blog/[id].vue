@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getBlogDetails, share, like as doLike } from '~/api/blog'
-import { listBlogComments } from '~/api/comment'
+import { listBlogComments ,create, del , updateComment } from '~/api/comment'
 import { useUserStore } from '~/stores/user'
 import { EditorContent, useEditor } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
@@ -27,6 +27,17 @@ const commentsPagination = ref({
   pages: 0
 })
 
+const submittingComment = ref(false)
+const editingCommentId = ref<string | null>(null)
+const editingCommentContent = ref('')
+const replyingToCommentId = ref<string | null>(null)
+const submittingReply = ref(false)
+
+const commentContent = ref('')
+const replyContents = ref<Record<string, string>>({})
+
+const expandedComments = ref<Record<string, boolean>>({})
+
 const editor = useEditor({
   editable: false,
   extensions: [StarterKit],
@@ -37,87 +48,148 @@ const editor = useEditor({
   }
 })
 
-const generateMockComments = () => {
-  const mockComments = [
-    {
-      id: 'mock-1',
-      content: '这篇文章写得真好，对Web3的理解很深入！期待更多关于数据主权的内容。',
-      authorId: 'user-1',
-      blogId: blog.value?.id || '',
-      parentCommentId: null,
-      likeCount: 12,
-      isDeleted: false,
-      deletedAt: null,
-      deletedContent: null,
-      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), 
-      updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      author: {
-        id: 'user-1',
-        username: '区块链爱好者',
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'
-      },
-      replies: [
-        {
-          id: 'mock-1-1',
-          content: '同意！作者对数据主权的分析很到位，特别是关于个人数据价值的部分。',
-          authorId: 'user-2',
-          blogId: blog.value?.id || '',
-          parentCommentId: 'mock-1',
-          likeCount: 5,
-          isDeleted: false,
-          deletedAt: null,
-          deletedContent: null,
-          createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-          updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-          author: {
-            id: 'user-2',
-            username: '技术探索者',
-            avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face'
-          }
-        }
-      ]
-    },
-    {
-      id: 'mock-2',
-      content: '请问这篇文章提到的DAO治理模式在实际应用中有什么挑战？',
-      authorId: 'user-3',
-      blogId: blog.value?.id || '',
-      parentCommentId: null,
-      likeCount: 8,
-      isDeleted: false,
-      deletedAt: null,
-      deletedContent: null,
-      createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), 
-      updatedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
-      author: {
-        id: 'user-3',
-        username: 'Web3新手',
-        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face'
-      },
-      replies: []
-    },
-    {
-      id: 'mock-3',
-      content: '作为一个开发者，我觉得这篇文章对智能合约安全性的讨论很有价值。希望看到更多技术细节！',
-      authorId: 'user-4',
-      blogId: blog.value?.id || '',
-      parentCommentId: null,
-      likeCount: 15,
-      isDeleted: false,
-      deletedAt: null,
-      deletedContent: null,
-      createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(), 
-      updatedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-      author: {
-        id: 'user-4',
-        username: 'Solidity开发者',
-        avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop&crop=face'
-      },
-      replies: []
+const toggleCommentExpand = (commentId: string) => {
+  expandedComments.value[commentId] = !expandedComments.value[commentId]
+}
+
+const needsExpand = (content: string) => {
+  return content.length > 250
+}
+
+const getDisplayContent = (comment: any) => {
+  if (expandedComments.value[comment.id] || !needsExpand(comment.content)) {
+    return comment.content
+  }
+  return comment.content.slice(0, 250) + '...'
+}
+
+const submitComment = async () => {
+  if (!userStore.token) {
+    toast.warning(t('blog.detail.login_required'))
+    return
+  }
+
+  const commentContent = document.querySelector('.comment-textarea') as HTMLTextAreaElement
+  if (!commentContent || !commentContent.value.trim()) {
+    toast.warning(t('blog.detail.comment_empty'))
+    return
+  }
+
+  submittingComment.value = true
+
+  try {
+    const result = await create({
+      blogId: blog.value.id,
+      content: commentContent.value,
+      parentCommentId: null
+    }) as ApiResponse
+
+    if (result.success) {
+      toast.success(t('blog.detail.comment_published'))
+      commentContent.value = ''
+      await fetchComments()
+    } else {
+      throw new Error(result.message)
     }
-  ]
-  
-  return mockComments
+  } catch (err) {
+    toast.error(t('blog.detail.comment_publish_failed'))
+    console.error('Failed to publish comment:', err)
+  } finally {
+    submittingComment.value = false
+  }
+}
+
+const submitReply = async (parentCommentId: string) => {
+  if (!userStore.token) {
+    toast.warning(t('blog.detail.login_required'))
+    return
+  }
+
+  const replyContent = document.querySelector(`.reply-textarea-${parentCommentId}`) as HTMLTextAreaElement
+  if (!replyContent || !replyContent.value.trim()) {
+    toast.warning(t('blog.detail.comment_empty'))
+    return
+  }
+    submittingReply.value = true
+
+  try {
+    const result = await create({
+      blogId: blog.value.id,
+      content: replyContent.value,
+      parentCommentId
+    }) as ApiResponse
+
+    if (result.success) {
+      toast.success(t('blog.detail.reply_published'))
+      replyContent.value = ''
+      replyingToCommentId.value = null
+      await fetchComments()
+    } else {
+      throw new Error(result.message)
+    }
+  } catch (err) {
+    toast.error(t('blog.detail.reply_publish_failed'))
+    console.error('Failed to publish reply:', err)
+  } finally {
+    submittingReply.value = false
+  }
+}
+
+const startEditComment = (comment: any) => {
+  editingCommentId.value = comment.id
+  editingCommentContent.value = comment.content
+}
+
+const cancelEditComment = () => {
+  editingCommentId.value = null
+  editingCommentContent.value = ''
+}
+
+const saveEditComment = async (commentId: string) => {
+  if (!editingCommentContent.value.trim()) {
+    toast.warning(t('blog.detail.comment_empty'))
+    return
+  }
+
+  try {
+    const result = await updateComment(commentId, editingCommentContent.value)
+
+    if (result.success) {
+      toast.success(t('blog.detail.comment_updated'))
+      editingCommentId.value = null
+      editingCommentContent.value = ''
+      await fetchComments()
+    } else {
+      throw new Error(result.message)
+    }
+  } catch (err) {
+    toast.error(t('blog.detail.comment_update_failed'))
+    console.error('Failed to update comment:', err)
+  }
+}
+
+const deleteCommentHandler = async (commentId: string) => {
+  if (!confirm(t('blog.detail.confirm_delete_comment'))) {
+    return
+  }
+
+  try {
+    const result = await del(commentId)
+
+    if (result.success) {
+      toast.success(t('blog.detail.comment_deleted'))
+      await fetchComments()
+    } else {
+      throw new Error(result.message)
+    }
+  } catch (err) {
+    toast.error(t('blog.detail.comment_delete_failed'))
+    console.error('Failed to delete comment:', err)
+  }
+}
+
+const isCommentAuthor = (commentAuthorId: string) => {
+  return userStore.user?.id === commentAuthorId
 }
 
 const formatCommentDate = (dateString: string) => {
@@ -185,6 +257,14 @@ const fetchComments = async () => {
         ...commentsPagination.value,
         ...result.data.pagination
       }
+      comments.value.forEach(comment => {
+        expandedComments.value[comment.id] = false
+        if (comment.replies) {
+          comment.replies.forEach((reply: any) => {
+            expandedComments.value[reply.id] = false
+          })
+        }
+      })
     } else {
       comments.value = []
       commentsPagination.value.total = 0
@@ -192,9 +272,8 @@ const fetchComments = async () => {
     }
   } catch (err:any) {
     if (err.message && err.message.includes('评论不存在')) {
-      comments.value = generateMockComments()
+      comments.value = []
       commentsPagination.value.total = comments.value.length
-      commentsError.value = null
       console.log('No comments found for this blog')
     } else {
       commentsError.value = t('blog.detail.comments_load_failed')
@@ -370,7 +449,7 @@ onMounted(() => {
           </span>
         </div>
         
-         <div class="border-t border-base-content/10 pt-10 pb-8">
+        <div class="border-t border-base-content/10 pt-10 pb-8">
           <div class="mb-8">
             <h3 class="text-2xl font-bold text-base-content mb-2">
               {{ t('blog.detail.comments') }}
@@ -379,6 +458,41 @@ onMounted(() => {
               </span>
             </h3>
             <p class="text-base-content/60">{{ t('blog.detail.comments_description') }}</p>
+          </div>
+
+          <div class="bg-base-200/30 rounded-xl p-6 mb-8 border border-base-content/5">
+            <div class="flex gap-4">
+              <div class="avatar flex-shrink-0">
+                <div class="w-10 h-10 rounded-full ring-2 ring-base-content/5">
+                  <img 
+                    :src="userStore.user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face'" 
+                    :alt="userStore.user?.username || '用户'" 
+                  />
+                </div>
+              </div>
+              <div class="flex-1">
+                <textarea 
+                  class="textarea textarea-bordered w-full min-h-[100px] mb-3 comment-textarea"
+                  :placeholder="userStore.token ? t('blog.detail.comment_placeholder') : t('blog.detail.login_to_comment')"
+                  :disabled="!userStore.token"
+                ></textarea>
+                <div class="flex justify-between items-center">
+                  <p class="text-sm text-base-content/60" v-if="!userStore.token">
+                    {{ t('blog.detail.login_to_comment') }}
+                  </p>
+                  <div class="flex gap-2 ml-auto">
+                    <button 
+                      @click="submitComment"
+                      class="btn btn-primary btn-sm rounded-lg"
+                      :disabled="submittingComment || !userStore.token"
+                    >
+                      <span v-if="submittingComment" class="loading loading-spinner loading-sm"></span>
+                      {{ submittingComment ? t('blog.detail.publishing') : t('blog.detail.publish_comment') }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div v-if="commentsLoading" class="space-y-6">
@@ -394,7 +508,7 @@ onMounted(() => {
             </div>
           </div>
 
-           <div v-else-if="commentsError" class="text-center py-8">
+          <div v-else-if="commentsError" class="text-center py-8">
             <div class="w-12 h-12 bg-base-200 rounded-full flex items-center justify-center mb-4 text-base-content/40 mx-auto">
               <Icon name="mingcute:comment-fail-line" class="w-6 h-6" />
             </div>
@@ -418,23 +532,117 @@ onMounted(() => {
                     <span class="w-1 h-1 rounded-full bg-base-content/20"></span>
                     <span class="text-sm text-base-content/60">{{ formatCommentDate(comment.createdAt) }}</span>
                   </div>
-                  <div class="text-base-content/80 leading-relaxed mb-2">
-                    {{ comment.content }}
+                  
+                  <div v-if="editingCommentId === comment.id" class="mb-3">
+                    <textarea 
+                      v-model="editingCommentContent"
+                      class="textarea textarea-bordered w-full min-h-[100px] mb-2"
+                      :placeholder="t('blog.detail.edit_comment_placeholder')"
+                    ></textarea>
+                    <div class="flex gap-2">
+                      <button 
+                        @click="saveEditComment(comment.id)"
+                        class="btn btn-primary btn-sm rounded-lg"
+                      >
+                        {{ t('blog.detail.save') }}
+                      </button>
+                      <button 
+                        @click="cancelEditComment"
+                        class="btn btn-ghost btn-sm rounded-lg"
+                      >
+                        {{ t('blog.detail.cancel') }}
+                      </button>
+                    </div>
                   </div>
+
+                  <div v-else class="text-base-content/80 leading-relaxed mb-2">
+                    <div :class="['comment-content', { 'line-clamp-5': !expandedComments[comment.id] && needsExpand(comment.content) }]">
+                      {{ getDisplayContent(comment) }}
+                    </div>
+                    <button
+                    v-if="needsExpand(comment.content)"
+                    @click="toggleCommentExpand(comment.id)"
+                    class="btn btn-link btn-sm p-0 h-auto min-h-0 text-primary mt-1 no-underline hover:underline"
+                    >
+                    {{ expandedComments[comment.id] ?t('blog.detail.collapse') : t('blog.detail.expand')  }}
+                    </button>
+                  </div>
+                  
                   <div class="flex items-center gap-4 text-sm text-base-content/60">
                     <button class="flex items-center gap-1 hover:text-primary transition-colors">
                       <Icon name="mingcute:thumb-up-2-line" class="w-4 h-4" />
                       <span>{{ comment.likeCount }}</span>
                     </button>
-                    <button class="flex items-center gap-1 hover:text-primary transition-colors">
+                    <button 
+                      @click="replyingToCommentId = replyingToCommentId === comment.id ? null : comment.id"
+                      class="flex items-center gap-1 hover:text-primary transition-colors"
+                    >
                       <Icon name="mingcute:chat-3-line" class="w-4 h-4" />
                       <span>{{ comment.replies?.length || 0 }}</span>
                     </button>
+                    
+                    <div v-if="isCommentAuthor(comment.author.id)" class="flex items-center gap-2 ml-2">
+                      <button 
+                        @click="startEditComment(comment)"
+                        class="text-xs hover:text-primary transition-colors"
+                      >
+                        {{ t('blog.detail.edit') }}
+                      </button>
+                      <span class="text-base-content/20">•</span>
+                      <button 
+                        @click="deleteCommentHandler(comment.id)"
+                        class="text-xs hover:text-error transition-colors"
+                      >
+                        {{ t('blog.detail.delete') }}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div v-if="replyingToCommentId === comment.id" class="mt-4 bg-base-200/30 rounded-lg p-4">
+                    <div class="flex gap-3">
+                      <div class="avatar flex-shrink-0">
+                        <div class="w-8 h-8 rounded-full ring-2 ring-base-content/5">
+                          <img 
+                            :src="userStore.user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face'" 
+                            :alt="userStore.user?.username || '用户'" 
+                          />
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <textarea 
+                          :class="`textarea textarea-bordered w-full min-h-[80px] mb-2 reply-textarea-${comment.id}`"
+                          :placeholder="userStore.token ? t('blog.detail.reply_placeholder') : t('blog.detail.login_to_comment')"
+                          :disabled="!userStore.token"
+                        ></textarea>
+                        <div class="flex justify-between items-center">
+                          <p class="text-sm text-base-content/60" v-if="!userStore.token">
+                            {{ t('blog.detail.login_to_comment') }}
+                          </p>
+                          <div class="flex gap-2 ml-auto">
+                            <button 
+                              @click="replyingToCommentId = null"
+                              class="btn btn-ghost btn-sm rounded-lg"
+                              :disabled="submittingReply"
+                            >
+                              {{ t('blog.detail.cancel') }}
+                            </button>
+                            <button 
+                              @click="submitReply(comment.id)"
+                              class="btn btn-primary btn-sm rounded-lg"
+                              :disabled="submittingReply || !userStore.token"
+                            >
+                              <span v-if="submittingReply" class="loading loading-spinner loading-sm"></span>
+                              {{ submittingReply ? t('blog.detail.publishing') : t('blog.detail.publish_reply') }}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-               <div v-if="comment.replies && comment.replies.length > 0" class="ml-14 mt-4 space-y-4">
+              <div v-if="comment.replies && comment.replies.length > 0" class="ml-14 mt-4 space-y-4">
                 <div v-for="reply in comment.replies" :key="reply.id" class="flex gap-4">
                   <div class="avatar flex-shrink-0">
                     <div class="w-8 h-8 rounded-full ring-2 ring-base-content/5">
@@ -447,14 +655,71 @@ onMounted(() => {
                       <span class="w-1 h-1 rounded-full bg-base-content/20"></span>
                       <span class="text-sm text-base-content/60">{{ formatCommentDate(reply.createdAt) }}</span>
                     </div>
-                    <div class="text-base-content/80 leading-relaxed mb-2">
+                    
+                    <div v-if="editingCommentId === reply.id" class="mb-3">
+                      <textarea 
+                        v-model="editingCommentContent"
+                        class="textarea textarea-bordered w-full min-h-[80px] mb-2"
+                        :placeholder="t('blog.detail.edit_comment_placeholder')"
+                      ></textarea>
+                      <div class="flex gap-2">
+                        <button 
+                          @click="saveEditComment(reply.id)"
+                          class="btn btn-primary btn-sm rounded-lg"
+                        >
+                          {{ t('blog.detail.save') }}
+                        </button>
+                        <button 
+                          @click="cancelEditComment"
+                          class="btn btn-ghost btn-sm rounded-lg"
+                        >
+                          {{ t('blog.detail.cancel') }}
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div v-else class="text-base-content/80 leading-relaxed mb-2">
+                      <div :class="['comment-content', { 'line-clamp-5': !expandedComments[reply.id] && needsExpand(reply.content) }]">
+                         {{ getDisplayContent(reply) }}
+                      </div>
+                      <button 
+                      v-if="needsExpand(reply.content)"
+                      @click="toggleCommentExpand(reply.id)"
+                      class="btn btn-link btn-sm p-0 h-auto min-h-0 text-primary mt-1 no-underline hover:underline"
+                      >
+                      {{ expandedComments[reply.id] ? t('blog.detail.collapse') : t('blog.detail.expand')  }}
+                    </button>
                       {{ reply.content }}
                     </div>
+                    
                     <div class="flex items-center gap-4 text-sm text-base-content/60">
                       <button class="flex items-center gap-1 hover:text-primary transition-colors">
                         <Icon name="mingcute:thumb-up-2-line" class="w-4 h-4" />
                         <span>{{ reply.likeCount }}</span>
                       </button>
+                      
+                      <button @click="replyingToCommentId = replyingToCommentId === comment.id ? null : comment.id" 
+                        class="flex items-center gap-1 hover:text-primary transition-colors"
+                        >
+                        <Icon name="mingcute:chat-3-line" class="w-4 h-4" />
+                        <span>{{ comment.replies?.length || 0 }}</span>
+                      </button>
+
+                      <div v-if="isCommentAuthor(reply.author.id)" class="flex items-center gap-2 ml-2">
+                        <button 
+                          @click="startEditComment(reply)"
+                          class="text-xs hover:text-primary transition-colors"
+                        >
+                          {{ t('blog.detail.edit') }}
+                        </button>
+                        <span class="text-base-content/20">•</span>
+                        <button 
+                          @click="deleteCommentHandler(reply.id)"
+                          class="text-xs hover:text-error transition-colors"
+                        >
+                          {{ t('blog.detail.delete') }}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -462,7 +727,7 @@ onMounted(() => {
             </div>
           </div>
 
-        <div v-else class="text-center py-12">
+          <div v-else class="text-center py-12">
             <div class="w-16 h-16 bg-base-200 rounded-full flex items-center justify-center mb-4 text-base-content/40 mx-auto">
               <Icon name="mingcute:comment-line" class="w-8 h-8" />
             </div>
@@ -533,7 +798,31 @@ onMounted(() => {
         "just_now": "刚刚",
         "minutes_ago": "分钟前",
         "hours_ago": "小时前",
-        "days_ago": "天前"
+        "days_ago": "天前",
+         "comment_empty": "评论内容不能为空",
+        "comment_published": "评论发布成功",
+        "comment_publish_failed": "评论发布失败",
+        "reply_published": "回复发布成功",
+        "reply_publish_failed": "回复发布失败",
+        "comment_updated": "评论更新成功",
+        "comment_update_failed": "评论更新失败",
+        "comment_deleted": "评论删除成功",
+        "comment_delete_failed": "评论删除失败",
+        "confirm_delete_comment": "确定要删除这条评论吗？",
+        "login_to_comment": "请登录后发表评论",
+        "publish_comment": "发布评论",
+        "publish_reply": "发布回复",
+        "publishing": "发布中...",
+        "edit": "编辑",
+        "delete": "删除",
+        "save": "保存",
+        "cancel": "取消",
+        "edited": "已编辑",
+        "edit_comment_placeholder": "编辑评论内容...",
+        "comment_placeholder": "写下你的评论...",
+        "reply_placeholder": "写下你的回复...",
+        "expand": "展开",
+        "collapse": "收起"
       }
     }
   },
@@ -556,7 +845,31 @@ onMounted(() => {
         "just_now": "剛剛",
         "minutes_ago": "分鐘前",
         "hours_ago": "小時前",
-        "days_ago": "天前"
+        "days_ago": "天前",
+        "comment_empty": "評論內容不能為空",
+        "comment_published": "評論發布成功",
+        "comment_publish_failed": "評論發布失敗",
+        "reply_published": "回覆發布成功",
+        "reply_publish_failed": "回覆發布失敗",
+        "comment_updated": "評論更新成功",
+        "comment_update_failed": "評論更新失敗",
+        "comment_deleted": "評論刪除成功",
+        "comment_delete_failed": "評論刪除失敗",
+        "confirm_delete_comment": "確定要刪除這條評論嗎？",
+        "login_to_comment": "請登入後發表評論",
+        "publish_comment": "發布評論",
+        "publish_reply": "發布回覆",
+        "publishing": "發布中...",
+        "edit": "編輯",
+        "delete": "刪除",
+        "save": "保存",
+        "cancel": "取消",
+        "edited": "已編輯",
+        "edit_comment_placeholder": "編輯評論內容...",
+        "comment_placeholder": "寫下你的評論...",
+        "reply_placeholder": "寫下你的回覆...",
+        "expand": "展開",
+        "collapse": "收起"
       }
     }
   },
@@ -579,10 +892,32 @@ onMounted(() => {
         "just_now": "Just now",
         "minutes_ago": " minutes ago",
         "hours_ago": " hours ago",
-        "days_ago": " days ago"
+        "days_ago": " days ago",
+        "comment_empty": "Comment content cannot be empty",
+        "comment_published": "Comment published successfully",
+        "comment_publish_failed": "Failed to publish comment",
+        "reply_published": "Reply published successfully",
+        "reply_publish_failed": "Failed to publish reply",
+        "comment_updated": "Comment updated successfully",
+        "comment_update_failed": "Failed to update comment",
+        "comment_deleted": "Comment deleted successfully",
+        "comment_delete_failed": "Failed to delete comment",
+        "confirm_delete_comment": "Are you sure you want to delete this comment?",
+        "login_to_comment": "Please login to comment",
+        "publish_comment": "Publish Comment",
+        "publish_reply": "Publish Reply",
+        "publishing": "Publishing...",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save",
+        "cancel": "Cancel",
+        "edited": "Edited",
+        "edit_comment_placeholder": "Edit comment content...",
+        "comment_placeholder": "Write your comment...",
+        "reply_placeholder": "Write your reply...",
+        "expand": "Expand",
+        "collapse": "Collapse"
       }
     }
   }
-
-
 }</i18n>
