@@ -354,7 +354,7 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans">
-    <div class="sticky top-0 z-50 bg-base-100/80 backdrop-blur-md border-b border-base-content/5">
+    <div class="sticky top-0 bg-base-100/80 backdrop-blur-md border-b border-base-content/5">
       <div class="container mx-auto px-4 max-w-4xl h-16 flex items-center justify-between">
         <button @click="router.back()"
           class="btn btn-ghost btn-sm gap-2 text-base-content/70 hover:text-base-content hover:bg-base-content/5 rounded-lg font-normal">

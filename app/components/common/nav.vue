@@ -145,9 +145,15 @@
                       </span>
                     </div>
                   </div>
-                  <div class="flex flex-col overflow-hidden">
-                    <span class="font-bold text-base truncate leading-tight">{{ userStore.user?.username }}</span>
-                    <span class="text-xs opacity-50 truncate mt-0.5">{{ userStore.user?.email }}</span>
+                  <div class="flex flex-col overflow-hidden w-36">
+                    <span class="font-bold text-base truncate leading-tight min-w-0 max-w-full">
+                      {{ userStore.user?.username }}
+                    </span>
+
+                    <span
+                      class="text-xs opacity-50 mt-0.5 w-full block overflow-hidden whitespace-nowrap text-ellipsis">
+                      {{ userStore.user?.email }}
+                    </span>
                   </div>
                 </div>
               </li>
