@@ -451,8 +451,6 @@ onMounted(() => {
         </div>
         
         <div class="border-t border-base-content/10 pt-10 pb-8">
-
-        <div class="border-t border-base-content/10 pt-10 pb-8">
           <div class="mb-8">
             <h3 class="text-2xl font-bold text-base-content mb-2">
               {{ t('blog.detail.comments') }}
@@ -646,7 +644,6 @@ onMounted(() => {
               </div>
 
               <div v-if="comment.replies && comment.replies.length > 0" class="ml-14 mt-4 space-y-4">
-              <div v-if="comment.replies && comment.replies.length > 0" class="ml-14 mt-4 space-y-4">
                 <div v-for="reply in comment.replies" :key="reply.id" class="flex gap-4">
                   <div class="avatar flex-shrink-0">
                     <div class="w-8 h-8 rounded-full ring-2 ring-base-content/5">
@@ -693,7 +690,6 @@ onMounted(() => {
                       >
                       {{ expandedComments[reply.id] ? t('blog.detail.collapse') : t('blog.detail.expand')  }}
                     </button>
-                      {{ reply.content }}
                     </div>
                     
                     <div class="flex items-center gap-4 text-sm text-base-content/60">
@@ -731,12 +727,12 @@ onMounted(() => {
             </div>
           </div>
 
-          <div v-else class="text-center py-12">
-            <div class="w-16 h-16 bg-base-200 rounded-full flex items-center justify-center mb-4 text-base-content/40 mx-auto">
-              <Icon name="mingcute:comment-line" class="w-8 h-8" />
-            </div>
+        <div v-else class="text-center py-12">
+          <div class="w-16 h-16 bg-base-200 rounded-full flex items-center justify-center mb-4 text-base-content/40 mx-auto">
+            <Icon name="mingcute:comment-line" class="w-8 h-8" />
+          </div>
             <h4 class="text-lg font-medium text-base-content mb-2">{{ t('blog.detail.no_comments') }}</h4>
-            <p class="text-base-content/60">{{ t('blog.detail.no_comments_description') }}</p>
+              <p class="text-base-content/60">{{ t('blog.detail.no_comments_description') }}</p>
           </div>
         </div>
 
