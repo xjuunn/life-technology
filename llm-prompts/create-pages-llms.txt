@@ -201,6 +201,7 @@ export interface Pagination {
   hasPrevPage: boolean
   limit: number
 }
+Pagination是全局自动导入的，无需手动导入即可使用
 
 12. 页面编写要求（AI 生成页面时必须遵守）
 页面必须美观并符合上面全部 UI 风格

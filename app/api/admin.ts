@@ -129,7 +129,7 @@ export interface ListUserRequest {
   page: number;
   limit: number;
   search: string;
-  status: UserStatus;
+  status: UserStatus | undefined;
 }
 
 export interface AdminUserListItem {
@@ -170,7 +170,7 @@ export interface UpdateUserStatusRequest {
  * @param data 更新数据
  */
 function updateUser(userId: string, data: UpdateUserStatusRequest) {
-  return api.put<{ message: string, user: AdminUserListItem }>(base + `/${userId}/status`, data)
+  return api.put<{ message: string, user: AdminUserListItem }>(base + `/users/${userId}/status`, data)
 }
 
 /**
@@ -186,7 +186,7 @@ function updateUserPassword(userId: string, newPassword: string) {
       username: string;
       email: string;
     }
-  }>(base + `/${userId}/password`, { newPassword });
+  }>(base + `/users/${userId}/password`, { newPassword });
 }
 
 /**
