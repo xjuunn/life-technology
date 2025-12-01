@@ -185,18 +185,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-6 p-6 h-full pb-24">
-    <div class="flex flex-col md:flex-row justify-between items-center gap-4 relative z-50">
+  <div class="flex flex-col gap-6 h-[calc(100vh-4rem)] p-2 md:p-6">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4 relative z-40 shrink-0">
       <div class="w-full md:w-96">
         <label
-          class="input input-bordered bg-base-100/80 backdrop-blur shadow-sm flex items-center gap-3 w-full transition-all focus-within:shadow-md">
-          <Icon name="mingcute:search-line" class="text-base-content/40 text-lg" />
-          <input type="text" class="grow" :placeholder="t('common.search')" v-model="filter.search" />
+          class="input input-bordered bg-base-100/80 backdrop-blur shadow-sm flex items-center gap-3 w-full transition-all hover:shadow-md focus-within:shadow-md focus-within:border-primary/50 rounded-lg h-11">
+          <Icon name="mingcute:search-line" class="text-base-content/50 text-xl" />
+          <input type="text" class="grow placeholder:text-base-content/40" :placeholder="t('common.search')"
+            v-model="filter.search" />
         </label>
       </div>
 
       <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-        <select class="select select-bordered bg-base-100/80 backdrop-blur shadow-sm w-full md:w-40"
+        <select
+          class="select select-bordered bg-base-100/80 backdrop-blur shadow-sm w-full md:w-40 rounded-lg h-11 min-h-[2.75rem]"
           v-model="filter.status">
           <option :value="-1">{{ t('common.all_status') }}</option>
           <option :value="0">{{ t('status.active') }}</option>
@@ -206,44 +208,48 @@ onMounted(() => {
 
         <div class="dropdown dropdown-end dropdown-bottom" v-if="selectedIds.size > 0">
           <div tabindex="0" role="button"
-            class="btn btn-primary text-primary-content shadow-md animate-in fade-in zoom-in duration-200">
-            <Icon name="mingcute:layer-line" />
-            {{ t('common.batch') }}
-            <span class="badge badge-sm badge-neutral bg-white/20 border-none text-white">{{ selectedIds.size }}</span>
+            class="btn btn-primary text-primary-content shadow-md animate-in fade-in zoom-in duration-200 rounded-lg px-6 h-11 min-h-[2.75rem]">
+            <Icon name="mingcute:layer-line" size="18" />
+            <span>{{ t('common.batch') }}</span>
+            <span class="badge badge-neutral bg-white/20 border-none text-white">{{ selectedIds.size
+            }}</span>
           </div>
           <ul tabindex="0"
             class="dropdown-content menu bg-base-100 rounded-xl z-[100] w-52 p-2 shadow-xl border border-base-200 mt-2">
-            <li><a @click="handleBatch('activate')" class="hover:text-success">
-                <Icon name="mingcute:check-circle-line" /> {{ t('action.activate') }}
+            <li><a @click="handleBatch('activate')" class="py-3 hover:text-success">
+                <Icon name="mingcute:check-circle-line" size="18" /> {{ t('action.activate') }}
               </a></li>
-            <li><a @click="handleBatch('deactivate')" class="hover:text-warning">
-                <Icon name="mingcute:close-circle-line" /> {{ t('action.deactivate') }}
+            <li><a @click="handleBatch('deactivate')" class="py-3 hover:text-warning">
+                <Icon name="mingcute:close-circle-line" size="18" /> {{ t('action.deactivate') }}
               </a></li>
             <li class="divider my-1"></li>
-            <li><a class="text-error hover:bg-error/10" @click="handleBatch('delete')">
-                <Icon name="mingcute:delete-2-line" /> {{ t('common.delete') }}
+            <li><a class="text-error hover:bg-error/10 py-3" @click="handleBatch('delete')">
+                <Icon name="mingcute:delete-2-line" size="18" /> {{ t('common.delete') }}
               </a></li>
           </ul>
         </div>
       </div>
     </div>
 
-    <div class="card bg-base-100 shadow-sm border border-base-200 overflow-visible z-0 flex-1 flex flex-col">
-      <div class="overflow-x-auto overflow-y-hidden rounded-t-xl flex-1">
-        <table class="table table-pin-rows h-full">
+    <div
+      class="card bg-base-100 shadow-sm border border-base-200 z-0 flex-1 min-h-0 flex flex-col rounded-2xl overflow-hidden">
+      <div class="overflow-auto flex-1 w-full scrollbar-hide">
+        <table class="table table-pin-rows">
           <thead>
             <tr class="bg-base-200/50 text-base-content/70">
-              <th class="w-12 text-center">
+              <th class="w-16 text-center py-4">
                 <label>
-                  <input type="checkbox" class="checkbox checkbox-sm checkbox-primary rounded-md" v-model="selectAll" />
+                  <input type="checkbox" class="checkbox checkbox-primary rounded-md" v-model="selectAll" />
                 </label>
               </th>
-              <th>{{ t('user.info') }}</th>
-              <th>{{ t('user.role') }}</th>
-              <th>{{ t('user.status') }}</th>
-              <th>{{ t('user.stats') }}</th>
-              <th>{{ t('common.created_at') }}</th>
-              <th class="text-right pr-6">{{ t('common.action') }}</th>
+              <th class="py-4 text-sm font-semibold min-w-[200px]">{{ t('user.info') }}</th>
+              <th class="py-4 text-sm font-semibold min-w-[120px]">{{ t('user.role') }}</th>
+              <th class="py-4 text-sm font-semibold min-w-[120px]">{{ t('user.status') }}</th>
+              <th class="py-4 text-sm font-semibold min-w-[150px]">{{ t('user.stats') }}</th>
+              <th class="py-4 text-sm font-semibold min-w-[120px]">{{ t('common.created_at') }}</th>
+              <th
+                class="sticky right-0 bg-base-200/50 shadow-[-5px_0_10px_-5px_rgba(0,0,0,0.05)] text-center w-40 py-4 text-sm font-semibold">
+                {{ t('common.action') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -256,80 +262,88 @@ onMounted(() => {
             <tr v-else-if="users.length === 0">
               <td colspan="7" class="h-64 text-center text-base-content/40">
                 <div class="flex flex-col items-center gap-3">
-                  <div class="bg-base-200 p-4 rounded-full">
-                    <Icon name="mingcute:ghost-line" class="text-4xl" />
+                  <div class="bg-base-200 p-6 rounded-full">
+                    <Icon name="mingcute:ghost-line" class="text-5xl" />
                   </div>
-                  <span>{{ t('common.no_data') }}</span>
+                  <span class="text-lg">{{ t('common.no_data') }}</span>
                 </div>
               </td>
             </tr>
 
-            <tr v-else v-for="user in users" :key="user.id" class="hover:bg-base-200/30 transition-colors group">
-              <th class="text-center">
+            <tr v-else v-for="user in users" :key="user.id"
+              class="hover:bg-base-200/30 transition-colors group border-b border-base-100">
+              <th class="text-center py-4">
                 <label>
-                  <input type="checkbox" class="checkbox checkbox-sm checkbox-primary rounded-md"
+                  <input type="checkbox" class="checkbox checkbox-primary rounded-md"
                     :checked="selectedIds.has(user.id)" @change="toggleSelection(user.id)" />
                 </label>
               </th>
-              <td>
+              <td class="py-4">
                 <div class="flex items-center gap-4">
                   <div class="avatar">
-                    <div class="mask mask-squircle w-10 h-10 bg-base-300 ring-1 ring-base-content/10">
+                    <div class="mask mask-squircle w-10 h-10 md:w-11 md:h-11 bg-base-200 ring-1 ring-base-content/5">
                       <img :src="user.avatar || 'https://ui-avatars.com/api/?name=' + user.username"
                         :alt="user.username" loading="lazy" />
                     </div>
                   </div>
-                  <div>
-                    <div class="font-bold truncate max-w-[140px]">{{ user.username }}</div>
-                    <div class="text-xs text-base-content/50 truncate max-w-[180px]">{{ user.email }}</div>
+                  <div class="min-w-0">
+                    <div class="font-medium text-base truncate max-w-[180px]">{{ user.username }}
+                    </div>
+                    <div class="text-sm text-base-content/50 truncate max-w-[220px]">{{ user.email
+                    }}</div>
                   </div>
                 </div>
               </td>
-              <td>
-                <span v-if="user.isAdmin"
-                  class="badge badge-sm badge-primary badge-soft gap-1.5 font-medium px-3 py-2.5">
-                  <Icon name="mingcute:shield-fill" class="w-3.5 h-3.5" /> Admin
+              <td class="py-4">
+                <span v-if="user.isAdmin" class="badge badge-primary badge-soft gap-1.5 font-medium px-3 py-3 h-auto">
+                  <Icon name="mingcute:shield-fill" size="14" /> Admin
                 </span>
-                <span v-else class="badge badge-sm badge-ghost gap-1.5 px-3 py-2.5 bg-base-200/50">
-                  <Icon name="mingcute:user-3-line" class="w-3.5 h-3.5" /> User
+                <span v-else class="badge badge-ghost gap-1.5 px-3 py-3 h-auto bg-base-200/70 border border-base-200">
+                  <Icon name="mingcute:user-3-line" size="14" /> User
                 </span>
               </td>
-              <td>
-                <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 rounded-full ring-2 ring-opacity-20 ring-offset-1 ring-offset-base-100"
-                    :class="user.isActive ? 'bg-success ring-success' : 'bg-error ring-error'"></div>
-                  <span class="text-sm font-medium">{{ user.isActive ? t('status.active') : t('status.inactive')
-                  }}</span>
+              <td class="py-4">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-2.5 h-2.5 rounded-full ring-4 ring-opacity-20 ring-offset-0"
+                    :class="user.isActive ? 'bg-success ring-success' : 'bg-error ring-error'">
+                  </div>
+                  <span class="text-sm font-medium">{{ user.isActive ? t('status.active') :
+                    t('status.inactive') }}</span>
                 </div>
               </td>
-              <td>
-                <div class="flex gap-4 text-xs text-base-content/60">
+              <td class="py-4">
+                <div class="flex gap-4 text-sm text-base-content/70">
                   <span class="flex items-center gap-1.5" :title="t('stats.blogs')">
-                    <Icon name="mingcute:document-line" class="text-base-content/40" /> {{ user.blogCount }}
+                    <Icon name="mingcute:document-line" class="text-base-content/40" size="16" /> {{
+                      user.blogCount }}
                   </span>
                   <span class="flex items-center gap-1.5" :title="t('stats.likes')">
-                    <Icon name="mingcute:thumb-up-line" class="text-base-content/40" /> {{ user.totalLikes }}
+                    <Icon name="mingcute:thumb-up-line" class="text-base-content/40" size="16" /> {{
+                      user.totalLikes }}
                   </span>
                 </div>
               </td>
-              <td class="text-sm text-base-content/60 font-mono">
+              <td class="text-sm text-base-content/60 font-mono py-4">
                 {{ new Date(user.createdAt).toLocaleDateString() }}
               </td>
-              <td class="text-right">
-                <div class="join opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <button class="btn btn-sm btn-ghost btn-square join-item hover:bg-primary/10 hover:text-primary"
-                    :title="t('common.edit')" @click="openEdit(user)">
-                    <Icon name="mingcute:edit-line" class="w-4 h-4" />
-                  </button>
-                  <button class="btn btn-sm btn-ghost btn-square join-item hover:bg-warning/10 hover:text-warning"
-                    :title="t('user.reset_password')" @click="openPwdReset(user)">
-                    <Icon name="mingcute:key-2-line" class="w-4 h-4" />
-                  </button>
-                  <button
-                    class="btn btn-sm btn-ghost btn-square join-item text-error/70 hover:bg-error/10 hover:text-error"
-                    :title="t('common.delete')" @click="handleDelete(user)">
-                    <Icon name="mingcute:delete-2-line" class="w-4 h-4" />
-                  </button>
+              <td
+                class="sticky right-0 bg-base-100 shadow-[-5px_0_10px_-5px_rgba(0,0,0,0.05)] text-center p-0 align-middle">
+                <div class="flex justify-center items-center h-full w-full px-2">
+                  <div class="join border border-base-200/60 shadow-sm bg-base-100 rounded-lg">
+                    <button class="btn btn-sm btn-square btn-ghost join-item text-primary hover:bg-primary/10 w-9 h-9"
+                      :title="t('common.edit')" @click="openEdit(user)">
+                      <Icon name="mingcute:edit-line" size="18" />
+                    </button>
+                    <button class="btn btn-sm btn-square btn-ghost join-item text-warning hover:bg-warning/10 w-9 h-9"
+                      :title="t('user.reset_password')" @click="openPwdReset(user)">
+                      <Icon name="mingcute:key-2-line" size="18" />
+                    </button>
+                    <button
+                      class="btn btn-sm btn-square btn-ghost join-item text-error/70 hover:bg-error/10 hover:text-error w-9 h-9"
+                      :title="t('common.delete')" @click="handleDelete(user)">
+                      <Icon name="mingcute:delete-2-line" size="18" />
+                    </button>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -338,76 +352,79 @@ onMounted(() => {
       </div>
 
       <div
-        class="p-4 border-t border-base-200 flex flex-col sm:flex-row justify-between items-center gap-4 bg-base-50/50">
-        <div class="text-xs text-base-content/40 font-medium">
+        class="p-4 border-t border-base-200 bg-base-50/50 flex flex-col sm:flex-row justify-between items-center gap-4 shrink-0 h-auto sm:h-16">
+        <div class="text-sm text-base-content/50 font-medium hidden sm:block">
           {{ t('common.total_records', { count: pagination.totalBlogs || users.length }) }}
         </div>
         <div class="join bg-base-100 shadow-sm border border-base-200 rounded-lg overflow-hidden">
-          <button class="join-item btn btn-sm btn-ghost border-r border-base-200 hover:bg-base-200"
+          <button
+            class="join-item btn btn-sm h-9 min-h-[2.25rem] btn-ghost border-r border-base-200 hover:bg-base-200 px-3"
             :disabled="!pagination.hasPrevPage" @click="changePage(pagination.currentPage - 1)">
-            <Icon name="mingcute:left-line" />
+            <Icon name="mingcute:left-line" size="18" />
           </button>
           <button
-            class="join-item btn btn-sm bg-base-100 border-none no-animation text-xs font-normal cursor-default hover:bg-base-100">
+            class="join-item btn btn-sm h-9 min-h-[2.25rem] bg-base-100 border-none no-animation text-sm font-medium cursor-default hover:bg-base-100 px-4">
             {{ pagination.currentPage }} / {{ pagination.totalPages }}
           </button>
-          <button class="join-item btn btn-sm btn-ghost border-l border-base-200 hover:bg-base-200"
+          <button
+            class="join-item btn btn-sm h-9 min-h-[2.25rem] btn-ghost border-l border-base-200 hover:bg-base-200 px-3"
             :disabled="!pagination.hasNextPage" @click="changePage(pagination.currentPage + 1)">
-            <Icon name="mingcute:right-line" />
+            <Icon name="mingcute:right-line" size="18" />
           </button>
         </div>
       </div>
     </div>
 
     <dialog class="modal modal-bottom sm:modal-middle backdrop-blur-sm" :class="{ 'modal-open': showEditModal }">
-      <div class="modal-box p-0 overflow-hidden shadow-2xl">
-        <div class="p-5 border-b border-base-200 bg-base-200/30 flex justify-between items-center">
-          <h3 class="font-bold text-lg flex items-center gap-2">
-            <Icon name="mingcute:user-edit-line" class="text-primary" />
+      <div class="modal-box p-0 overflow-hidden shadow-2xl max-w-lg">
+        <div class="p-5 border-b border-base-200 bg-base-100 flex justify-between items-center">
+          <h3 class="font-bold text-lg flex items-center gap-2.5">
+            <div class="p-2 bg-primary/10 rounded-lg text-primary">
+              <Icon name="mingcute:user-edit-line" size="20" />
+            </div>
             {{ t('admin.edit_user') }}
           </h3>
           <button class="btn btn-sm btn-circle btn-ghost" @click="showEditModal = false">✕</button>
         </div>
 
-        <div class="p-6" v-if="editingUser">
+        <div class="p-6 bg-base-50/50" v-if="editingUser">
           <div class="grid gap-4">
             <div
-              class="bg-base-100 border border-base-200 rounded-xl p-4 flex items-center justify-between hover:border-primary/30 transition-colors">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-base-200 flex items-center justify-center">
-                  <Icon name="mingcute:power-line" class="text-xl"
-                    :class="editingUser.isActive ? 'text-success' : 'text-base-content/40'" />
+              class="bg-base-100 border border-base-200 rounded-xl p-4 flex items-center justify-between hover:border-primary/30 transition-colors shadow-sm">
+              <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-full bg-success/10 flex items-center justify-center text-success">
+                  <Icon name="mingcute:power-line" size="22" :class="!editingUser.isActive && 'grayscale opacity-50'" />
                 </div>
                 <div>
-                  <div class="font-medium">{{ t('user.status') }}</div>
-                  <div class="text-xs text-base-content/50">{{ editingUser.isActive ? t('status.active_desc') :
-                    t('status.inactive_desc') }}</div>
+                  <div class="font-semibold text-base">{{ t('user.status') }}</div>
+                  <div class="text-sm text-base-content/50 mt-0.5">{{ editingUser.isActive ?
+                    t('status.active_desc') : t('status.inactive_desc') }}</div>
                 </div>
               </div>
-              <input type="checkbox" class="toggle toggle-success" v-model="editingUser.isActive" />
+              <input type="checkbox" class="toggle toggle-md toggle-success" v-model="editingUser.isActive" />
             </div>
 
             <div
-              class="bg-base-100 border border-base-200 rounded-xl p-4 flex items-center justify-between hover:border-primary/30 transition-colors">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-base-200 flex items-center justify-center">
-                  <Icon name="mingcute:shield-line" class="text-xl"
-                    :class="editingUser.isAdmin ? 'text-primary' : 'text-base-content/40'" />
+              class="bg-base-100 border border-base-200 rounded-xl p-4 flex items-center justify-between hover:border-primary/30 transition-colors shadow-sm">
+              <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <Icon name="mingcute:shield-line" size="22" :class="!editingUser.isAdmin && 'grayscale opacity-50'" />
                 </div>
                 <div>
-                  <div class="font-medium">{{ t('user.role') }}</div>
-                  <div class="text-xs text-base-content/50">{{ editingUser.isAdmin ? t('role.admin_desc') :
-                    t('role.user_desc') }}</div>
+                  <div class="font-semibold text-base">{{ t('user.role') }}</div>
+                  <div class="text-sm text-base-content/50 mt-0.5">{{ editingUser.isAdmin ?
+                    t('role.admin_desc') : t('role.user_desc') }}</div>
                 </div>
               </div>
-              <input type="checkbox" class="toggle toggle-primary" v-model="editingUser.isAdmin" />
+              <input type="checkbox" class="toggle toggle-md toggle-primary" v-model="editingUser.isAdmin" />
             </div>
           </div>
         </div>
 
-        <div class="p-5 border-t border-base-200 bg-base-50 flex justify-end gap-2">
-          <button class="btn btn-ghost" @click="showEditModal = false">{{ t('common.cancel') }}</button>
-          <button class="btn btn-primary px-6" @click="saveEdit">{{ t('common.save') }}</button>
+        <div class="p-5 border-t border-base-200 bg-base-100 flex justify-end gap-3">
+          <button class="btn btn-md btn-ghost font-normal" @click="showEditModal = false">{{
+            t('common.cancel') }}</button>
+          <button class="btn btn-md btn-primary px-8" @click="saveEdit">{{ t('common.save') }}</button>
         </div>
       </div>
       <form method="dialog" class="modal-backdrop">
@@ -416,39 +433,45 @@ onMounted(() => {
     </dialog>
 
     <dialog class="modal modal-bottom sm:modal-middle backdrop-blur-sm" :class="{ 'modal-open': showPwdModal }">
-      <div class="modal-box p-0 overflow-hidden shadow-2xl">
-        <div class="p-5 border-b border-base-200 bg-warning/5 flex justify-between items-center">
-          <h3 class="font-bold text-lg flex items-center gap-2 text-warning-content">
-            <Icon name="mingcute:key-2-line" class="text-warning" />
+      <div class="modal-box p-0 overflow-hidden shadow-2xl max-w-lg">
+        <div class="p-5 border-b border-base-200 bg-base-100 flex justify-between items-center">
+          <h3 class="font-bold text-lg flex items-center gap-2.5">
+            <div class="p-2 bg-warning/10 rounded-lg text-warning">
+              <Icon name="mingcute:key-2-line" size="20" />
+            </div>
             {{ t('user.reset_password') }}
           </h3>
           <button class="btn btn-sm btn-circle btn-ghost" @click="showPwdModal = false">✕</button>
         </div>
 
-        <div class="p-6">
-          <div class="alert alert-warning alert-soft mb-4 text-xs">
-            <Icon name="mingcute:warning-line" />
-            <span>{{ t('admin.password_warning') }}</span>
+        <div class="p-6 bg-base-50/50">
+          <div class="alert alert-warning alert-soft mb-6 p-4 border-none shadow-sm">
+            <Icon name="mingcute:warning-line" size="20" />
+            <span class="text-sm font-medium">{{ t('admin.password_warning') }}</span>
           </div>
 
           <div class="form-control w-full">
-            <label class="label">
-              <span class="label-text font-medium">{{ t('user.new_password') }}</span>
+            <label class="label pt-0 pb-2">
+              <span class="label-text font-semibold text-base">{{ t('user.new_password') }}</span>
             </label>
             <div class="relative">
-              <input type="text" v-model="pwdForm.newPassword" class="input input-bordered w-full font-mono pl-10"
+              <input type="text" v-model="pwdForm.newPassword" class="input input-bordered w-full font-mono pl-11 h-12"
                 placeholder="New Password" />
-              <Icon name="mingcute:lock-line" class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" />
+              <div class="absolute left-0 top-0 bottom-0 w-11 flex items-center justify-center text-base-content/40">
+                <Icon name="mingcute:lock-line" size="20" />
+              </div>
             </div>
-            <label class="label">
+            <label class="label pb-0">
               <span class="label-text-alt text-base-content/50">{{ t('admin.password_hint') }}</span>
             </label>
           </div>
         </div>
 
-        <div class="p-5 border-t border-base-200 bg-base-50 flex justify-end gap-2">
-          <button class="btn btn-ghost" @click="showPwdModal = false">{{ t('common.cancel') }}</button>
-          <button class="btn btn-warning px-6" @click="savePwd">{{ t('common.confirm_reset') }}</button>
+        <div class="p-5 border-t border-base-200 bg-base-100 flex justify-end gap-3">
+          <button class="btn btn-md btn-ghost font-normal" @click="showPwdModal = false">{{ t('common.cancel')
+          }}</button>
+          <button class="btn btn-md btn-warning px-8" @click="savePwd">{{ t('common.confirm_reset')
+          }}</button>
         </div>
       </div>
       <form method="dialog" class="modal-backdrop">

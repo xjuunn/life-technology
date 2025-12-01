@@ -51,6 +51,11 @@ export const useUserStore = defineStore('user', () => {
     return result.data.token;
   }
 
+  async function getUserInfo() {
+    const data = await ApiList.auth.profile();
+    return data.data.user;
+  }
+
   function setUser(u: ApiList.auth.User) {
     _user.value = u;
   }
@@ -75,6 +80,7 @@ export const useUserStore = defineStore('user', () => {
     setUser,
     setToken,
     setRefreshToken,
+    getUserInfo
   }
 }, {
   persist: {
