@@ -108,12 +108,14 @@ export function forgotPassword(email: string) {
 
 /**
  * 重置密码
- * @param token token
+ * @param email 邮箱
+ * @param code token
  * @param newPassword 新密码
  */
-export function resetPassword(token: string, newPassword: string) {
+export function resetPassword(email:string, code: string, newPassword: string) {
     return api.post<any>(base + '/reset-password', {
-        token,
+        email,
+        code,
         newPassword
     })
 }
