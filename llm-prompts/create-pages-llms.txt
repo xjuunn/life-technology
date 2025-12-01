@@ -87,6 +87,13 @@ export interface LoginResponse {
 }
 
 5.5 所有 API 必须通过 ApiList 导出并自动导入
+使用类似的结构，直接访问API
+ApiList.blog.create();
+ApiList.upload.avatar();
+ApiList.auth.login();
+ApiList.admin.blog.listBlogs();
+ApiList是自动导入的，不需要手动导入
+
 6. Pinia 状态管理
 所有 Store 必须放在：
 ~/app/stores/
@@ -137,6 +144,44 @@ useToast().success('成功')
 useToast().info('提示')
 useToast().error('错误')
 useToast().warning('警告')
+
+Dialog
+const dialog = useDialog()
+const toast = useToast()
+// 示例 1: 基础确认框
+const handleDelete = async () => {
+  const isConfirmed = await dialog.confirm({
+    title: '删除确认',
+    content: '你确定要删除这条重要数据吗？此操作无法撤销。',
+    type: 'warning',
+    confirmText: '立即删除',
+  })
+  if (isConfirmed) {
+    // 调用 API
+    await new Promise(r => setTimeout(r, 1000))
+    toast.success('删除成功')
+  } else {
+    toast.info('已取消操作')
+  }
+}
+// 示例 2: 简单 Alert
+const showInfo = async () => {
+  await dialog.alert('操作成功，积分已到账！')
+  console.log('用户关闭了弹窗')
+}
+// 示例 3: 错误提示
+const showError = () => {
+  dialog.error('服务器连接超时，请检查网络设置。')
+}
+
+Modal
+<CommonModal v-model="showLargeModal" :title="t('demo.large_modal')" max-width="max-w-3xl">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="bg-base-200 p-4 rounded-xl h-32 animate-pulse"></div>
+    <div class="bg-base-200 p-4 rounded-xl h-32 animate-pulse"></div>
+    <div class="bg-base-200 p-4 rounded-xl h-32 animate-pulse sm:col-span-2"></div>
+  </div>
+</CommonModal>
 
 Api 通用响应类型
 export interface ApiResponse<T = any> {
