@@ -1,21 +1,77 @@
 <template>
+    <!-- 在模板中添加 Modal 结构 -->
+  <div class="modal" :class="{ 'modal-open': showModal }">
+    <div class="modal-box max-w-10xl max-h-[110vh]">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold">{{ modalTitle }}</h3>
+        <p v-if="modalImages.length > 1" class="text-sm text-base-content/60">
+           步骤{{ currentImageIndex + 1 }} / {{ modalImages.length }}
+        </p>
+        <button class="btn btn-sm btn-circle" @click="closeModal">✕</button>
+      </div>
+      <div class="flex justify-center items-center relative">
+       <button 
+            v-if="modalImages.length > 1 && currentImageIndex > 0"
+            class="rounded-full bg-base-100 p-4 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-all duration-500 shadow-sm absolute left-2 z-10 flex items-center justify-center"
+            @click="prevImage"
+          >
+            <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
+            <div class="relative z-10 w-10 h-10 flex items-center justify-center text-accent">
+              <Icon name="heroicons:chevron-left" class="!w-8 !h-8" />
+            </div>
+          </button>
+        <div class="w-full h-full flex items-center justify-center p-4">
+          <img 
+            v-if="modalImages.length > 0 && modalImages[currentImageIndex]"
+            :src="modalImages[currentImageIndex]" 
+            :alt="`${modalTitle} - 步骤 ${currentImageIndex + 1}`" 
+            class="max-w-full max-h-[75vh] object-contain rounded-xl shadow-2xl"
+            @error="handleImageError" 
+            />
+        </div>
+        <!-- 下一张 -->
+       <button 
+            v-if="modalImages.length > 1 && currentImageIndex < modalImages.length - 1"
+            class="rounded-full bg-base-100 p-4 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-all duration-500 shadow-sm absolute right-2 z-10 flex items-center justify-center"
+            @click="nextImage"
+          >
+            <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
+            <div class="relative z-10 w-10 h-10 flex items-center justify-center text-accent">
+              <Icon name="heroicons:chevron-right" class="!w-8 !h-8" />
+            </div>
+          </button>
+      </div>
+      <!-- 圆点指示器 -->
+      <div v-if="modalImages.length > 1" class="flex justify-center mt-4 space-x-2">
+        <button
+          v-for="(img, index) in modalImages"
+          :key="index"
+          class="w-10 h-10 rounded-full transition-all duration-300 border-2 border-base-300"
+          :class="currentImageIndex === index ? 'bg-primary border-primary scale-125' : 'bg-base-300 hover:bg-base-400'"
+          @click="currentImageIndex = index"
+          :aria-label="`跳转到步骤 ${index + 1}`"
+          >
+        </button>
+      </div>
+    </div>
+  </div>
   <div
     class="min-h-full h-[calc(100vh-90px)] bg-base-100 text-base-content font-sans relative overflow-hidden selection:bg-primary selection:text-primary-content flex flex-col">
     <div class="absolute inset-0 bg-base-100 z-0"></div>
     <!--背景图片-->
-    <div class="absolute inset-y-0 right-0 w-2/3 z-0 " :style="{
+    <div class="absolute inset-y-0 right-0 w-3/4 z-0 " :style="{
       backgroundImage: 'url(/imgs/background.png)',
       backgroundSize: 'cover',
-      backgroundPosition: 'left center',
+      backgroundPosition: 'left 80%',
       backgroundRepeat: 'no-repeat'
     }">
     </div>
     <div class="absolute inset-0 z-0">
       <!-- 中心高亮点 -->
-      <div class="absolute right-1/4 top-1/3 w-32 h-32 bg-primary/20 rounded-full blur-2xl"></div>
+      <div class="absolute right-1/4 top-1/4 w-32 h-32 bg-primary/20 rounded-full blur-2xl"></div>
     </div>
 
-    <main class="flex-1 w-full flex items-center py-8 sm:py-12 lg:py-0 overflow-y-auto overflow-x-hidden">
+    <main class="flex-1 w-full flex items-start py-4 sm:py-8 lg:py-12 overflow-y-auto overflow-x-hidden">
       <div class="container mx-auto sm:px-6">
         <div class="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12 xl:gap-16">
           <div class="w-full lg:w-1/2 text-center lg:text-left space-y-5 sm:space-y-6 z-10 order-2 lg:order-1">
@@ -80,24 +136,218 @@
           </div>
           <div class="w-full lg:w-2/5 flex justify-center relative order-1 lg:order-2">
             <div
-              class="relative w-full max-w-[390px] lg:max-w-[400px] xl:max-w-[450px] flex items-center justify-center">
-              <img src="/imgs/phonea.png" alt="LifeChain App Preview"
+              class="relative w-full max-w-[300px] lg:max-w-[350px] xl:max-w-[400px] flex items-center justify-center">
+              <img src="/imgs/phone.png" alt="LifeChain App Preview"
                 class="w-full h-auto object-contain transform transition-transform duration-700 hover:scale-105 z-20 relative">
               <!-- 手机图片中心高亮 -->
-              <div class="absolute inset-0 flex items-center justify-center z-10">
+              <!-- <div class="absolute inset-0 flex items-center justify-center z-10">
                 <div class="w-64 h-64 bg-primary/40 rounded-full blur-2xl animate-pulse"></div>
                 <div class="w-32 h-32 bg-white/30 rounded-full blur-xl absolute"></div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
       </div>
     </main>
+
+ <!-- 底部教程区域 -->
+    <div class="h-1/5 w-full bg-gradient-to-t from-base-200 to-base-100 border-t border-base-300 flex items-center justify-center">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-4">
+          <h3 class="text-xl font-bold text-base-content mb-2">{{ t('tutorial_section.title') }}</h3>
+          <p class="text-sm text-base-content/60 max-w-2xl mx-auto">{{ t('tutorial_section.subtitle') }}</p>
+        </div>
+        
+        <!-- 使用流程图 - 添加点击事件 -->
+        <div class="relative">
+          <div class="absolute top-6 left-0 right-0 h-0.5 bg-primary/20 hidden sm:block"></div>
+          
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+            <!-- 步骤1: 下载安装 -->
+            <div class="flex flex-col items-center text-center space-y-3 group cursor-pointer" @click="openStepModal(1)">
+              <div class="relative">
+                <div class="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-all duration-300">
+                  <Icon name="heroicons:arrow-down-tray" class="w-6 h-6 text-primary" />
+                </div>
+                <div class="absolute -top-2 -right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                  <span class="text-white text-xs font-bold">1</span>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-base text-base-content">{{ t('tutorial_section.step1_title') }}</p>
+                <p class="text-xs text-base-content/60">{{ t('tutorial_section.step1_desc') }}</p>
+              </div>
+            </div>
+            
+            <!-- 步骤2: 创建钱包 -->
+            <div class="flex flex-col items-center text-center space-y-3 group cursor-pointer" @click="openStepModal(2)">
+              <div class="relative">
+                <div class="w-14 h-14 rounded-full bg-success/20 flex items-center justify-center group-hover:bg-success/30 transition-all duration-300">
+                  <Icon name="heroicons:plus-circle" class="w-6 h-6 text-success" />
+                </div>
+                <div class="absolute -top-2 -right-2 w-6 h-6 bg-success rounded-full flex items-center justify-center">
+                  <span class="text-white text-xs font-bold">2</span>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-base text-base-content">{{ t('tutorial_section.step2_title') }}</p>
+                <p class="text-xs text-base-content/60">{{ t('tutorial_section.step2_desc') }}</p>
+              </div>
+            </div>
+            
+            <!-- 步骤3: 安全备份 -->
+            <div class="flex flex-col items-center text-center space-y-3 group cursor-pointer" @click="openStepModal(3)">
+              <div class="relative">
+                <div class="w-14 h-14 rounded-full bg-warning/20 flex items-center justify-center group-hover:bg-warning/30 transition-all duration-300">
+                  <Icon name="heroicons:key" class="w-6 h-6 text-warning" />
+                </div>
+                <div class="absolute -top-2 -right-2 w-6 h-6 bg-warning rounded-full flex items-center justify-center">
+                  <span class="text-white text-xs font-bold">3</span>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-base text-base-content">{{ t('tutorial_section.step3_title') }}</p>
+                <p class="text-xs text-base-content/60">{{ t('tutorial_section.step3_desc') }}</p>
+              </div>
+            </div>
+            
+            <!-- 步骤4: 开始使用 -->
+            <div class="flex flex-col items-center text-center space-y-3 group cursor-pointer" @click="openStepModal(4)">
+              <div class="relative">
+                <div class="w-14 h-14 rounded-full bg-info/20 flex items-center justify-center group-hover:bg-info/30 transition-all duration-300">
+                  <Icon name="heroicons:rocket-launch" class="w-6 h-6 text-info" />
+                </div>
+                <div class="absolute -top-2 -right-2 w-6 h-6 bg-info rounded-full flex items-center justify-center">
+                  <span class="text-white text-xs font-bold">4</span>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-base text-base-content">{{ t('tutorial_section.step4_title') }}</p>
+                <p class="text-xs text-base-content/60">{{ t('tutorial_section.step4_desc') }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 底部导航和版权信息保持不变 -->
+        <div class="mt-6 pt-4 border-t border-base-300">
+          <div class="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+            <div class="flex space-x-6 text-sm">
+              <a href="#" class="text-base-content/70 hover:text-primary transition-colors">{{ t('footer.home') }}</a>
+              <a href="#" class="text-base-content/70 hover:text-primary transition-colors">{{ t('footer.about') }}</a>
+              <a href="#" class="text-base-content/70 hover:text-primary transition-colors">{{ t('footer.apps') }}</a>
+              <a href="#" class="text-base-content/70 hover:text-primary transition-colors">{{ t('footer.blog') }}</a>
+            </div>
+            <div class="text-xs text-base-content/50 text-center sm:text-right">
+              <p>{{ t('footer.copyright') }}</p>
+              <p>{{ t('footer.icp') }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 const { t } = useAppI18n();
+// 添加模态框状态
+const showModal = ref(false);
+const modalImages = ref([]);
+const modalTitle = ref('');
+const currentImageIndex = ref(0);
+
+// 打开模态框
+// 打开步骤模态框 - 支持多张图片
+const openStepModal = (step) => {
+  const stepConfig = {
+    1: {
+      images: [
+        '/imgs/step1/10.jpg',
+        '/imgs/step1/11.jpg', 
+        '/imgs/step1/21.jpg',
+        '/imgs/step1/22.jpg',
+        '/imgs/step1/23.jpg'
+      ],
+      title: t('tutorial_section.step1_title')
+    },
+    2: {
+      images: [
+        '/imgs/step2/30.jpg',
+        '/imgs/step2/31.jpg',
+        '/imgs/step2/32.jpg',
+        '/imgs/step2/33.jpg',
+        '/imgs/step2/34.jpg'
+      ],
+      title: t('tutorial_section.step2_title')
+    },
+    3: {
+      images: [
+        '/imgs/step3/40.jpg',
+        '/imgs/step3/42.jpg',
+        '/imgs/step3/43.jpg',
+        '/imgs/step3/44.jpg'
+      ],
+      title: t('tutorial_section.step3_title')
+    },
+    4: {
+      images: [
+        '/imgs/step4/70.jpg',
+      ],
+      title: t('tutorial_section.step4_title')
+    }
+  };
+
+  const config = stepConfig[step];
+  if (config) {
+    modalImages.value = config.images;
+    modalTitle.value = config.title;
+    currentImageIndex.value = 0;
+    showModal.value = true;
+  }
+};
+
+// 切换图片
+const nextImage = () => {
+  if (currentImageIndex.value < modalImages.value.length - 1) {
+    currentImageIndex.value++;
+  }
+};
+
+const prevImage = () => {
+  if (currentImageIndex.value > 0) {
+    currentImageIndex.value--;
+  }
+};
+
+// 图片加载错误处理
+const handleImageError = (event) => {
+  console.error('图片加载失败:', event.target.src);
+  // 可以在这里添加默认图片或错误提示
+};
+
+// 关闭模态框时重置
+const closeModal = () => {
+  showModal.value = false;
+  modalImages.value = [];
+  modalTitle.value = '';
+  currentImageIndex.value = 0;
+};
+
+// 键盘事件监听（按ESC关闭）
+onMounted(() => {
+  const handleKeydown = (event) => {
+    if (event.key === 'Escape' && showModal.value) {
+      closeModal();
+    }
+  };
+  
+  window.addEventListener('keydown', handleKeydown);
+  
+  onUnmounted(() => {
+    window.removeEventListener('keydown', handleKeydown);
+  });
+});
 </script>
 
 <i18n lang="json">{
@@ -117,6 +367,17 @@ const { t } = useAppI18n();
         "multichain": "Multi-Chain",
         "custodial": "Non-Custodial"
       }
+    },
+    "tutorial_section": {
+      "title": "How to Get Started",
+      "step1_title": "Create User",
+      "step1_desc": "One-click setup",
+      "step2_title": "Secure Backup",
+      "step2_desc": "Protect your assets",
+      "step3_title": "Manage Assets",
+      "step3_desc": "Multi-chain support",
+      "step4_title": "Social & Live",
+      "step4_desc": "Chat and earn"
     }
   },
   "zh-CN": {
@@ -135,6 +396,17 @@ const { t } = useAppI18n();
         "multichain": "多链支持",
         "custodial": "非托管"
       }
+    },
+     "tutorial_section": {
+      "title": "使用指南",
+      "step1_title": "创建用户",
+      "step1_desc": "一键创建",
+      "step2_title": "安全备份",
+      "step2_desc": "保护资产安全",
+      "step3_title": "资产管理",
+      "step3_desc": "多链支持",
+      "step4_title": "社交直播",
+      "step4_desc": "边聊边赚"
     }
   },
   "zh-TW": {
@@ -153,6 +425,17 @@ const { t } = useAppI18n();
         "multichain": "多鏈支持",
         "custodial": "非託管"
       }
+    },
+    "tutorial_section": {
+      "title": "使用指南",
+      "step1_title": "創建用户",
+      "step1_desc": "一鍵創建",
+      "step2_title": "安全備份",
+      "step2_desc": "保護資產安全",
+      "step3_title": "資產管理",
+      "step3_desc": "多鏈支持",
+      "step4_title": "社交直播",
+      "step4_desc": "邊聊邊賺"
     }
   }
 }</i18n>
