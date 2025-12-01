@@ -1,85 +1,52 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const dialog = useDialog()
+const toast = useToast()
 
-// 状态管理
-const showModal = ref(false)
-const showLargeModal = ref(false)
+// 示例 1: 基础确认框
+const handleDelete = async () => {
+  const isConfirmed = await dialog.confirm({
+    title: '删除确认',
+    content: '你确定要删除这条重要数据吗？此操作无法撤销。',
+    type: 'warning',
+    confirmText: '立即删除',
+  })
 
-const handleConfirm = () => {
-  useToast().success(t('demo.success_message'))
-  showModal.value = false
+  if (isConfirmed) {
+    // 调用 API
+    await new Promise(r => setTimeout(r, 1000))
+    toast.success('删除成功')
+  } else {
+    toast.info('已取消操作')
+  }
+}
+
+// 示例 2: 简单 Alert
+const showInfo = async () => {
+  await dialog.alert('操作成功，积分已到账！')
+  console.log('用户关闭了弹窗')
+}
+
+// 示例 3: 错误提示
+const showError = () => {
+  dialog.error('服务器连接超时，请检查网络设置。')
 }
 </script>
 
 <template>
-  <div class="p-8 min-h-screen flex flex-col items-center justify-center gap-4 bg-base-200">
+  <div class="p-10 flex flex-col gap-4 items-start">
+    <h1 class="text-2xl font-bold">Dialog Demo</h1>
 
-    <!-- 触发按钮 -->
-    <button class="btn btn-primary" @click="showModal = true">
-      {{ t('demo.open_basic') }}
+    <button class="btn btn-warning" @click="handleDelete">
+      <Icon name="mingcute:delete-2-fill" />
+      测试删除确认 (Async/Await)
     </button>
 
-    <button class="btn btn-secondary" @click="showLargeModal = true">
-      {{ t('demo.open_large') }}
+    <button class="btn btn-info" @click="showInfo">
+      测试普通提示
     </button>
 
-    <!-- 1. 基础 Modal -->
-    <CommonModal v-model="showModal" :title="t('demo.modal_title')">
-      <p class="text-base-content/70">
-        {{ t('demo.modal_content') }}
-      </p>
-
-      <!-- 底部按钮插槽 -->
-      <template #actions="{ close }">
-        <button class="btn btn-ghost" @click="close">
-          {{ t('common.cancel') }}
-        </button>
-        <button class="btn btn-primary" @click="handleConfirm">
-          {{ t('common.confirm') }}
-        </button>
-      </template>
-    </CommonModal>
-
-    <!-- 2. 大尺寸内容 Modal -->
-    <CommonModal v-model="showLargeModal" :title="t('demo.large_modal')" max-width="max-w-3xl">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="bg-base-200 p-4 rounded-xl h-32 animate-pulse"></div>
-        <div class="bg-base-200 p-4 rounded-xl h-32 animate-pulse"></div>
-        <div class="bg-base-200 p-4 rounded-xl h-32 animate-pulse sm:col-span-2"></div>
-      </div>
-    </CommonModal>
-
-
+    <button class="btn btn-error" @click="showError">
+      测试错误提示
+    </button>
   </div>
 </template>
-
-<i18n lang="json">{
-  "zh-CN": {
-    "common": {
-      "cancel": "取消",
-      "confirm": "确认"
-    },
-    "demo": {
-      "open_basic": "打开基础模态框",
-      "open_large": "打开宽幅模态框",
-      "modal_title": "系统提示",
-      "modal_content": "这是一个响应式模态框。在移动端它会从底部滑出，在桌面端它会居中显示。",
-      "large_modal": "详细信息",
-      "success_message": "操作成功！"
-    }
-  },
-  "en": {
-    "common": {
-      "cancel": "Cancel",
-      "confirm": "Confirm"
-    },
-    "demo": {
-      "open_basic": "Open Basic Modal",
-      "open_large": "Open Large Modal",
-      "modal_title": "System Notice",
-      "modal_content": "This is a responsive modal. It slides up from the bottom on mobile and centers on desktop.",
-      "large_modal": "Detailed Information",
-      "success_message": "Operation successful!"
-    }
-  }
-}</i18n>
