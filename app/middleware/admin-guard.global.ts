@@ -4,6 +4,6 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const isAdminRoute = to.path.startsWith('/admin')
     if (isAdminRoute) {
-        if (!useUserStore().user?.isAdmin) return navigateTo('/auth/login')
+        if (!useUserStore().user?.isAdmin) return navigateTo('/403')
     }
 })
