@@ -440,5 +440,13 @@ export type Action = "delete" | "dismiss";
  * @param data 处理数据
  */
 function handleReport(id: string, data: HandleReportRequest) {
-  return api.put<{ message: string }>(base + '/reports/' + id, data);
+  return api.put<{
+    message: string;
+    report: {
+      id: string;
+      status: string;
+      handleResult: string;
+      handledAt: string;
+    }
+  }>(base + '/reports/' + id, data);
 }
