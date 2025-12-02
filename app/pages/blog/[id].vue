@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { getBlogDetails, share, like as doLike } from '~/api/blog'
-import { listBlogComments ,create, del , updateComment } from '~/api/comment'
+import { listBlogComments, create, del, updateComment } from '~/api/comment'
 import { useUserStore } from '~/stores/user'
 import { EditorContent, useEditor } from "@tiptap/vue-3"
 import { GlobalEditorExtensions } from '~/utils/editor.util.ts';
-import { list as createReport } from '~/api/report'
+import { create as createReport} from '~/api/report'
+import type {CreateReportRequest, CreateReportResponse} from "~/api/report";
 
 const { t } = useI18n()
 const route = useRoute()
@@ -91,21 +92,29 @@ const reportBlog = async () => {
   reporting.value = true
 
   try {
-     const result = await createReport({
-      targetId: blog.value.id,
+    const requestData: CreateReportRequest = {
       targetType: 'Blog',
+      targetId: blog.value.id,
       reason: reason.value,
       description: reportDescription.value || `举报博客: ${blog.value.title}`
-    })
+    }
 
-    if (result.report) {
-      toast.success(result.message || t('blog.detail.report_success'))
+    const response = await createReport(requestData)
+    if (response.success) {
+      const result = response.data as CreateReportResponse
+      
+      if (result.report) {
+        toast.success(result.message || t('blog.detail.report_success'))
+      } else {
+        const errorMessage = getLocalizedErrorMessage(result.message || t('blog.detail.report_failed'))
+        toast.error(errorMessage)
+      }
     } else {
-      const errorMessage = getLocalizedErrorMessage(result.message || t('blog.detail.report_failed'))
-      throw new Error(result.message)
+      const errorMessage = getLocalizedErrorMessage(response.message || t('blog.detail.report_failed'))
+      toast.error(errorMessage)
     }
   } catch (err: any) {
-    const errorMessage= getLocalizedErrorMessage(err.message || t('blog.detail.report_failed'))
+    const errorMessage = getLocalizedErrorMessage(err.message || t('blog.detail.report_failed'))
     toast.error(errorMessage)
     console.error('Failed to submit report:', err)
   } finally {
@@ -113,10 +122,8 @@ const reportBlog = async () => {
   }
 }
 
-// 显示举报对话框
 const showReportDialog = (): Promise<{value: string, label: string} | null> => {
   return new Promise((resolve) => {
-
     const dialog = document.createElement('dialog')
     dialog.className = 'modal modal-bottom sm:modal-middle'
     
@@ -136,6 +143,7 @@ const showReportDialog = (): Promise<{value: string, label: string} | null> => {
                   name="reportReason" 
                   value="${reason.value}" 
                   class="radio radio-primary mr-3"
+                  ${reason.value === selectedReason.value ? 'checked' : ''}
                 />
                 <span>${reason.label}</span>
               </label>
@@ -149,14 +157,14 @@ const showReportDialog = (): Promise<{value: string, label: string} | null> => {
             class="textarea textarea-bordered w-full" 
             placeholder="${t('blog.detail.report_description_placeholder')}"
             rows="3"
-          ></textarea>
+          >${reportDescription.value}</textarea>
         </div>
         
         <div class="modal-action">
-          <button class="btn btn-ghost" value="cancel">
+          <button class="btn btn-ghost" type="button" onclick="this.closest('dialog').close('cancel')">
             ${t('blog.detail.cancel')}
           </button>
-          <button class="btn btn-error" value="confirm">
+          <button class="btn btn-error" type="button" onclick="this.closest('dialog').close('confirm')">
             ${t('blog.detail.confirm_report')}
           </button>
         </div>
@@ -168,12 +176,10 @@ const showReportDialog = (): Promise<{value: string, label: string} | null> => {
     
     dialog.addEventListener('close', () => {
       const returnValue = dialog.returnValue
-      document.body.removeChild(dialog)
+      const selectedRadio = dialog.querySelector('input[name="reportReason"]:checked') as HTMLInputElement
+      const textarea = dialog.querySelector('textarea') as HTMLTextAreaElement
       
       if (returnValue === 'confirm') {
-        const selectedRadio = dialog.querySelector('input[name="reportReason"]:checked') as HTMLInputElement
-        const textarea = dialog.querySelector('textarea') as HTMLTextAreaElement
-        
         if (!selectedRadio?.value) {
           toast.warning(t('blog.detail.select_report_reason'))
           resolve(null)
@@ -188,10 +194,13 @@ const showReportDialog = (): Promise<{value: string, label: string} | null> => {
       } else {
         resolve(null)
       }
+      
+      document.body.removeChild(dialog)
     })
     
     dialog.addEventListener('cancel', (e) => {
       e.preventDefault()
+      dialog.close('cancel')
     })
   })
 }
@@ -213,17 +222,25 @@ const reportComment = async (comment: any, isReply = false) => {
   reporting.value = true
 
   try {
-    const result = await createReport({
+    const requestData: CreateReportRequest = {
+      targetType: 'Comment',
       targetId: comment.id,
-      targetType: 'Comment', 
       reason: reason.value,
       description: reportDescription.value || `举报${isReply ? '回复' : '评论'}: ${comment.content.substring(0, 50)}${comment.content.length > 50 ? '...' : ''}`
-    })
+    }
 
-    if (result.success) {
-      toast.success(result.message || t('blog.detail.report_success'))
+    const response  = await createReport(requestData)
+    if (response.success) {
+      const result = response.data as CreateReportResponse
+      
+      if (result.report) {
+        toast.success(result.message || t('blog.detail.report_success'))
+      } else {
+        const errorMessage = getLocalizedErrorMessage(result.message || t('blog.detail.report_failed'))
+        toast.error(errorMessage)
+      }
     } else {
-      const errorMessage = getLocalizedErrorMessage(result.message || t('blog.detail.report_failed'))
+      const errorMessage = getLocalizedErrorMessage(response.message || t('blog.detail.report_failed'))
       toast.error(errorMessage)
     }
   } catch (err: any) {
@@ -297,7 +314,7 @@ const submitReply = async (parentCommentId: string) => {
     toast.warning(t('blog.detail.comment_empty'))
     return
   }
-    submittingReply.value = true
+  submittingReply.value = true
 
   try {
     const result = await create({
@@ -622,7 +639,7 @@ onMounted(() => {
           </div>
         </header>
 
-        <div v-if="blog.coverImage"
+        <div v-if="blog.coverImage" 
           class="mb-10 rounded-xl overflow-hidden bg-base-200 border border-base-content/5 shadow-sm aspect-video">
           <img :src="blog.coverImage" :alt="blog.title" class="w-full h-full object-cover" />
         </div>
@@ -774,11 +791,11 @@ onMounted(() => {
                       {{ getDisplayContent(comment) }}
                     </div>
                     <button
-                    v-if="needsExpand(comment.content)"
-                    @click="toggleCommentExpand(comment.id)"
-                    class="btn btn-link btn-sm p-0 h-auto min-h-0 text-primary mt-1 no-underline hover:underline"
+                      v-if="needsExpand(comment.content)"
+                      @click="toggleCommentExpand(comment.id)"
+                      class="btn btn-link btn-sm p-0 h-auto min-h-0 text-primary mt-1 no-underline hover:underline"
                     >
-                    {{ expandedComments[comment.id] ?t('blog.detail.collapse') : t('blog.detail.expand')  }}
+                      {{ expandedComments[comment.id] ? t('blog.detail.collapse') : t('blog.detail.expand') }}
                     </button>
                   </div>
                   
@@ -882,7 +899,6 @@ onMounted(() => {
                       <span class="text-sm text-base-content/60">{{ formatCommentDate(reply.createdAt) }}</span>
                     </div>
                     
-                    <!-- 显示回复给谁 -->
                     <div class="text-sm text-base-content/60 mb-1">
                       回复 @{{ comment.author.username }}
                     </div>
@@ -911,15 +927,15 @@ onMounted(() => {
                     
                     <div v-else class="text-base-content/80 leading-relaxed mb-2">
                       <div :class="['comment-content', { 'line-clamp-5': !expandedComments[reply.id] && needsExpand(reply.content) }]">
-                         {{ getDisplayContent(reply) }}
+                        {{ getDisplayContent(reply) }}
                       </div>
                       <button 
-                      v-if="needsExpand(reply.content)"
-                      @click="toggleCommentExpand(reply.id)"
-                      class="btn btn-link btn-sm p-0 h-auto min-h-0 text-primary mt-1 no-underline hover:underline"
+                        v-if="needsExpand(reply.content)"
+                        @click="toggleCommentExpand(reply.id)"
+                        class="btn btn-link btn-sm p-0 h-auto min-h-0 text-primary mt-1 no-underline hover:underline"
                       >
-                      {{ expandedComments[reply.id] ? t('blog.detail.collapse') : t('blog.detail.expand')  }}
-                    </button>
+                        {{ expandedComments[reply.id] ? t('blog.detail.collapse') : t('blog.detail.expand') }}
+                      </button>
                     </div>
                     
                     <div class="flex items-center gap-4 text-sm text-base-content/60">
@@ -962,12 +978,12 @@ onMounted(() => {
             </div>
           </div>
 
-        <div v-else class="text-center py-12">
-          <div class="w-16 h-16 bg-base-200 rounded-full flex items-center justify-center mb-4 text-base-content/40 mx-auto">
-            <Icon name="mingcute:comment-line" class="w-8 h-8" />
-          </div>
+          <div v-else class="text-center py-12">
+            <div class="w-16 h-16 bg-base-200 rounded-full flex items-center justify-center mb-4 text-base-content/40 mx-auto">
+              <Icon name="mingcute:comment-line" class="w-8 h-8" />
+            </div>
             <h4 class="text-lg font-medium text-base-content mb-2">{{ t('blog.detail.no_comments') }}</h4>
-              <p class="text-base-content/60">{{ t('blog.detail.no_comments_description') }}</p>
+            <p class="text-base-content/60">{{ t('blog.detail.no_comments_description') }}</p>
           </div>
         </div>
       </article>
@@ -993,7 +1009,8 @@ onMounted(() => {
 }
 </style>
 
-<i18n lang="json">{
+<i18n lang="json">
+{
   "zh-CN": {
     "blog": {
       "detail": {
@@ -1014,7 +1031,7 @@ onMounted(() => {
         "minutes_ago": "分钟前",
         "hours_ago": "小时前",
         "days_ago": "天前",
-         "comment_empty": "评论内容不能为空",
+        "comment_empty": "评论内容不能为空",
         "comment_published": "评论发布成功",
         "comment_publish_failed": "评论发布失败",
         "reply_published": "回复发布成功",
@@ -1168,7 +1185,7 @@ onMounted(() => {
         "reply_placeholder": "Write your reply...",
         "expand": "Expand",
         "collapse": "Collapse",
-         "report": "Report",
+        "report": "Report",
         "report_success": "Report submitted successfully",
         "report_failed": "Failed to submit report",
         "report_reason": "Report reason",
@@ -1189,4 +1206,5 @@ onMounted(() => {
       }
     }
   }
-}</i18n>
+}
+</i18n>
