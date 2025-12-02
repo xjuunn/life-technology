@@ -112,7 +112,7 @@ export function forgotPassword(email: string) {
  * @param code token
  * @param newPassword 新密码
  */
-export function resetPassword(email:string, code: string, newPassword: string) {
+export function resetPassword(email: string, code: string, newPassword: string) {
     return api.post<any>(base + '/reset-password', {
         email,
         code,
@@ -133,4 +133,16 @@ export function logout() {
  */
 export function sendRegisterCode(email: string) {
     return api.post(base + '/send-register-code', { email });
+}
+
+/**
+ * 身份证认证
+ * @param front 身份证正面图片
+ * @param back 身份证背面图片
+ */
+export function ocrIdcard(front: File, back: File) {
+    const formdata = new FormData();
+    formdata.append('front', front);
+    formdata.append('back', back);
+    return api.post<{ message: string }>('/ocr/idcard', formdata); // 返回值类型不准确
 }
