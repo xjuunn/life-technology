@@ -144,6 +144,9 @@ function errorHandler(res: ApiResponse<any>): string {
       break
     case StatusCode.REALNAME_REQUIRED:
       message = '需要实名认证才能进行此操作'
+      setTimeout(() => {
+        navigateTo("/auth/real-name-auth/", { open: { target: '_blank' } })
+      }, 2000);
       break
     case StatusCode.USER_DISABLED:
       message = '账户已被禁用，无法进行此操作'

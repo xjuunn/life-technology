@@ -319,8 +319,10 @@ const saveProfile = async () => {
 
               <!-- 登出按钮 -->
               <div class="md:self-start">
-                <nuxt-link to="/auth/real-name-auth/" v-show="!userStore.user?.isAdmin && !userStore.user?.idVerified" 
-                  class="btn btn-soft btn-primary btn-sm">实名认证</nuxt-link>
+                <nuxt-link to="/auth/real-name-auth/" v-show="!userStore.user?.isAdmin && !userStore.user?.idVerified"
+                  class="btn btn-soft btn-primary btn-sm">
+                  <util-i18n zh="实名认证" tw="實名認證" en="Real-name Authentication"></util-i18n>
+                </nuxt-link>
                 <button class="btn btn-ghost text-error hover:bg-error/10 btn-sm gap-2" @click="handleLogout">
                   <Icon name="mingcute:exit-line" class="text-lg" />
                   <span class="hidden sm:inline">{{ t('profile.logout') }}</span>
@@ -410,7 +412,7 @@ const saveProfile = async () => {
                           </h3>
                           <span class="badge badge-sm"
                             :class="blog.status === 'published' ? 'badge-success badge-soft' : 'badge-warning badge-soft'">{{
-                            blog.status }}</span>
+                              blog.status }}</span>
                         </div>
                         <p class="text-sm text-base-content/60 line-clamp-2 mt-1">{{ blog.summary }}</p>
                       </div>
