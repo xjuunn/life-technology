@@ -1,14 +1,13 @@
 <template>
   <div>
-    <button class="btn btn-primary" @click="test">test</button>
+    <button class="btn btn-primary" @click="test">
+      <util-i18n en="test" zh="测试" tw="測試"></util-i18n>
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
-const userStore = useUserStore();
 async function test() {
-  const data = await userStore.getUserInfo();
-  console.log(data);
 
 }
 
