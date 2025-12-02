@@ -223,7 +223,7 @@ export interface ListBlogItem {
   tags: string[],
   category: string;
   coverImage: string;
-  status: "published" | string;
+  status: "draft" | "pending" | "published" | "rejected" | "archived";
   rejectReason: null | string;
   reviewedAt: null | string;
   reviewedBy: null | string;
