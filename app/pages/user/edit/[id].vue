@@ -1,8 +1,6 @@
 <template>
   <div
     class="min-h-screen bg-base-100 relative overflow-hidden text-base-content selection:bg-primary selection:text-primary-content pb-20">
-    
-    <!-- 背景光晕 -->
     <div
       class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px] pointer-events-none select-none animate-pulse-slow">
     </div>
@@ -10,33 +8,23 @@
       class="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-secondary/5 rounded-full blur-[120px] pointer-events-none select-none select-none animate-pulse-slow"
       style="animation-delay: 2s;"></div>
 
-    <div class="relative z-10 max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-      
-      <!-- 返回按钮 -->
+    <div class="relative z-10 max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">      
       <div class="mb-6">
         <button @click="goBack" class="btn btn-ghost btn-sm gap-2">
           <Icon name="mingcute:arrow-left-line" class="text-lg" />
           {{ t('blog.edit.back') }}
         </button>
       </div>
-
-      <!-- 标题 -->
       <div class="mb-8">
         <h1 class="text-3xl font-bold font-title tracking-tight mb-2">{{ t('blog.edit.title') }}</h1>
         <p class="text-base-content/60">{{ t('blog.edit.subtitle') }}</p>
       </div>
-
-      <!-- 加载状态 -->
       <div v-if="loading" class="flex justify-center items-center h-64">
         <span class="loading loading-ring loading-lg text-primary"></span>
       </div>
-
-      <!-- 博客表单 -->
       <div v-else class="card bg-base-100/60 backdrop-blur-xl border border-base-content/5 shadow-lg">
         <div class="card-body p-6 md:p-10">
           <form @submit.prevent="saveBlog" class="space-y-6">
-            
-            <!-- 博客标题 -->
             <div class="form-control">
               <label class="label">
                 <span class="label-text font-bold">{{ t('blog.edit.form.title') }}</span>
@@ -49,8 +37,6 @@
                 required
               />
             </div>
-
-            <!-- 博客摘要 -->
             <div class="form-control">
               <label class="label">
                 <span class="label-text font-bold">{{ t('blog.edit.form.summary') }}</span>
@@ -63,23 +49,55 @@
                 maxlength="200"
               ></textarea>
             </div>
-
-            <!-- 博客内容 -->
             <div class="form-control">
               <label class="label">
                 <span class="label-text font-bold">{{ t('blog.edit.form.content') }}</span>
               </label>
-              <textarea 
-                v-model="form.content"
-                class="textarea textarea-bordered w-full h-96 bg-base-200/50 focus:bg-base-100 focus:border-primary resize-none rounded-xl font-mono text-sm"
-                :placeholder="t('blog.edit.form.content_placeholder')"
-                required
-              ></textarea>
-              <div class="label-text-alt text-xs text-base-content/40 mt-2">
-                {{ t('blog.edit.form.markdown_hint') }}
+              <div class="editor-container border border-base-content/10 rounded-lg overflow-hidden bg-base-200/30">
+                <div class="border-b border-base-content/10 bg-base-200/50 p-3 flex gap-2">
+                  <button 
+                    @click="editor?.chain().focus().toggleBold().run()" 
+                    type="button"
+                    class="btn btn-xs btn-ghost"
+                    :class="{ 'btn-active': editor?.isActive('bold') }"
+                  >
+                    <Icon name="mingcute:bold-line" />
+                  </button>
+                  <button 
+                    @click="editor?.chain().focus().toggleItalic().run()" 
+                    type="button"
+                    class="btn btn-xs btn-ghost"
+                    :class="{ 'btn-active': editor?.isActive('italic') }"
+                  >
+                    <Icon name="mingcute:italic-line" />
+                  </button>
+                  <button 
+                    @click="editor?.chain().focus().toggleHeading({ level: 1 }).run()" 
+                    type="button"
+                    class="btn btn-xs btn-ghost"
+                    :class="{ 'btn-active': editor?.isActive('heading', { level: 1 }) }"
+                  >
+                    H1
+                  </button>
+                  <button 
+                    @click="editor?.chain().focus().toggleHeading({ level: 2 }).run()" 
+                    type="button"
+                    class="btn btn-xs btn-ghost"
+                    :class="{ 'btn-active': editor?.isActive('heading', { level: 2 }) }"
+                  >
+                    H2
+                  </button>
+                  <div class="flex-1"></div>
+                  <span class="text-xs text-base-content/40">
+                    {{ t('blog.edit.form.markdown_hint') }}
+                  </span>
+                </div>
+
+                <div class="p-4 min-h-[400px]">
+                  <editor-content :editor="editor" />
+                </div>
               </div>
             </div>
-
             <!-- 封面图片 -->
             <div class="form-control">
               <label class="label">
@@ -100,7 +118,6 @@
                 />
               </div>
             </div>
-
             <!-- 标签 -->
             <div class="form-control">
               <label class="label">
@@ -139,7 +156,6 @@
                 </button>
               </div>
             </div>
-
             <!-- 分类 -->
             <div class="form-control">
               <label class="label">
@@ -152,8 +168,6 @@
                 :placeholder="t('blog.edit.form.category_placeholder')"
               />
             </div>
-
-            <!-- 状态 -->
             <div class="form-control">
               <label class="label">
                 <span class="label-text font-bold">{{ t('blog.edit.form.status') }}</span>
@@ -166,7 +180,6 @@
                 <option value="published">{{ t('blog.edit.status.published') }}</option>
               </select>
             </div>
-
             <!-- 按钮组 -->
             <div class="flex gap-4 pt-6">
               <button 
@@ -198,6 +211,9 @@ import { useI18n } from 'vue-i18n'
 import { useToast } from '~/composables/useToast'
 import { useRouter } from '#app'
 import { update, getBlogDetails, type BlogUpdateRequest } from '~/api/blog'
+import { EditorContent, useEditor } from "@tiptap/vue-3"
+import StarterKit from "@tiptap/starter-kit"
+import { useUserStore } from '~/stores/user'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -207,6 +223,9 @@ const route = useRoute()
 const loading = ref(true)
 const saving = ref(false)
 const newTag = ref('')
+const hasUnsavedChanges = ref(false)
+const blog = ref<any>(null)
+const hasEditPermission = ref(false)
 
 const form = reactive({
   title: '',
@@ -218,59 +237,53 @@ const form = reactive({
   status: 'draft' as 'draft' | 'published'
 })
 
+const editor = useEditor({
+  editable: true,
+  extensions: [
+    StarterKit
+  ],
+  content: '<p>开始编辑...</p>',
+  editorProps: {
+    attributes: {
+      class: 'prose prose-base md:prose-lg max-w-none focus:outline-none dark:prose-invert prose-headings:font-bold prose-p:leading-relaxed prose-img:rounded-xl prose-img:shadow-sm prose-a:text-primary prose-a:no-underline hover:prose-a:underline min-h-[400px] bg-base-200/30 rounded-lg p-4 border border-base-content/10',
+      placeholder: t('blog.edit.form.content_placeholder')
+    }
+  },
+  onUpdate: ({ editor }) => {
+    form.content = JSON.stringify(editor.getJSON())
+    hasUnsavedChanges.value = true
+  }
+})
+
 // 获取博客ID
 const blogId = computed(() => route.params.id as string)
 
-// JSON修复函数
-const fixJSONFormat = (content: string): string => {
-  if (!content || typeof content !== 'string') {
-    return '{"type":"doc","content":[]}'
-  }
-  
-  let contentStr = content.trim()
-  
-  // 尝试直接解析
+// 解析 JSON 内容
+const safeParseContent = (content: any) => {
   try {
-    JSON.parse(contentStr)
-    return contentStr
+    if (!content) return { type: 'doc', content: [] }
+    
+    if (typeof content === 'string') {
+      const parsed = JSON.parse(content)
+      if (parsed && typeof parsed === 'object') {
+        return parsed
+      }
+    } else if (typeof content === 'object') {
+      return content
+    }
   } catch (error) {
-    console.warn('JSON格式错误，尝试修复:')
+    console.warn('解析内容失败，使用默认结构:', error)
   }
-  
-  // 修复常见的格式错误
-  const patterns = [
-    // 修复 }]}} 结尾
-    { regex: /(\]\s*\})\s*\}$/, replacement: '}]}' },
-    { regex: /(\]\s*\}\s*)\}\s*\}$/, replacement: '}]}]}' },
-    // 修复缺少的括号
-    { regex: /"content"\s*:\s*\[\s*\{([^}]+)\}\s*$/, replacement: '"content": [{$1}]}' },
-    // 修复 type: "che" -> type: "doc"
-    { regex: /"type":\s*"che"/, replacement: '"type": "doc"' }
-  ]
-  
-  for (const pattern of patterns) {
-    if (pattern.regex.test(contentStr)) {
-      contentStr = contentStr.replace(pattern.regex, pattern.replacement)
-    }
-  }
-  
-  // 确保有正确的基本结构
-  if (!contentStr.includes('"type":"doc"')) {
-    if (contentStr.includes('"type"')) {
-      // 保留原有类型
-    } else {
-      // 添加类型
-      contentStr = contentStr.replace(/^\{/, '{"type":"doc",')
-    }
-  }
-  
-  // 最终验证
-  try {
-    JSON.parse(contentStr)
-    return contentStr
-  } catch (finalError) {
-    console.error('修复失败，使用默认结构')
-    return '{"type":"doc","content":[]}'
+  return {
+    type: 'doc',
+    content: [
+      {
+        type: 'paragraph',
+        content: content && typeof content === 'string' 
+          ? [{ type: 'text', text: content }]
+          : [{ type: 'text', text: '' }]
+      }
+    ]
   }
 }
 
@@ -279,35 +292,31 @@ onMounted(async () => {
   try {
     const { data } = await getBlogDetails(blogId.value)
     const blog = data.blog
-    
-    // 填充表单，使用修复后的内容
     form.title = blog.title
     form.summary = blog.summary || ''
-    form.content = fixJSONFormat(blog.content) // 修复JSON格式
     form.coverImage = blog.coverImage || ''
     form.tags = blog.tags || []
     form.category = blog.category || ''
     form.status = blog.status as 'draft' | 'published'
-    
-  } catch (error) {
-    // 安全处理错误类型
-    let errorMessage = t('blog.edit.fetch_failed')
-    
-    if (error instanceof Error) {
-      errorMessage = error.message || errorMessage
-    } else if (typeof error === 'string') {
-      errorMessage = error
-    } else if (error && typeof error === 'object' && 'message' in error) {
-      errorMessage = String((error as any).message)
+    let contentData = blog.content
+    if (typeof contentData === 'string' && (!contentData.trim() || contentData === 'null')) {
+      contentData = '{"type":"doc","content":[]}'
+    }
+    const parsedContent = safeParseContent(contentData)
+    if (editor.value) {
+      editor.value.commands.setContent(parsedContent)
+      form.content = JSON.stringify(parsedContent)
+    } else {
+      form.content = JSON.stringify(parsedContent)
     }
     
-    toast.error(errorMessage)
+  } catch (error) {
+    console.error('加载博客失败:', error)
+    toast.error(t('blog.edit.fetch_failed'))
   } finally {
     loading.value = false
   }
 })
-
-// 添加标签
 const addTag = () => {
   const tag = newTag.value.trim()
   if (tag && !form.tags.includes(tag)) {
@@ -325,6 +334,23 @@ const removeTag = (tag: string) => {
 const saveBlog = async () => {
   saving.value = true
   try {
+    if (editor.value) {
+      form.content = JSON.stringify(editor.value.getJSON())
+    }
+    if (!form.content.trim()) {
+      toast.error(t('blog.edit.form.content_empty'))
+      saving.value = false
+      return
+    }
+    // 验证 JSON 格式
+    try {
+      JSON.parse(form.content)
+    } catch (jsonError) {
+      toast.error(t('blog.edit.form.invalid_json'))
+      saving.value = false
+      return
+    }
+    
     const updateData: BlogUpdateRequest = {
       title: form.title,
       content: form.content,
@@ -338,12 +364,11 @@ const saveBlog = async () => {
     await update(blogId.value, updateData)
     
     toast.success(t('blog.edit.save_success'))
-    
-    // 保存成功后返回博客详情页
     setTimeout(() => {
       router.push(`/blog/${blogId.value}`)
     }, 1000)
   } catch (error: any) {
+    console.error('保存失败:', error)
     toast.error(error.message || t('blog.edit.save_failed'))
   } finally {
     saving.value = false
@@ -354,8 +379,6 @@ const saveBlog = async () => {
 const goBack = () => {
   router.back()
 }
-
-
 </script>
 
 <i18n lang="json">
