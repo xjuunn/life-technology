@@ -175,13 +175,20 @@ const showError = () => {
 }
 
 Modal
-<CommonModal v-model="showLargeModal" :title="t('demo.large_modal')" max-width="max-w-3xl">
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div class="bg-base-200 p-4 rounded-xl h-32 animate-pulse"></div>
-    <div class="bg-base-200 p-4 rounded-xl h-32 animate-pulse"></div>
-    <div class="bg-base-200 p-4 rounded-xl h-32 animate-pulse sm:col-span-2"></div>
-  </div>
-</CommonModal>
+<common-modal v-model="showModal" :title="t('demo.modal_title')">
+  <p class="text-base-content/70">
+    {{ t('demo.modal_content') }}
+  </p>
+  <template #actions="{ close }">
+    <button class="btn btn-ghost" @click="close">
+      {{ t('common.cancel') }}
+    </button>
+    <button class="btn btn-primary" @click="handleConfirm">
+      {{ t('common.confirm') }}
+    </button>
+  </template>
+</common-modal>
+所有的模态对话框均使用这个Modal，禁止使用html原生的dialog
 
 Api 通用响应类型
 export interface ApiResponse<T = any> {
