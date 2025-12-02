@@ -7,8 +7,10 @@ import {
 } from '~/api/auth'
 import {
   getUserBlogs,
+  del as deleteBlog,
   type Blog,
-  type UserBlogRequest
+  type UserBlogRequest,
+  type Status 
 } from '~/api/blog'
 import {
   listUserComments,
@@ -35,7 +37,7 @@ const blogPagination = ref({
   hasPrevPage: false
 })
 const blogLoading = ref(false)
-const blogStatusFilter = ref<undefined | 'published'>(undefined)
+const blogStatusFilter = ref<Status | undefined>(undefined)
 
 // --- 评论相关 ---
 const comments = ref<ListUserCommentsResponse['comments']>([])
@@ -57,6 +59,11 @@ const editForm = reactive({
   bio: '',
   avatar: ''
 })
+
+// --- 删除博客相关 ---
+const showDeleteModal = ref(false)
+const blogToDelete = ref<Blog | null>(null)
+const isDeleting = ref(false)
 
 // --- 初始化与数据获取 ---
 
@@ -131,6 +138,42 @@ const fetchComments = async (page = 1) => {
     console.error(error)
   } finally {
     commentLoading.value = false
+  }
+}
+
+// 编辑博客
+const handleEditBlog = (blogId: string) => {
+  router.push(`/user/edit/${blogId}`)
+}
+
+// 删除博客确认
+const confirmDeleteBlog = (blog: Blog) => {
+  blogToDelete.value = blog
+  showDeleteModal.value = true
+}
+
+// 执行删除博客
+const handleDeleteBlog = async () => {
+  if (!blogToDelete.value) return
+  
+  isDeleting.value = true
+  try {
+    await deleteBlog(blogToDelete.value.id)
+    toast.success(t('profile.delete_blog_success'))
+    
+    // 从列表中移除
+    blogs.value = blogs.value.filter(blog => blog.id !== blogToDelete.value?.id)
+    
+    // 如果当前页没有内容且不是第一页，返回上一页
+    if (blogs.value.length === 0 && blogPagination.value.currentPage > 1) {
+      fetchBlogs(blogPagination.value.currentPage - 1)
+    }
+  } catch (error: any) {
+    toast.error(error.message || t('profile.delete_blog_failed'))
+  } finally {
+    isDeleting.value = false
+    showDeleteModal.value = false
+    blogToDelete.value = null
   }
 }
 
@@ -211,7 +254,7 @@ const saveProfile = async () => {
 </script>
 
 <template>
-  <div
+ <div
     class="min-h-screen bg-base-100 relative overflow-hidden text-base-content selection:bg-primary selection:text-primary-content pb-20">
 
     <!-- 背景光晕 -->
@@ -354,7 +397,7 @@ const saveProfile = async () => {
                 </div>
                 <div v-else-if="blogs.length > 0" class="grid gap-4">
                   <div v-for="blog in blogs" :key="blog.id"
-                    class="card card-side bg-base-100/60 backdrop-blur-md shadow-sm border border-base-content/5 p-4 hover:border-primary/20 transition-all">
+                    class="card card-side bg-base-100/60 backdrop-blur-md shadow-sm border border-base-content/5 p-4 hover:border-primary/20 transition-all group">
                     <figure class="w-24 sm:w-40 rounded-lg overflow-hidden shrink-0">
                       <NuxtImg :src="blog.coverImage || '/default-cover.jpg'" class="h-full w-full object-cover" />
                     </figure>
@@ -365,8 +408,7 @@ const saveProfile = async () => {
                             <NuxtLink :to="`/blog/${blog.id}`" class="hover:text-primary">{{ blog.title }}</NuxtLink>
                           </h3>
                           <span class="badge badge-sm"
-                            :class="blog.status === 'published' ? 'badge-success badge-soft' : 'badge-warning badge-soft'">{{
-                              blog.status }}</span>
+                            :class="blog.status === 'published' ? 'badge-success badge-soft' : 'badge-warning badge-soft'">{{ blog.status }}</span>
                         </div>
                         <p class="text-sm text-base-content/60 line-clamp-2 mt-1">{{ blog.summary }}</p>
                       </div>
@@ -378,19 +420,31 @@ const saveProfile = async () => {
                           <span>
                             <Icon name="mingcute:thumb-up-line" /> {{ blog.likeCount }}
                           </span>
+                          <span>
+                            <Icon name="mingcute:chat-line" /> {{ blog.commentCount }}
+                          </span>
                         </div>
-                        <NuxtLink :to="`/blog/edit/${blog.id}`" class="btn btn-sm btn-ghost btn-circle">
-                          <Icon name="mingcute:edit-2-line" />
-                        </NuxtLink>
+                        <div class="flex gap-1">
+                          <button @click="handleEditBlog(blog.id)"
+                            class="btn btn-sm btn-ghost btn-circle hover:bg-primary/10 hover:text-primary"
+                            :title="t('profile.edit_blog')">
+                            <Icon name="mingcute:edit-2-line" />
+                          </button>
+                          <button @click="confirmDeleteBlog(blog)"
+                            class="btn btn-sm btn-ghost btn-circle hover:bg-error/10 text-error"
+                            :title="t('profile.delete_blog')">
+                            <Icon name="mingcute:delete-2-line" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                   <!-- 分页 -->
                   <div class="join grid grid-cols-2 max-w-xs mx-auto mt-4" v-if="blogPagination.totalPages > 1">
                     <button class="join-item btn btn-outline btn-sm" :disabled="!blogPagination.hasPrevPage"
-                      @click="fetchBlogs(blogPagination.currentPage - 1)">Prev</button>
+                      @click="fetchBlogs(blogPagination.currentPage - 1)">{{ t('profile.prev') }}</button>
                     <button class="join-item btn btn-outline btn-sm" :disabled="!blogPagination.hasNextPage"
-                      @click="fetchBlogs(blogPagination.currentPage + 1)">Next</button>
+                      @click="fetchBlogs(blogPagination.currentPage + 1)">{{ t('profile.next') }}</button>
                   </div>
                 </div>
                 <div v-else class="text-center py-20 text-base-content/40">
@@ -426,9 +480,9 @@ const saveProfile = async () => {
                   <!-- 分页 -->
                   <div class="join grid grid-cols-2 max-w-xs mx-auto mt-4" v-if="commentPagination.totalPages > 1">
                     <button class="join-item btn btn-outline btn-sm" :disabled="!commentPagination.hasPrevPage"
-                      @click="fetchComments(commentPagination.currentPage - 1)">Prev</button>
+                      @click="fetchComments(commentPagination.currentPage - 1)">{{ t('profile.prev') }}</button>
                     <button class="join-item btn btn-outline btn-sm" :disabled="!commentPagination.hasNextPage"
-                      @click="fetchComments(commentPagination.currentPage + 1)">Next</button>
+                      @click="fetchComments(commentPagination.currentPage + 1)">{{ t('profile.next') }}</button>
                   </div>
                 </div>
                 <div v-else class="text-center py-20 text-base-content/40">
@@ -437,7 +491,7 @@ const saveProfile = async () => {
                 </div>
               </div>
 
-              <!-- Tab 3: 个人设置 (整合您的代码) -->
+              <!-- Tab 3: 个人设置 -->
               <div v-else-if="activeTab === 'settings'" key="settings">
                 <div class="card w-full bg-base-100/60 backdrop-blur-xl shadow-lg border border-base-content/5">
                   <div class="card-body p-6 md:p-10">
@@ -528,6 +582,26 @@ const saveProfile = async () => {
         </div>
       </div>
     </div>
+
+    <!-- 删除确认模态框 -->
+    <div v-if="showDeleteModal" class="modal modal-open">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">{{ t('profile.delete_blog_title') }}</h3>
+        <p class="py-4">
+          {{ t('profile.delete_blog_confirmation') }} <strong>"{{ blogToDelete?.title }}"</strong>?
+          {{ t('profile.delete_blog_warning') }}
+        </p>
+        <div class="modal-action">
+          <button class="btn btn-ghost" @click="showDeleteModal = false" :disabled="isDeleting">
+            {{ t('profile.cancel') }}
+          </button>
+          <button class="btn btn-error" @click="handleDeleteBlog" :disabled="isDeleting">
+            <span v-if="isDeleting" class="loading loading-spinner"></span>
+            {{ t('profile.confirm_delete') }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -599,6 +673,18 @@ const saveProfile = async () => {
       "my_comments": "My Comments",
       "no_blogs": "No blogs found",
       "no_comments": "No comments found",
+      "prev": "Prev",
+      "next": "Next",
+      "edit_blog": "Edit",
+      "delete_blog": "Delete",
+      "cancel": "Cancel",
+      "confirm_delete": "Delete",
+      "comment_to": "Re",
+      "delete_blog_title": "Delete Blog",
+      "delete_blog_confirmation": "Are you sure you want to delete the blog",
+      "delete_blog_warning": "This action cannot be undone.",
+      "delete_blog_success": "Blog deleted successfully",
+      "delete_blog_failed": "Failed to delete blog",
       "filter": {
         "all": "All",
         "published": "Published"
@@ -638,6 +724,18 @@ const saveProfile = async () => {
       "my_comments": "我的评论",
       "no_blogs": "暂无博客",
       "no_comments": "暂无评论",
+      "prev": "上一页",
+      "next": "下一页",
+      "edit_blog": "编辑",
+      "delete_blog": "删除",
+      "cancel": "取消",
+      "confirm_delete": "确认删除",
+      "comment_to": "回复",
+      "delete_blog_title": "删除博客",
+      "delete_blog_confirmation": "确定要删除博客",
+      "delete_blog_warning": "此操作不可撤销。",
+      "delete_blog_success": "博客删除成功",
+      "delete_blog_failed": "博客删除失败",
       "filter": {
         "all": "全部",
         "published": "已发布"
@@ -677,6 +775,18 @@ const saveProfile = async () => {
       "my_comments": "我的評論",
       "no_blogs": "暫無博客",
       "no_comments": "暫無評論",
+      "prev": "上一頁",
+      "next": "下一頁",
+      "edit_blog": "編輯",
+      "delete_blog": "刪除",
+      "cancel": "取消",
+      "confirm_delete": "確認刪除",
+      "comment_to": "回覆",
+      "delete_blog_title": "刪除博客",
+      "delete_blog_confirmation": "確定要刪除博客",
+      "delete_blog_warning": "此操作不可撤銷。",
+      "delete_blog_success": "博客刪除成功",
+      "delete_blog_failed": "博客刪除失敗",
       "filter": {
         "all": "全部",
         "published": "已發布"

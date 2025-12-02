@@ -31,7 +31,7 @@ export type SortBy = "createdAt" | "viewCount" | "likeCount" | "commentCount";
 export type SortOrder = "asc" | "desc";
 
 // 状态（公开接口只能查看已发布的）
-export type Status = "published";
+export type Status = "published" | "draft";
 
 export interface Blog {
   id: string;
