@@ -10,7 +10,7 @@ import {
   del as deleteBlog,
   type Blog,
   type UserBlogRequest,
-  type Status 
+  type Status
 } from '~/api/blog'
 import {
   listUserComments,
@@ -155,15 +155,15 @@ const confirmDeleteBlog = (blog: Blog) => {
 // 执行删除博客
 const handleDeleteBlog = async () => {
   if (!blogToDelete.value) return
-  
+
   isDeleting.value = true
   try {
     await deleteBlog(blogToDelete.value.id)
     toast.success(t('profile.delete_blog_success'))
-    
+
     // 从列表中移除
     blogs.value = blogs.value.filter(blog => blog.id !== blogToDelete.value?.id)
-    
+
     // 如果当前页没有内容且不是第一页，返回上一页
     if (blogs.value.length === 0 && blogPagination.value.currentPage > 1) {
       fetchBlogs(blogPagination.value.currentPage - 1)
@@ -254,7 +254,7 @@ const saveProfile = async () => {
 </script>
 
 <template>
- <div
+  <div
     class="min-h-screen bg-base-100 relative overflow-hidden text-base-content selection:bg-primary selection:text-primary-content pb-20">
 
     <!-- 背景光晕 -->
@@ -288,7 +288,6 @@ const saveProfile = async () => {
                   <NuxtImg :src="user.avatar || '/default-avatar.png'" alt="avatar" class="object-cover" />
                 </div>
               </div>
-
               <!-- 信息 -->
               <div class="flex-1 text-center md:text-left space-y-3 pt-2">
                 <div class="flex flex-col md:flex-row items-center gap-3">
@@ -320,6 +319,8 @@ const saveProfile = async () => {
 
               <!-- 登出按钮 -->
               <div class="md:self-start">
+                <nuxt-link to="/auth/real-name-auth/" v-show="!userStore.user?.isAdmin && !userStore.user?.idVerified" 
+                  class="btn btn-soft btn-primary btn-sm">实名认证</nuxt-link>
                 <button class="btn btn-ghost text-error hover:bg-error/10 btn-sm gap-2" @click="handleLogout">
                   <Icon name="mingcute:exit-line" class="text-lg" />
                   <span class="hidden sm:inline">{{ t('profile.logout') }}</span>
@@ -408,7 +409,8 @@ const saveProfile = async () => {
                             <NuxtLink :to="`/blog/${blog.id}`" class="hover:text-primary">{{ blog.title }}</NuxtLink>
                           </h3>
                           <span class="badge badge-sm"
-                            :class="blog.status === 'published' ? 'badge-success badge-soft' : 'badge-warning badge-soft'">{{ blog.status }}</span>
+                            :class="blog.status === 'published' ? 'badge-success badge-soft' : 'badge-warning badge-soft'">{{
+                            blog.status }}</span>
                         </div>
                         <p class="text-sm text-base-content/60 line-clamp-2 mt-1">{{ blog.summary }}</p>
                       </div>

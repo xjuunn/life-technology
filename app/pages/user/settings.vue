@@ -51,6 +51,8 @@
               </div>
             </div>
             <p class="text-xs text-base-content/40 text-center px-4">{{ t('settings.upload_hint') }}</p>
+            <nuxt-link to="/auth/real-name-auth/" v-show="!userStore.user?.isAdmin && !userStore.user?.idVerified"
+              class="btn btn-soft btn-primary">实名认证</nuxt-link>
           </div>
 
           <div class="flex-1 space-y-6">
