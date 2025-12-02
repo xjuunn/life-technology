@@ -135,6 +135,16 @@ export function sendRegisterCode(email: string) {
     return api.post(base + '/send-register-code', { email });
 }
 
+export interface OcrIdCardResult {
+    front?: Record<string, any>;
+    back?: Record<string, any>;
+}
+
+export interface OcrIdCardData {
+    message: string;
+    data: OcrIdCardResult;
+}
+
 /**
  * 身份证认证
  * @param front 身份证正面图片
@@ -144,5 +154,9 @@ export function ocrIdcard(front: File, back: File) {
     const formdata = new FormData();
     formdata.append('front', front);
     formdata.append('back', back);
-    return api.post<{ message: string }>('/ocr/idcard', formdata); // 返回值类型不准确
+    return api.post<OcrIdCardData>('/ocr/idcard', formdata, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
 }
