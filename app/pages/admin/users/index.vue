@@ -185,7 +185,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-6 h-[calc(100vh-4rem)] p-2 md:p-6">
+  <div class="flex flex-col gap-6 p-2 md:p-6">
     <div class="flex flex-col md:flex-row justify-between items-center gap-4 relative z-40 shrink-0">
       <div class="w-full md:w-96">
         <label
@@ -212,7 +212,7 @@ onMounted(() => {
             <Icon name="mingcute:layer-line" size="18" />
             <span>{{ t('common.batch') }}</span>
             <span class="badge badge-neutral bg-white/20 border-none text-white">{{ selectedIds.size
-            }}</span>
+              }}</span>
           </div>
           <ul tabindex="0"
             class="dropdown-content menu bg-base-100 rounded-xl z-[100] w-52 p-2 shadow-xl border border-base-200 mt-2">
@@ -290,7 +290,7 @@ onMounted(() => {
                     <div class="font-medium text-base truncate max-w-[180px]">{{ user.username }}
                     </div>
                     <div class="text-sm text-base-content/50 truncate max-w-[220px]">{{ user.email
-                    }}</div>
+                      }}</div>
                   </div>
                 </div>
               </td>
@@ -374,7 +374,6 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
     <dialog class="modal modal-bottom sm:modal-middle backdrop-blur-sm" :class="{ 'modal-open': showEditModal }">
       <div class="modal-box p-0 overflow-hidden shadow-2xl max-w-lg">
         <div class="p-5 border-b border-base-200 bg-base-100 flex justify-between items-center">
@@ -469,9 +468,9 @@ onMounted(() => {
 
         <div class="p-5 border-t border-base-200 bg-base-100 flex justify-end gap-3">
           <button class="btn btn-md btn-ghost font-normal" @click="showPwdModal = false">{{ t('common.cancel')
-          }}</button>
+            }}</button>
           <button class="btn btn-md btn-warning px-8" @click="savePwd">{{ t('common.confirm_reset')
-          }}</button>
+            }}</button>
         </div>
       </div>
       <form method="dialog" class="modal-backdrop">

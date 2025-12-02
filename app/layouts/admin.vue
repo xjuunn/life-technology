@@ -24,14 +24,14 @@
       <div class="sticky top-0 z-40 w-full">
         <admin-header />
       </div>
-      <main class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 scroll-smooth custom-scrollbar">
+      <div class="h-[calc(100vh-4rem)] min-h-0 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 scroll-smooth custom-scrollbar">
         <div class="container mx-auto max-w-7xl min-h-[calc(100vh-8rem)] animate-fade-in-up">
           <slot />
         </div>
         <div class="mt-10 py-6 text-center text-xs opacity-40">
-          <p>&copy; {{ new Date().getFullYear() }} LIFE Admin Panel. All Rights Reserved.</p>
+          
         </div>
-      </main>
+      </div>
     </div>
 
   </div>
