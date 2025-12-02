@@ -3,8 +3,8 @@ import { getBlogDetails, share, like as doLike } from '~/api/blog'
 import { listBlogComments ,create, del , updateComment } from '~/api/comment'
 import { useUserStore } from '~/stores/user'
 import { EditorContent, useEditor } from "@tiptap/vue-3"
-import StarterKit from "@tiptap/starter-kit"
 import { GlobalEditorExtensions } from '~/utils/editor.util.ts';
+import { list as createReport } from '~/api/report'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -12,11 +12,39 @@ const router = useRouter()
 const userStore = useUserStore()
 const toast = useToast()
 
+const getLocalizedErrorMessage = (message: string): string => {
+  const errorMappings = {
+    '不能举报自己的内容': t('blog.detail.cannot_report_own_content'),
+    '您已经举报过该内容': t('blog.detail.already_reported'),
+    '举报频率过高': t('blog.detail.report_rate_limit'),
+  }
+
+  for (const [key, value] of Object.entries(errorMappings)) {
+    if (message.includes(key)) {
+      return value
+    }
+  }
+  
+  return message || t('blog.detail.report_failed')
+}
+
 const blog = ref<any>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const isLiked = ref(false)
 const likesCount = ref(0)
+
+const reporting = ref(false)
+const selectedReason = ref('')
+const reportDescription = ref('')
+
+const reportReasons = computed(() => [
+  { value: 'spam', label: t('blog.detail.report_reasons.spam') },
+  { value: 'inappropriate', label: t('blog.detail.report_reasons.inappropriate') },
+  { value: 'copyright', label: t('blog.detail.report_reasons.copyright') },
+  { value: 'harassment', label: t('blog.detail.report_reasons.harassment') },
+  { value: 'other', label: t('blog.detail.report_reasons.other') }
+])
 
 const comments = ref<any[]>([])
 const commentsLoading = ref(false)
@@ -34,9 +62,6 @@ const editingCommentContent = ref('')
 const replyingToCommentId = ref<string | null>(null)
 const submittingReply = ref(false)
 
-const commentContent = ref('')
-const replyContents = ref<Record<string, string>>({})
-
 const expandedComments = ref<Record<string, boolean>>({})
 
 const editor = useEditor({
@@ -48,6 +73,167 @@ const editor = useEditor({
     }
   }
 })
+
+const reportBlog = async () => {
+  if (!userStore.token) {
+    toast.warning(t('blog.detail.login_required'))
+    return
+  }
+
+  if (!blog.value?.id) {
+    toast.error(t('blog.detail.blog_info_missing'))
+    return
+  }
+
+  const reason = await showReportDialog()
+  if (!reason) return
+  
+  reporting.value = true
+
+  try {
+     const result = await createReport({
+      targetId: blog.value.id,
+      targetType: 'Blog',
+      reason: reason.value,
+      description: reportDescription.value || `举报博客: ${blog.value.title}`
+    })
+
+    if (result.report) {
+      toast.success(result.message || t('blog.detail.report_success'))
+    } else {
+      const errorMessage = getLocalizedErrorMessage(result.message || t('blog.detail.report_failed'))
+      throw new Error(result.message)
+    }
+  } catch (err: any) {
+    const errorMessage= getLocalizedErrorMessage(err.message || t('blog.detail.report_failed'))
+    toast.error(errorMessage)
+    console.error('Failed to submit report:', err)
+  } finally {
+    reporting.value = false
+  }
+}
+
+// 显示举报对话框
+const showReportDialog = (): Promise<{value: string, label: string} | null> => {
+  return new Promise((resolve) => {
+
+    const dialog = document.createElement('dialog')
+    dialog.className = 'modal modal-bottom sm:modal-middle'
+    
+    const reasons = reportReasons.value
+    
+    dialog.innerHTML = `
+      <form method="dialog" class="modal-box">
+        <h3 class="font-bold text-lg mb-4">${t('blog.detail.report')}</h3>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-2">${t('blog.detail.report_reason')}</label>
+          <div class="space-y-2">
+            ${reasons.map(reason => `
+              <label class="flex items-center cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="reportReason" 
+                  value="${reason.value}" 
+                  class="radio radio-primary mr-3"
+                />
+                <span>${reason.label}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-2">${t('blog.detail.additional_info')}</label>
+          <textarea 
+            class="textarea textarea-bordered w-full" 
+            placeholder="${t('blog.detail.report_description_placeholder')}"
+            rows="3"
+          ></textarea>
+        </div>
+        
+        <div class="modal-action">
+          <button class="btn btn-ghost" value="cancel">
+            ${t('blog.detail.cancel')}
+          </button>
+          <button class="btn btn-error" value="confirm">
+            ${t('blog.detail.confirm_report')}
+          </button>
+        </div>
+      </form>
+    `
+    
+    document.body.appendChild(dialog)
+    dialog.showModal()
+    
+    dialog.addEventListener('close', () => {
+      const returnValue = dialog.returnValue
+      document.body.removeChild(dialog)
+      
+      if (returnValue === 'confirm') {
+        const selectedRadio = dialog.querySelector('input[name="reportReason"]:checked') as HTMLInputElement
+        const textarea = dialog.querySelector('textarea') as HTMLTextAreaElement
+        
+        if (!selectedRadio?.value) {
+          toast.warning(t('blog.detail.select_report_reason'))
+          resolve(null)
+          return
+        }
+        
+        selectedReason.value = selectedRadio.value
+        reportDescription.value = textarea?.value || ''
+        
+        const selected = reasons.find(r => r.value === selectedReason.value)
+        resolve(selected || null)
+      } else {
+        resolve(null)
+      }
+    })
+    
+    dialog.addEventListener('cancel', (e) => {
+      e.preventDefault()
+    })
+  })
+}
+
+const reportComment = async (comment: any, isReply = false) => {
+  if (!userStore.token) {
+    toast.warning(t('blog.detail.login_required'))
+    return
+  }
+
+  if (!comment?.id) {
+    toast.error(t('blog.detail.comment_info_missing'))
+    return
+  }
+
+  const reason = await showReportDialog()
+  if (!reason) return
+  
+  reporting.value = true
+
+  try {
+    const result = await createReport({
+      targetId: comment.id,
+      targetType: 'Comment', 
+      reason: reason.value,
+      description: reportDescription.value || `举报${isReply ? '回复' : '评论'}: ${comment.content.substring(0, 50)}${comment.content.length > 50 ? '...' : ''}`
+    })
+
+    if (result.success) {
+      toast.success(result.message || t('blog.detail.report_success'))
+    } else {
+      const errorMessage = getLocalizedErrorMessage(result.message || t('blog.detail.report_failed'))
+      toast.error(errorMessage)
+    }
+  } catch (err: any) {
+    const errorMessage = getLocalizedErrorMessage(err.message || t('blog.detail.report_failed'))
+    toast.error(errorMessage)
+    console.error('Failed to submit report:', err)
+  } finally {
+    reporting.value = false
+  }
+}
 
 const toggleCommentExpand = (commentId: string) => {
   expandedComments.value[commentId] = !expandedComments.value[commentId]
@@ -362,6 +548,13 @@ onMounted(() => {
           {{ t('blog.detail.back_list') }}
         </button>
         <div class="flex gap-2">
+          <button @click="reportBlog"
+            class="btn btn-ghost btn-sm btn-square rounded-lg text-base-content/70 hover:text-error hover:bg-base-content/5 transition-colors"
+            :disabled="reporting || loading || !blog"
+            :title="t('blog.detail.report')">
+            <Icon v-if="!reporting" name="mingcute:alert-line" class="w-5 h-5" />
+            <span v-else class="loading loading-spinner loading-sm"></span>
+          </button>
           <button @click="shareBlog"
             class="btn btn-ghost btn-sm btn-square rounded-lg text-base-content/70 hover:bg-base-content/5">
             <Icon name="mingcute:share-forward-line" class="w-5 h-5" />
@@ -450,7 +643,6 @@ onMounted(() => {
           </span>
         </div>
         
-        <!-- 点赞与分享区域上移 -->
         <div class="border-t border-base-content/10 pt-10 pb-20">
           <div class="flex flex-col items-center gap-6">
             <h3 class="text-sm font-bold uppercase tracking-widest text-base-content/40">{{ t('blog.detail.like_share')
@@ -471,7 +663,6 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- 评论区域下移 -->
         <div class="border-t border-base-content/10 pt-10 pb-8">
           <div class="mb-8">
             <h3 class="text-2xl font-bold text-base-content mb-2">
@@ -619,6 +810,18 @@ onMounted(() => {
                         {{ t('blog.detail.delete') }}
                       </button>
                     </div>
+                    <div class="flex items-center gap-2 ml-2">
+                      <span class="text-base-content/20" v-if="isCommentAuthor(comment.author.id)">•</span>
+                      <button 
+                        @click="reportComment(comment, false)"
+                        class="text-xs hover:text-warning transition-colors flex items-center gap-1"
+                        :disabled="reporting"
+                        :title="t('blog.detail.report')"
+                      >
+                        <Icon name="mingcute:alert-line" class="w-3 h-3" />
+                        {{ t('blog.detail.report') }}
+                      </button>
+                    </div>
                   </div>
 
                   <div v-if="replyingToCommentId === comment.id" class="mt-4 bg-base-200/30 rounded-lg p-4">
@@ -740,6 +943,18 @@ onMounted(() => {
                           {{ t('blog.detail.delete') }}
                         </button>
                       </div>
+                      <div class="flex items-center gap-2 ml-2">
+                        <span class="text-base-content/20" v-if="isCommentAuthor(reply.author.id)">•</span>
+                        <button 
+                          @click="reportComment(reply, true)"
+                          class="text-xs hover:text-warning transition-colors flex items-center gap-1"
+                          :disabled="reporting"
+                          :title="t('blog.detail.report')"
+                        >
+                          <Icon name="mingcute:alert-line" class="w-3 h-3" />
+                          {{ t('blog.detail.report') }}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -822,7 +1037,25 @@ onMounted(() => {
         "comment_placeholder": "写下你的评论...",
         "reply_placeholder": "写下你的回复...",
         "expand": "展开",
-        "collapse": "收起"
+        "collapse": "收起",
+        "report": "举报",
+        "report_success": "举报提交成功",
+        "report_failed": "举报提交失败",
+        "report_reason": "举报原因",
+        "select_report_reason": "请选择举报原因",
+        "additional_info": "补充说明（选填）",
+        "report_description_placeholder": "请描述具体情况...",
+        "confirm_report": "确认举报",
+        "cannot_report_own_content": "不能举报自己的内容",
+        "already_reported": "您已经举报过该内容",
+        "report_rate_limit": "举报频率过高，请稍后再试",
+        "report_reasons": {
+          "spam": "垃圾内容",
+          "inappropriate": "不合适内容",
+          "copyright": "侵犯版权",
+          "harassment": "骚扰",
+          "other": "其他原因"
+        }
       }
     }
   },
@@ -869,7 +1102,25 @@ onMounted(() => {
         "comment_placeholder": "寫下你的評論...",
         "reply_placeholder": "寫下你的回覆...",
         "expand": "展開",
-        "collapse": "收起"
+        "collapse": "收起",
+        "report": "檢舉",
+        "report_success": "檢舉提交成功",
+        "report_failed": "檢舉提交失敗",
+        "report_reason": "檢舉原因",
+        "select_report_reason": "請選擇檢舉原因",
+        "additional_info": "補充說明（選填）",
+        "report_description_placeholder": "請描述具體情況...",
+        "confirm_report": "確認檢舉",
+        "cannot_report_own_content": "不能檢舉自己的內容",
+        "already_reported": "您已經檢舉過該內容",
+        "report_rate_limit": "檢舉頻率過高，請稍後再試",
+        "report_reasons": {
+          "spam": "垃圾內容",
+          "inappropriate": "不合適內容",
+          "copyright": "侵犯版權",
+          "harassment": "騷擾",
+          "other": "其他原因"
+        }
       }
     }
   },
@@ -916,7 +1167,25 @@ onMounted(() => {
         "comment_placeholder": "Write your comment...",
         "reply_placeholder": "Write your reply...",
         "expand": "Expand",
-        "collapse": "Collapse"
+        "collapse": "Collapse",
+         "report": "Report",
+        "report_success": "Report submitted successfully",
+        "report_failed": "Failed to submit report",
+        "report_reason": "Report reason",
+        "select_report_reason": "Please select a report reason",
+        "additional_info": "Additional information (optional)",
+        "report_description_placeholder": "Please describe the situation...",
+        "confirm_report": "Confirm Report",
+        "cannot_report_own_content": "Cannot report your own content",
+        "already_reported": "You have already reported this content",
+        "report_rate_limit": "Report rate limit exceeded, please try again later",
+        "report_reasons": {
+          "spam": "Spam",
+          "inappropriate": "Inappropriate content",
+          "copyright": "Copyright infringement",
+          "harassment": "Harassment",
+          "other": "Other reason"
+        }
       }
     }
   }
