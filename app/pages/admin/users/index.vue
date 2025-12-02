@@ -212,7 +212,7 @@ onMounted(() => {
             <Icon name="mingcute:layer-line" size="18" />
             <span>{{ t('common.batch') }}</span>
             <span class="badge badge-neutral bg-white/20 border-none text-white">{{ selectedIds.size
-              }}</span>
+            }}</span>
           </div>
           <ul tabindex="0"
             class="dropdown-content menu bg-base-100 rounded-xl z-[100] w-52 p-2 shadow-xl border border-base-200 mt-2">
@@ -290,7 +290,7 @@ onMounted(() => {
                     <div class="font-medium text-base truncate max-w-[180px]">{{ user.username }}
                     </div>
                     <div class="text-sm text-base-content/50 truncate max-w-[220px]">{{ user.email
-                      }}</div>
+                    }}</div>
                   </div>
                 </div>
               </td>
@@ -374,109 +374,85 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <dialog class="modal modal-bottom sm:modal-middle backdrop-blur-sm" :class="{ 'modal-open': showEditModal }">
-      <div class="modal-box p-0 overflow-hidden shadow-2xl max-w-lg">
-        <div class="p-5 border-b border-base-200 bg-base-100 flex justify-between items-center">
-          <h3 class="font-bold text-lg flex items-center gap-2.5">
-            <div class="p-2 bg-primary/10 rounded-lg text-primary">
-              <Icon name="mingcute:user-edit-line" size="20" />
-            </div>
-            {{ t('admin.edit_user') }}
-          </h3>
-          <button class="btn btn-sm btn-circle btn-ghost" @click="showEditModal = false">✕</button>
+
+    <common-modal v-model="showEditModal" :title="t('admin.edit_user')">
+      <template #title-prefix>
+        <div class="p-2 bg-primary/10 rounded-lg text-primary">
+          <Icon name="mingcute:user-edit-line" size="20" />
         </div>
+      </template>
 
-        <div class="p-6 bg-base-50/50" v-if="editingUser">
-          <div class="grid gap-4">
-            <div
-              class="bg-base-100 border border-base-200 rounded-xl p-4 flex items-center justify-between hover:border-primary/30 transition-colors shadow-sm">
-              <div class="flex items-center gap-4">
-                <div class="w-11 h-11 rounded-full bg-success/10 flex items-center justify-center text-success">
-                  <Icon name="mingcute:power-line" size="22" :class="!editingUser.isActive && 'grayscale opacity-50'" />
-                </div>
-                <div>
-                  <div class="font-semibold text-base">{{ t('user.status') }}</div>
-                  <div class="text-sm text-base-content/50 mt-0.5">{{ editingUser.isActive ?
-                    t('status.active_desc') : t('status.inactive_desc') }}</div>
-                </div>
-              </div>
-              <input type="checkbox" class="toggle toggle-md toggle-success" v-model="editingUser.isActive" />
+      <div class="grid gap-4" v-if="editingUser">
+        <div
+          class="bg-base-100 border border-base-200 rounded-xl p-4 flex items-center justify-between hover:border-primary/30 transition-colors shadow-sm">
+          <div class="flex items-center gap-4">
+            <div class="w-11 h-11 rounded-full bg-success/10 flex items-center justify-center text-success">
+              <Icon name="mingcute:power-line" size="22" :class="!editingUser.isActive && 'grayscale opacity-50'" />
             </div>
-
-            <div
-              class="bg-base-100 border border-base-200 rounded-xl p-4 flex items-center justify-between hover:border-primary/30 transition-colors shadow-sm">
-              <div class="flex items-center gap-4">
-                <div class="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <Icon name="mingcute:shield-line" size="22" :class="!editingUser.isAdmin && 'grayscale opacity-50'" />
-                </div>
-                <div>
-                  <div class="font-semibold text-base">{{ t('user.role') }}</div>
-                  <div class="text-sm text-base-content/50 mt-0.5">{{ editingUser.isAdmin ?
-                    t('role.admin_desc') : t('role.user_desc') }}</div>
-                </div>
-              </div>
-              <input type="checkbox" class="toggle toggle-md toggle-primary" v-model="editingUser.isAdmin" />
+            <div>
+              <div class="font-semibold text-base">{{ t('user.status') }}</div>
+              <div class="text-sm text-base-content/50 mt-0.5">{{ editingUser.isActive ?
+                t('status.active_desc') : t('status.inactive_desc') }}</div>
             </div>
           </div>
+          <input type="checkbox" class="toggle toggle-md toggle-success" v-model="editingUser.isActive" />
         </div>
 
-        <div class="p-5 border-t border-base-200 bg-base-100 flex justify-end gap-3">
-          <button class="btn btn-md btn-ghost font-normal" @click="showEditModal = false">{{
-            t('common.cancel') }}</button>
-          <button class="btn btn-md btn-primary px-8" @click="saveEdit">{{ t('common.save') }}</button>
+        <div
+          class="bg-base-100 border border-base-200 rounded-xl p-4 flex items-center justify-between hover:border-primary/30 transition-colors shadow-sm">
+          <div class="flex items-center gap-4">
+            <div class="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <Icon name="mingcute:shield-line" size="22" :class="!editingUser.isAdmin && 'grayscale opacity-50'" />
+            </div>
+            <div>
+              <div class="font-semibold text-base">{{ t('user.role') }}</div>
+              <div class="text-sm text-base-content/50 mt-0.5">{{ editingUser.isAdmin ?
+                t('role.admin_desc') : t('role.user_desc') }}</div>
+            </div>
+          </div>
+          <input type="checkbox" class="toggle toggle-md toggle-primary" v-model="editingUser.isAdmin" />
         </div>
       </div>
-      <form method="dialog" class="modal-backdrop">
-        <button @click="showEditModal = false">close</button>
-      </form>
-    </dialog>
 
-    <dialog class="modal modal-bottom sm:modal-middle backdrop-blur-sm" :class="{ 'modal-open': showPwdModal }">
-      <div class="modal-box p-0 overflow-hidden shadow-2xl max-w-lg">
-        <div class="p-5 border-b border-base-200 bg-base-100 flex justify-between items-center">
-          <h3 class="font-bold text-lg flex items-center gap-2.5">
-            <div class="p-2 bg-warning/10 rounded-lg text-warning">
-              <Icon name="mingcute:key-2-line" size="20" />
-            </div>
-            {{ t('user.reset_password') }}
-          </h3>
-          <button class="btn btn-sm btn-circle btn-ghost" @click="showPwdModal = false">✕</button>
+      <template #actions="{ close }">
+        <button class="btn btn-ghost" @click="close">{{ t('common.cancel') }}</button>
+        <button class="btn btn-primary px-8" @click="saveEdit">{{ t('common.save') }}</button>
+      </template>
+    </common-modal>
+
+    <common-modal v-model="showPwdModal" :title="t('user.reset_password')">
+      <template #title-prefix>
+        <div class="p-2 bg-warning/10 rounded-lg text-warning">
+          <Icon name="mingcute:key-2-line" size="20" />
         </div>
+      </template>
 
-        <div class="p-6 bg-base-50/50">
-          <div class="alert alert-warning alert-soft mb-6 p-4 border-none shadow-sm">
-            <Icon name="mingcute:warning-line" size="20" />
-            <span class="text-sm font-medium">{{ t('admin.password_warning') }}</span>
-          </div>
-
-          <div class="form-control w-full">
-            <label class="label pt-0 pb-2">
-              <span class="label-text font-semibold text-base">{{ t('user.new_password') }}</span>
-            </label>
-            <div class="relative">
-              <input type="text" v-model="pwdForm.newPassword" class="input input-bordered w-full font-mono pl-11 h-12"
-                placeholder="New Password" />
-              <div class="absolute left-0 top-0 bottom-0 w-11 flex items-center justify-center text-base-content/40">
-                <Icon name="mingcute:lock-line" size="20" />
-              </div>
-            </div>
-            <label class="label pb-0">
-              <span class="label-text-alt text-base-content/50">{{ t('admin.password_hint') }}</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="p-5 border-t border-base-200 bg-base-100 flex justify-end gap-3">
-          <button class="btn btn-md btn-ghost font-normal" @click="showPwdModal = false">{{ t('common.cancel')
-            }}</button>
-          <button class="btn btn-md btn-warning px-8" @click="savePwd">{{ t('common.confirm_reset')
-            }}</button>
-        </div>
+      <div class="alert alert-warning alert-soft mb-6 p-4 border-none shadow-sm">
+        <Icon name="mingcute:warning-line" size="20" />
+        <span class="text-sm font-medium">{{ t('admin.password_warning') }}</span>
       </div>
-      <form method="dialog" class="modal-backdrop">
-        <button @click="showPwdModal = false">close</button>
-      </form>
-    </dialog>
+
+      <div class="form-control w-full">
+        <label class="label pt-0 pb-2">
+          <span class="label-text font-semibold text-base">{{ t('user.new_password') }}</span>
+        </label>
+        <div class="relative">
+          <input type="text" v-model="pwdForm.newPassword" class="input input-bordered w-full font-mono pl-11 h-12"
+            placeholder="New Password" />
+          <div class="absolute left-0 top-0 bottom-0 w-11 flex items-center justify-center text-base-content/40">
+            <Icon name="mingcute:lock-line" size="20" />
+          </div>
+        </div>
+        <label class="label pb-0">
+          <span class="label-text-alt text-base-content/50">{{ t('admin.password_hint') }}</span>
+        </label>
+      </div>
+
+      <template #actions="{ close }">
+        <button class="btn btn-ghost" @click="close">{{ t('common.cancel') }}</button>
+        <button class="btn btn-warning px-8" @click="savePwd">{{ t('common.confirm_reset') }}</button>
+      </template>
+    </common-modal>
   </div>
 </template>
 

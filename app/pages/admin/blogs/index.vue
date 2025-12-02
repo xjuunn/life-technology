@@ -330,7 +330,7 @@ onMounted(() => {
                     <div class="flex items-center gap-2">
                       <span class="badge badge-xs badge-neutral badge-outline">{{ blog.category }}</span>
                       <span class="text-xs text-base-content/50 truncate max-w-[200px] font-mono">/{{ blog.slug
-                      }}</span>
+                        }}</span>
                     </div>
                   </div>
                 </div>
@@ -433,126 +433,100 @@ onMounted(() => {
       </div>
     </div>
 
-    <dialog class="modal modal-bottom sm:modal-middle backdrop-blur-sm" :class="{ 'modal-open': showRejectModal }">
-      <div class="modal-box p-0 overflow-hidden shadow-2xl max-w-lg">
-        <div class="p-5 border-b border-base-200 bg-base-100 flex justify-between items-center">
-          <h3 class="font-bold text-lg flex items-center gap-2.5">
-            <div class="p-2 bg-error/10 rounded-lg text-error">
-              <Icon name="mingcute:close-circle-line" size="20" />
-            </div>
-            {{ t('admin.reject_blog') }}
-          </h3>
-          <button class="btn btn-sm btn-circle btn-ghost" @click="showRejectModal = false">✕</button>
+    <!-- 驳回模态框 -->
+    <common-modal v-model="showRejectModal" :title="t('admin.reject_blog')">
+      <template #title-prefix>
+        <div class="p-2 bg-error/10 rounded-lg text-error">
+          <Icon name="mingcute:close-circle-line" size="20" />
         </div>
+      </template>
 
-        <div class="p-6 bg-base-50/50">
-          <div class="form-control w-full">
-            <label class="label pt-0">
-              <span class="label-text font-semibold">{{ t('admin.reject_reason_label') }}</span>
-            </label>
-            <textarea v-model="rejectForm.reason"
-              class="textarea textarea-bordered h-32 w-full resize-none focus:border-error/50"
-              :placeholder="t('admin.reject_reason_placeholder')"></textarea>
-            <label class="label pb-0">
-              <span class="label-text-alt text-base-content/50">{{ t('admin.reject_hint') }}</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="p-5 border-t border-base-200 bg-base-100 flex justify-end gap-3">
-          <button class="btn btn-md btn-ghost font-normal" @click="showRejectModal = false">
-            {{ t('common.cancel') }}
-          </button>
-          <button class="btn btn-md btn-error px-8" @click="confirmReject">
-            {{ t('action.reject_confirm') }}
-          </button>
-        </div>
+      <div class="form-control w-full">
+        <label class="label pt-0">
+          <span class="label-text font-semibold">{{ t('admin.reject_reason_label') }}</span>
+        </label>
+        <textarea v-model="rejectForm.reason"
+          class="textarea textarea-bordered h-32 w-full resize-none focus:border-error/50"
+          :placeholder="t('admin.reject_reason_placeholder')"></textarea>
+        <label class="label pb-0">
+          <span class="label-text-alt text-base-content/50">{{ t('admin.reject_hint') }}</span>
+        </label>
       </div>
-      <form method="dialog" class="modal-backdrop">
-        <button @click="showRejectModal = false">close</button>
-      </form>
-    </dialog>
 
-    <dialog class="modal modal-bottom sm:modal-middle backdrop-blur-sm" :class="{ 'modal-open': showViewModal }">
-      <div class="modal-box p-0 overflow-hidden shadow-2xl max-w-4xl scrollbar-hide">
-        <div
-          class="p-5 border-b border-base-200 bg-base-100/95 sticky top-0 z-50 backdrop-blur flex justify-between items-center">
-          <div class="flex flex-col gap-1 min-w-0">
-            <h3 class="font-bold text-xl truncate pr-4">{{ viewingBlog?.title }}</h3>
-            <div class="flex items-center gap-2 text-xs text-base-content/50 font-mono">
-              <span class="opacity-70">ID: {{ viewingBlog?.id }}</span>
+      <template #actions="{ close }">
+        <button class="btn btn-ghost" @click="close">{{ t('common.cancel') }}</button>
+        <button class="btn btn-error px-6" @click="confirmReject">{{ t('action.reject_confirm') }}</button>
+      </template>
+    </common-modal>
+
+    <!-- 查看详情模态框 -->
+    <common-modal v-model="showViewModal" :title="viewingBlog?.title" max-width="max-w-4xl">
+      <div v-if="viewingBlog" class="flex flex-col gap-6">
+        <div v-if="viewingBlog.coverImage"
+          class="w-full h-64 sm:h-80 bg-base-200 relative rounded-xl overflow-hidden shadow-sm">
+          <img :src="viewingBlog.coverImage" class="w-full h-full object-cover" :alt="viewingBlog.title" />
+          <div class="absolute inset-0 bg-gradient-to-t from-base-100/50 to-transparent"></div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-base-200">
+          <div class="flex items-center gap-3">
+            <div class="avatar">
+              <div class="w-12 h-12 rounded-full ring ring-base-200 ring-offset-base-100 ring-offset-2">
+                <img
+                  :src="viewingBlog.author.avatar || 'https://ui-avatars.com/api/?name=' + viewingBlog.author.username" />
+              </div>
+            </div>
+            <div>
+              <div class="font-bold">{{ viewingBlog.author.username }}</div>
+              <div class="text-xs text-base-content/50 flex gap-2">
+                <span>{{ viewingBlog.author.email }}</span>
+                <span class="opacity-70 font-mono">ID: {{ viewingBlog.id }}</span>
+              </div>
             </div>
           </div>
-          <div class="flex items-center gap-2">
-            <template v-if="viewingBlog?.status === 'pending'">
-              <button class="btn btn-sm btn-success text-white" @click="viewingBlog && handleApprove(viewingBlog)">{{
-                t('action.approve') }}</button>
-              <button class="btn btn-sm btn-warning" @click="viewingBlog && openRejectModal(viewingBlog)">{{
-                t('action.reject') }}</button>
-            </template>
-            <button class="btn btn-sm btn-circle btn-ghost" @click="showViewModal = false">✕</button>
+          <div class="flex flex-col items-end gap-1">
+            <span class="badge badge-lg" :class="getStatusBadge(viewingBlog.status)">
+              {{ t(`status.${viewingBlog.status}`) }}
+            </span>
+            <span class="text-xs text-base-content/50">
+              {{ new Date(viewingBlog.updatedAt).toLocaleString() }}
+            </span>
           </div>
         </div>
 
-        <div class="overflow-y-auto max-h-[calc(100vh-12rem)] scrollbar-hide">
-          <div v-if="viewingBlog?.coverImage" class="w-full h-64 sm:h-80 bg-base-200 relative">
-            <img :src="viewingBlog.coverImage" class="w-full h-full object-cover" :alt="viewingBlog.title" />
-            <div class="absolute inset-0 bg-gradient-to-t from-base-100 to-transparent opacity-50"></div>
-          </div>
+        <div v-if="viewingBlog.summary"
+          class="bg-base-200/50 p-4 rounded-xl text-base-content/70 italic border-l-4 border-primary">
+          {{ viewingBlog.summary }}
+        </div>
 
-          <div class="p-6 md:p-8 flex flex-col gap-6">
-            <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-base-200">
-              <div class="flex items-center gap-3">
-                <div class="avatar">
-                  <div class="w-12 h-12 rounded-full ring ring-base-200 ring-offset-base-100 ring-offset-2">
-                    <img
-                      :src="viewingBlog?.author.avatar || 'https://ui-avatars.com/api/?name=' + viewingBlog?.author.username" />
-                  </div>
-                </div>
-                <div>
-                  <div class="font-bold">{{ viewingBlog?.author.username }}</div>
-                  <div class="text-xs text-base-content/50">{{ viewingBlog?.author.email }}</div>
-                </div>
-              </div>
-              <div class="flex flex-col items-end gap-1">
-                <span class="badge badge-lg" :class="getStatusBadge(viewingBlog?.status || '')">
-                  {{ viewingBlog ? t(`status.${viewingBlog.status}`) : '' }}
-                </span>
-                <span class="text-xs text-base-content/50" v-if="viewingBlog?.updatedAt">
-                  {{ new Date(viewingBlog.updatedAt).toLocaleString() }}
-                </span>
-              </div>
-            </div>
+        <div class="prose prose-sm md:prose-base max-w-none">
+          <pre class="whitespace-pre-wrap font-sans bg-transparent p-0 border-none text-base-content">{{ viewingBlog.content
+        }}</pre>
+        </div>
 
-            <div v-if="viewingBlog?.summary"
-              class="bg-base-200/50 p-4 rounded-xl text-base-content/70 italic border-l-4 border-primary">
-              {{ viewingBlog.summary }}
-            </div>
+        <div class="flex flex-wrap gap-2">
+          <span v-for="tag in viewingBlog.tags" :key="tag" class="badge badge-outline">#{{ tag }}</span>
+        </div>
 
-            <div class="prose prose-sm md:prose-base max-w-none">
-              <pre class="whitespace-pre-wrap font-sans bg-transparent p-0 border-none text-base-content">{{
-                viewingBlog?.content }}</pre>
-            </div>
-
-            <div class="flex flex-wrap gap-2 pt-4">
-              <span v-for="tag in viewingBlog?.tags" :key="tag" class="badge badge-outline">#{{ tag }}</span>
-            </div>
-
-            <div v-if="viewingBlog?.status === 'rejected' && viewingBlog?.rejectReason"
-              class="alert alert-error alert-soft">
-              <Icon name="mingcute:close-circle-fill" />
-              <div>
-                <h3 class="font-bold text-xs">{{ t('admin.reject_reason_label') }}</h3>
-                <div class="text-xs">{{ viewingBlog.rejectReason }}</div>
-              </div>
-            </div>
+        <div v-if="viewingBlog.status === 'rejected' && viewingBlog.rejectReason" class="alert alert-error alert-soft">
+          <Icon name="mingcute:close-circle-fill" />
+          <div>
+            <h3 class="font-bold text-xs">{{ t('admin.reject_reason_label') }}</h3>
+            <div class="text-xs">{{ viewingBlog.rejectReason }}</div>
           </div>
         </div>
       </div>
-      <form method="dialog" class="modal-backdrop">
-        <button @click="showViewModal = false">close</button>
-      </form>
-    </dialog>
+
+      <template #actions="{ close }">
+        <template v-if="viewingBlog?.status === 'pending'">
+          <button class="btn btn-warning" @click="viewingBlog && openRejectModal(viewingBlog)">{{ t('action.reject')
+            }}</button>
+          <button class="btn btn-success text-white" @click="viewingBlog && handleApprove(viewingBlog)">{{
+            t('action.approve') }}</button>
+        </template>
+        <button class="btn btn-ghost" @click="close">{{ t('common.cancel') }}</button>
+      </template>
+    </common-modal>
   </div>
 </template>
 
