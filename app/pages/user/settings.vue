@@ -70,7 +70,7 @@
                   </div>
                   <input v-model="username" type="text"
                     class="input input-bordered w-full pl-11 bg-base-200/50 focus:bg-base-100 focus:border-primary transition-all duration-300 rounded-xl focus-within:outline-0"
-                    :placeholder="t('settings.username_placeholder')" :disabled="isSaving" />
+                    :placeholder="t('settings.username_placeholder')" :disabled="isSaving" minlength="3" />
                 </div>
               </div>
 
