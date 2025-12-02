@@ -270,7 +270,7 @@ function listPendingBlogs(data: ListPendingBlogsRequest) {
  * @param id 博客ID
  */
 function approve(id: string) {
-  return api.put<{ message: string }>(base + `/${id}/approve`);
+  return api.put<{ message: string }>(base + `/blogs/${id}/approve`);
 }
 
 /**
@@ -279,7 +279,7 @@ function approve(id: string) {
  * @param reason 拒绝原因
  */
 function reject(id: string, reason: string) {
-  return api.put<{ message: string }>(base + `/${id}/reject`, { reason });
+  return api.put<{ message: string }>(base + `/blogs/${id}/reject`, { reason });
 }
 
 /**
