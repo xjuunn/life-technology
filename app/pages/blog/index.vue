@@ -167,14 +167,14 @@ onMounted(async () => {
           </div>
 
           <div
-            class="flex flex-col sm:flex-row gap-3 items-center justify-between bg-base-100/50 backdrop-blur-xl border border-base-content/5 p-2 rounded-2xl shadow-lg relative z-10">
+            class="flex flex-col sm:flex-row gap-3 items-center justify-between bg-base-100/80 backdrop-blur-xl border border-base-content/10 p-2 rounded-2xl shadow-lg relative z-10">
             <div class="relative flex-1 w-full">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Icon name="mingcute:search-line" class="w-5 h-5 text-base-content/40" />
               </div>
               <input v-model="searchKeyword" @keyup.enter="performSearch" type="text"
                 :placeholder="t('blog_page.search_placeholder')"
-                class="input w-full pl-11 bg-transparent border-0 focus:outline-none focus:bg-base-100/50 rounded-xl" />
+                class="input w-full pl-11 bg-transparent border border-base-content/10 focus:outline-none focus:bg-base-100/80 focus:border-primary/50 rounded-xl" />
               <button v-if="searchKeyword" @click="clearSearch"
                 class="absolute inset-y-0 right-3 flex items-center btn btn-ghost btn-xs btn-circle">
                 <Icon name="mingcute:close-line" class="w-4 h-4" />

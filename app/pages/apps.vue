@@ -66,10 +66,10 @@
       <div class="absolute right-1/4 top-1/4 w-32 h-32 bg-primary/20 rounded-full blur-2xl"></div>
     </div>
 
-    <main class="flex-1 w-full flex items-start py-4 sm:py-8 lg:py-12 overflow-y-auto overflow-x-hidden">
+    <main class="flex-1 w-full flex items-center py-4 sm:py-8 lg:py-12 overflow-y-auto overflow-x-hidden">
       <div class="container mx-auto sm:px-6">
         <div class="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12 xl:gap-16">
-          <div class="w-full lg:w-1/2 text-center lg:text-left space-y-5 sm:space-y-6 z-10 order-2 lg:order-1">
+          <div class="w-full lg:w-1/2 text-center lg:text-left space-y-5 sm:space-y-6 z-10 order-2 lg:order-1 lg:pr-8 xl:pr-20">
             <div class="space-y-3">
               <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight leading-[1.1]">
                 {{ t('download_page.title_line1') }}<br>
