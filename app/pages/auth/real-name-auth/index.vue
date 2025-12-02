@@ -42,7 +42,7 @@ const handleFileChange = (type: 'front' | 'back', event: Event) => {
       return
     }
 
-    if (file.size > 10 * 1024 * 1024) { // 10MB
+    if (file.size > 5 * 1024 * 1024) { // 5MB
       toast.warning(t('verify.image_too_large'))
       return
     }

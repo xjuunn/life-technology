@@ -283,6 +283,7 @@ import type { BlogCreateRequest, Status } from '~/api/blog';
 
 const { t } = useAppI18n();
 const router = useRouter();
+const userStore = useUserStore();
 
 const loading = ref(false);
 const uploading = ref(false);
@@ -368,6 +369,17 @@ const switchTab = (tab: 'edit' | 'preview') => {
 };
 
 onMounted(async () => {
+  if (userStore.user?.id === undefined) navigateTo('/auth/login')
+  if (!userStore.user?.isAdmin && !userStore.user?.idVerified) {
+    const result = await useDialog().confirm({
+      title: "实名认证",
+      content: "必须实名认证后才能发送博客",
+      type: "warning",
+      confirmText: "前往认证",
+      cancelText: "留在此页"
+    })
+    if (result) navigateTo("/auth/real-name-auth/")
+  }
   await loadCategories();
 });
 
