@@ -69,6 +69,9 @@ const handleSubmit = async () => {
   try {
     await ApiList.auth.ocrIdcard(frontFile.value, backFile.value)
     toast.success(t('verify.success'))
+    const userStore = useUserStore();
+    const user = userStore.user;
+    if (user) userStore.setUser({ ...user, idVerified: true })
     setTimeout(() => {
       router.push('/')
     }, 1500)
