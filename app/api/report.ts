@@ -1,12 +1,5 @@
 const base = '/reports';
 
-export interface ListReportRequest {
-  targetType: string;
-  targetId: string;
-  reason: string;
-  description: string;
-}
-
 export interface CreateReportRequest {
   targetType: string;
   targetId: string;
@@ -29,11 +22,11 @@ export interface CreateReportResponse {
 }
 
 /**
- * 
+ * 创建举报
  * @param data 举报数据
  * @returns 
  */
-export function list(data: ListReportRequest) {
+export function create(data: CreateReportRequest) {
   return api.post<{
     message: string;
     report: {
