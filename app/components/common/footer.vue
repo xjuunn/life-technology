@@ -26,8 +26,13 @@
       </div>
     </div>
     <div class="text-center mt-12 space-y-2">
-      <p class="text-xs text-base-content/40">&copy; 2014-2025 {{ t('footer.copyright') }}</p>
-      <p class="text-xs text-base-content/30">{{ t('footer.compliance') }}</p>
+      <p class="text-xs text-base-content/40">{{ t('footer.copyright') }}</p>
+      <p class="text-xs text-base-content/30">
+        <a href="https://beian.miit.gov.cn/#/Integrated/index"
+        target="_blank"
+        rel="noopener noreferrer"
+         class="hover:underline hover:text-base-content/50 transition-colors">{{ t('footer.compliance') }}</a>
+        </p>
     </div>
   </footer>
 </template>
@@ -39,8 +44,8 @@ const { t } = useAppI18n();
 <i18n lang="json">{
   "en": {
     "footer": {
-      "copyright": "LIFE Blockchain Technology Co., Ltd. All Rights Reserved.",
-      "compliance": "ICP Filing: Beijing ICP No. XXXXXXXX-1 | Blockchain Service Filing: Beijing Cyberspace No. XXXXXXXX"
+      "copyright": "Tianjin Chengjiu Network Technology Co., Ltd. All Rights Reserved.",
+      "compliance": "ICP Filing: Tianjin ICP No. 2025040555-1"
     },
     "nav": {
       "home": "Home",
@@ -65,8 +70,8 @@ const { t } = useAppI18n();
   },
   "zh-CN": {
     "footer": {
-      "copyright": "LIFE 区块链技术有限公司 版权所有",
-      "compliance": "备案号：京ICP备XXXXXXXX号-1 | 区块链信息服务备案编号：京网信备XXXXXXXX号"
+      "copyright": "天津成久网络科技有限公司 版权所有",
+      "compliance": "备案号：津ICP备2025040555号-1"
     },
     "nav": {
       "home": "首页",
@@ -91,8 +96,8 @@ const { t } = useAppI18n();
   },
   "zh-TW": {
     "footer": {
-      "copyright": "LIFE 區塊鏈技術有限公司 版權所有",
-      "compliance": "備案號：京ICP備XXXXXXXX號-1 | 區塊鏈信息服務備案編號：京網信備XXXXXXXX號"
+      "copyright": "天津成久網絡科技有限公司 版權所有",
+      "compliance": "備案號：津ICP備2025040555號-1"
     },
     "nav": {
       "home": "首頁",
