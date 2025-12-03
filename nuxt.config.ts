@@ -7,10 +7,13 @@ export default defineNuxtConfig({
     plugins: [tailwindcss() as any],
   },
   css: ["~/assets/css/app.css"],
+  components: true,
   imports: {
     dirs: [
       'stores/**',
-      'utils/**'
+      'utils/**',
+      'composables/**',
+      'c'
     ]
   },
   app: {
