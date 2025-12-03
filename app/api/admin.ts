@@ -1,3 +1,6 @@
+import type { ApiList } from "#imports";
+import type { DownloadLinkItem } from "./download";
+
 const base = '/admin'
 
 export interface BlogReviewStatsResponse {
@@ -449,4 +452,86 @@ function handleReport(id: string, data: HandleReportRequest) {
       handledAt: string;
     }
   }>(base + '/reports/' + id, data);
+}
+
+/** 下载链接管理 */
+export const download = {
+  listDoanloadLinks,
+  listDownloadStats,
+  downloadLinkCreate,
+  downloadLinkUPdate,
+  downloadLinkDelete,
+}
+
+export interface DoanloadLinkItem {
+  id: number;
+  platform: ApiList.download.Platform;
+  name: string;
+  version: null | number | string;
+  downloadUrl: string;
+  description: null | string;
+  fileSize: number | null | string;
+  isActive: boolean;
+  sortOrder: number;
+  downloadCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * 获取所有的下载链接列表
+ */
+function listDoanloadLinks() {
+  return api.get<{ downloads: string }>('/downloads/admin/all')
+}
+
+/**
+ * 获取下载统计
+ */
+function listDownloadStats() {
+  return api.get<{
+    totalDownloads: number;
+    downloads: {
+      id: number,
+      platform: ApiList.download.Platform;
+      name: "lifeapp" | string;
+      downloadCount: number;
+      createdAt: string;
+    }
+  }>('/downloads/admin/stats');
+}
+
+export interface DownloadLinkCreateRequest {
+  platform: ApiList.download.Platform;
+  name: string;
+  version: string;
+  downloadUrl: string;
+  description: string;
+  fileSize: string;
+  isActive: boolean;
+  sortOrder: number;
+}
+
+/**
+ * 创建下载链接
+ * @param data 创建数据
+ */
+function downloadLinkCreate(data: DownloadLinkCreateRequest) {
+  return api.post<{ message: string, download: DoanloadLinkItem }>('/downloads/admin', data);
+}
+
+/**
+ * 修改下载链接
+ * @param data 修改数据
+ */
+function downloadLinkUPdate(data: DownloadLinkCreateRequest) {
+  return api.post<{ message: string, download: DownloadLinkItem }>('/downloads/admin', data);
+}
+
+/**
+ * 删除下载链接
+ * @param id 要删除的链接ID
+ */
+function downloadLinkDelete(id: string | number) {
+  return api.delete<{ message: string }>('/downloads/admin/' + id);
 }

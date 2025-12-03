@@ -5,3 +5,4 @@ export * as blog from './blog';
 export * as comment from './comment';
 export * as admin from './admin';
 export * as report from './report';
+export * as download from './download';
