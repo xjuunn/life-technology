@@ -1,14 +1,9 @@
 <template>
   <div>
-    <button class="btn btn-primary" @click="test">
-      <util-i18n en="test" zh="测试" tw="測試"></util-i18n>
-    </button>
+    <span class="text-2xl">测试自动化部署</span>
   </div>
 </template>
 
 <script setup lang="ts">
-async function test() {
-
-}
 
 </script>
