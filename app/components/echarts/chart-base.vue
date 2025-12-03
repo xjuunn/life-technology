@@ -7,6 +7,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'; 
 import * as echarts from 'echarts/core';
 import { BarChart, LineChart, PieChart } from 'echarts/charts';
 import {
@@ -17,7 +18,6 @@ import {
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 
-// 注册必须的组件
 echarts.use([
   BarChart,
   LineChart,

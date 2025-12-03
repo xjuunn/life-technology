@@ -3,29 +3,27 @@
     <div class="py-4">
       <div class="flex justify-between items-center mb-2">
         <div class="flex items-center">
-          <Icon v-if="icon" :name="icon" class="mr-3 text-gray-400" />
-          <span class="text-gray-700 font-medium">{{ label }}</span>
+          <Icon v-if="icon" :name="icon" class="mr-3 text-base-content/40" />
+          <span class="text-base-content/80 font-medium">{{ label }}</span>
         </div>
         
         <div class="flex items-center">
           <span class="font-semibold" :class="valueColor">{{ value }}</span>
-          
-          <!-- 状态指示器 -->
+
           <div 
             v-if="healthy !== undefined"
             class="ml-2 w-2 h-2 rounded-full"
-            :class="healthy ? 'bg-green-500' : 'bg-red-500'"
+            :class="healthy ? 'bg-success' : 'bg-error'"
           ></div>
         </div>
       </div>
-      
-      <!-- 进度条 -->
+
       <div v-if="usage !== undefined" class="mt-3">
-        <div class="flex justify-between text-sm text-gray-500 mb-1">
+        <div class="flex justify-between text-sm text-base-content/60 mb-1">
           <span>{{ $t('admin.dashboard.usage') }}</span>
           <span>{{ usage }}%</span>
         </div>
-        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div class="h-2 bg-base-300 rounded-full overflow-hidden">
           <div 
             class="h-full rounded-full transition-all duration-500"
             :class="usageColor"
@@ -33,27 +31,24 @@
           ></div>
         </div>
         
-        <!-- 使用量详情 -->
-        <div v-if="details" class="mt-2 text-xs text-gray-500 flex justify-between">
+        <div v-if="details" class="mt-2 text-xs text-base-content/60 flex justify-between">
           <span>{{ details.used }}</span>
           <span>{{ details.total }}</span>
         </div>
       </div>
       
-      <!-- 警告信息 -->
       <div v-if="warning && usage !== undefined && usage > warningThreshold" class="mt-2">
-        <div class="flex items-start text-amber-600 bg-amber-50 px-3 py-2 rounded-lg">
-          <Icon name="mingcute:warning-line" class="mr-2 mt-0.5 flex-shrink-0" />
-          <span class="text-sm">
+        <div class="flex items-start text-warning-content bg-warning/10 px-3 py-2 rounded-lg border border-warning/20">
+          <Icon name="mingcute:warning-line" class="mr-2 mt-0.5 flex-shrink-0 text-warning" />
+          <span class="text-sm text-warning-content">
             {{ $t('admin.dashboard.warning_high_usage') }}
           </span>
         </div>
       </div>
-      
-      <!-- 操作按钮 -->
+    
       <div v-if="showAction" class="mt-3">
         <button 
-          class="text-sm text-blue-600 hover:text-blue-800 px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors"
+          class="text-sm text-primary hover:text-primary/80 px-3 py-1 rounded-lg hover:bg-primary/10 transition-colors"
           @click="handleAction"
         >
           {{ actionText || $t('common.manage') }}
@@ -94,29 +89,27 @@ const emit = defineEmits<{
   action: [];
 }>();
 
-// 值颜色
 const valueColor = computed(() => {
   if (props.healthy !== undefined) {
-    return props.healthy ? 'text-green-600' : 'text-red-600';
+    return props.healthy ? 'text-success' : 'text-error';
   }
   
   if (props.usage !== undefined) {
-    if (props.usage > 90) return 'text-red-600';
-    if (props.usage > 75) return 'text-yellow-600';
-    return 'text-green-600';
+    if (props.usage > 90) return 'text-error';
+    if (props.usage > 75) return 'text-warning';
+    return 'text-success';
   }
   
-  return 'text-gray-900';
+  return 'text-base-content';
 });
 
-// 进度条颜色
 const usageColor = computed(() => {
-  if (!props.usage) return 'bg-blue-500';
+  if (!props.usage) return 'bg-primary';
   
-  if (props.usage > 90) return 'bg-red-500';
-  if (props.usage > 75) return 'bg-yellow-500';
-  if (props.usage > 50) return 'bg-green-500';
-  return 'bg-blue-500';
+  if (props.usage > 90) return 'bg-error';
+  if (props.usage > 75) return 'bg-warning';
+  if (props.usage > 50) return 'bg-success';
+  return 'bg-primary';
 });
 
 const handleAction = () => {
@@ -126,6 +119,6 @@ const handleAction = () => {
 
 <style lang="postcss" scoped>
 .system-info {
-  @apply border-b border-gray-100 last:border-0;
+  @apply border-b border-base-300 last:border-0;
 }
 </style>

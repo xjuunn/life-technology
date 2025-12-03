@@ -1,161 +1,119 @@
 <template>
-  <chart-base
-    :width="width"
-    :height="height"
-    :options="mergedOptions"
-    :theme="theme"
-    :loading="loading"
-    :autoresize="autoresize"
-  />
+  <div ref="chartRef" :style="{ width: width, height: height }"></div>
 </template>
 
 <script setup lang="ts">
-import * as echarts from 'echarts/core';
-import type { EChartsCoreOption } from 'echarts/core';
-import { computed } from 'vue';
+import { ref, onMounted, watch, onUnmounted } from 'vue'
+import * as echarts from 'echarts'
 
 interface Props {
-  width?: string;
-  height?: string;
-  title?: string;
-  theme?: string;
-  loading?: boolean;
-  autoresize?: boolean;
-  xAxisData: string[];
-  seriesData: number[];
-  seriesName?: string;
-  color?: string;
-  areaStyle?: boolean;
-  smooth?: boolean;
-  showLegend?: boolean;
-  showTooltip?: boolean;
-  showGrid?: boolean;
-  yAxisName?: string;
-  xAxisName?: string;
+  xAxisData: string[]
+  seriesData: number[]
+  seriesName?: string
+  areaStyle?: boolean
+  color?: string
+  showLegend?: boolean
+  width?: string
+  height?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  width: '100%',
-  height: '400px',
   seriesName: '数据',
-  color: '#3b82f6',
   areaStyle: false,
-  smooth: true,
+  color: '#3b82f6',
   showLegend: true,
-  showTooltip: true,
-  showGrid: true,
-  autoresize: true,
-});
+  width: '100%',
+  height: '300px'
+})
 
-const mergedOptions = computed<EChartsCoreOption>(() => {
-  const baseOptions: EChartsCoreOption = {
-    title: props.title ? {
-      text: props.title,
-      left: 'center',
-      textStyle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#333',
-      },
-    } : undefined,
-    
-    tooltip: props.showTooltip ? {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'cross',
-        label: {
-          backgroundColor: '#6a7985',
-        },
-      },
-    } : undefined,
-    
-    legend: props.showLegend ? {
-      data: [props.seriesName],
-      top: 'bottom',
-    } : undefined,
-    
-    grid: props.showGrid ? {
+const chartRef = ref<HTMLElement | null>(null)
+let chartInstance: echarts.ECharts | null = null
+
+onMounted(() => {
+  if (chartRef.value) {
+    chartInstance = echarts.init(chartRef.value)
+    renderChart()
+  }
+})
+
+const renderChart = () => {
+  if (!chartInstance) return
+  
+  const option: any = {
+    grid: {
       left: '3%',
       right: '4%',
-      bottom: props.showLegend ? '15%' : '3%',
-      top: props.title ? '15%' : '3%',
-      containLabel: true,
-    } : undefined,
-    
+      bottom: '10%',
+      top: '10%',
+      containLabel: true
+    },
     xAxis: {
       type: 'category',
-      boundaryGap: false,
       data: props.xAxisData,
-      name: props.xAxisName,
-      nameTextStyle: {
-        fontSize: 12,
-        color: '#666',
-      },
       axisLine: {
         lineStyle: {
-          color: '#ccc',
-        },
+          color: '#e5e7eb'
+        }
       },
       axisLabel: {
-        color: '#666',
-      },
+        color: '#6b7280'
+      }
     },
-    
     yAxis: {
       type: 'value',
-      name: props.yAxisName,
-      nameTextStyle: {
-        fontSize: 12,
-        color: '#666',
-      },
       axisLine: {
         lineStyle: {
-          color: '#ccc',
-        },
+          color: '#e5e7eb'
+        }
       },
       axisLabel: {
-        color: '#666',
+        color: '#6b7280'
       },
       splitLine: {
         lineStyle: {
-          type: 'dashed',
-          color: '#eee',
-        },
-      },
+          color: '#f3f4f6'
+        }
+      }
     },
-    
-    series: [
-      {
-        name: props.seriesName,
-        type: 'line',
-        smooth: props.smooth,
-        data: props.seriesData,
-        itemStyle: {
-          color: props.color,
-        },
-        areaStyle: props.areaStyle
-          ? {
-              color: new (echarts as any).graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: props.color + '40',
-                },
-                {
-                  offset: 1,
-                  color: props.color + '10',
-                },
-              ]),
-            }
-          : undefined,
-        symbol: 'circle',
-        symbolSize: 8,
-        lineStyle: {
-          width: 3,
-        },
+    series: [{
+      name: props.seriesName,
+      type: 'line',
+      data: props.seriesData,
+      smooth: true,
+      lineStyle: {
+        color: props.color,
+        width: 3
       },
-    ],
-  };
-
-  return baseOptions;
-});
+      itemStyle: {
+        color: props.color
+      },
+      areaStyle: props.areaStyle ? {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: props.color + '40' },
+          { offset: 1, color: props.color + '05' }
+        ])
+      } : undefined
+    }],
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      borderColor: '#e5e7eb',
+      textStyle: {
+        color: '#374151'
+      }
+    }
+  }
+  
+  if (props.showLegend) {
+    option.legend = {
+      data: [props.seriesName],
+      bottom: 0,
+      textStyle: {
+        color: '#6b7280'
+      }
+    }
+  }
+  
+  chartInstance.setOption(option)
+}
 </script>

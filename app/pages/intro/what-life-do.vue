@@ -28,14 +28,14 @@ const capabilities: Capability[] = [
   },
   {
     id: 2,
-    icon: "mingcute:user-safe-fill",
+    icon: "heroicons:circle-stack",
     title: t('about_page.benefits.list.identity.title'),
     description: t('about_page.benefits.list.identity.desc'),
     features: [
       t('about_page.definition.main_card.badge_sovereignty'),
       t('about_page.wallet.features.privacy.desc'),
       t('about_page.benefits.list.control.desc'),
-      t('about_page.compliance.line1') // 修复：在i18n中添加此路径
+      t('about_page.compliance.line1') 
     ],
     color: "secondary"
   },
@@ -54,7 +54,7 @@ const capabilities: Capability[] = [
   },
   {
     id: 4,
-    icon: "mingcute:community-fill",
+    icon: "heroicons:user-group",
     title: t('about_page.token.list.governance.title'),
     description: t('about_page.token.list.governance.desc'),
     features: [
@@ -67,7 +67,7 @@ const capabilities: Capability[] = [
   },
   {
     id: 5,
-    icon: "mingcute:shield-check-fill",
+    icon: "mingcute:safe-flash-fill",
     title: t('about_page.benefits.list.security.title'),
     description: t('about_page.benefits.list.security.desc'),
     features: [
@@ -93,7 +93,6 @@ const capabilities: Capability[] = [
   }
 ];
 
-// 使用场景数据
 const useCases = [
   {
     category: t('about_page.token.list.circulation.title'),
@@ -119,7 +118,7 @@ const useCases = [
       t('about_page.token.list.circulation.desc'),
       t('about_page.benefits.list.control.desc'),
       t('about_page.benefits.list.identity.desc'),
-      t('about_page.compliance.line2') // 修复：在i18n中添加此路径
+      t('about_page.compliance.line2')
     ]
   }
 ];
@@ -242,7 +241,7 @@ const useCases = [
                     :name="[
                   'mingcute:user-4-fill',
                   'mingcute:code-fill', 
-                  'mingcute:building-4-fill'
+                  'mingcute:earth-fill',
                 ][index] || 'mingcute:question-fill'" 
                     size="24" 
                   />
@@ -297,7 +296,7 @@ const useCases = [
               
               <div class="flex items-start gap-4 p-6 rounded-2xl bg-base-200/50 hover:bg-base-200 transition-colors duration-300">
                 <div class="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
-                  <Icon name="mingcute:puzzle-2-fill" size="24" />
+                  <Icon name="mingcute:earth-fill" size="24" />
                 </div>
                 <div>
                   <h4 class="font-bold text-lg mb-2">{{ t('about_page.benefits.list.ecosystem.title') }}</h4>
@@ -338,7 +337,7 @@ const useCases = [
           </button>
            <button class="btn btn-primary btn-lg rounded-full px-8 text-white hover:bg-blue-600">
             {{ t('about_page.benefits.future.btn') }}
-            <Icon name="mingcute:book-open-fill" size="20" />
+            <Icon name="mingcute:book-2-fill" size="20" />
           </button>
         </div>
       </div>

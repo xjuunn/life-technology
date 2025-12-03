@@ -72,16 +72,3 @@ export function listReports(data: ListReportsRequest) {
   return api.get<ListReportsResponse>(base, data);
 }
 
-export interface ReportDetailResponse {
-  report: Report;
-  target: {
-    id: string;
-    title?: string;
-    content?: string;
-    author?: {
-      id: string;
-      username: string;
-      avatar: string;
-    }
-  }
-}

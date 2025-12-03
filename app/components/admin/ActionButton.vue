@@ -1,57 +1,87 @@
 <template>
   <NuxtLink :to="to" class="action-button group">
-    <div class="relative overflow-hidden rounded-xl bg-white shadow-sm p-6 border border-gray-100 hover:border-blue-200 transition-all duration-300 hover:shadow-lg">
-      <!-- 背景装饰 -->
-      <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-10 group-hover:opacity-20 transition-opacity duration-300" :class="colorClass"></div>
-      
-      <!-- 图标 -->
+    <div class="relative overflow-hidden rounded-xl bg-base-100 shadow-sm p-6 border border-base-300 hover:border-primary/30 transition-all duration-300 hover:shadow-lg">
+
+      <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-10 group-hover:opacity-20 transition-opacity duration-300" :class="backgroundClass"></div>
+
       <div class="relative mb-4">
         <div class="w-12 h-12 rounded-lg flex items-center justify-center" :class="colorClass">
           <Icon :name="icon" class="text-xl" />
         </div>
       </div>
-      
-      <!-- 内容 -->
+
       <div class="relative">
-        <h3 class="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">{{ label }}</h3>
-        <p class="text-sm text-gray-500 line-clamp-2">{{ description }}</p>
+        <h3 class="font-semibold text-base-content mb-1 group-hover:text-primary transition-colors">{{ label }}</h3>
+        <p class="text-sm text-base-content/70 line-clamp-2">{{ description }}</p>
       </div>
-      
-      <!-- 箭头指示 -->
+
       <div class="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
-        <Icon name="mingcute:arrow-right-line" class="text-blue-500" />
+        <Icon name="mingcute:arrow-right-line" class="text-primary" />
       </div>
     </div>
   </NuxtLink>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+
+type ColorKey = 
+  | 'primary' | 'secondary' | 'accent' | 'neutral'
+  | 'base-100' | 'base-200' | 'base-300' | 'base-content'
+  | 'info' | 'success' | 'warning' | 'error'
+  | 'blue' | 'green' | 'purple' | 'orange' | 'red';
+
 interface Props {
   to: string;
   icon: string;
   label: string;
   description: string;
-  color?: 'blue' | 'green' | 'purple' | 'orange' | 'red';
+  color?: ColorKey; 
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  color: 'blue'
+  color: 'primary'
 });
 
-// 根据颜色生成对应的类
+const colorConfig = {
+
+  'primary': { bg: 'bg-primary/20', text: 'text-primary', base: 'bg-primary' },
+  'secondary': { bg: 'bg-secondary/20', text: 'text-secondary', base: 'bg-secondary' },
+  'accent': { bg: 'bg-accent/20', text: 'text-accent', base: 'bg-accent' },
+  'neutral': { bg: 'bg-neutral/20', text: 'text-neutral', base: 'bg-neutral' },
+  'base-100': { bg: 'bg-base-100/20', text: 'text-base-content', base: 'bg-base-100' },
+  'base-200': { bg: 'bg-base-200/20', text: 'text-base-content', base: 'bg-base-200' },
+  'base-300': { bg: 'bg-base-300/20', text: 'text-base-content', base: 'bg-base-300' },
+  'base-content': { bg: 'bg-base-content/20', text: 'text-base-100', base: 'bg-base-content' },
+
+  'info': { bg: 'bg-info/20', text: 'text-info', base: 'bg-info' },
+  'success': { bg: 'bg-success/20', text: 'text-success', base: 'bg-success' },
+  'warning': { bg: 'bg-warning/20', text: 'text-warning', base: 'bg-warning' },
+  'error': { bg: 'bg-error/20', text: 'text-error', base: 'bg-error' },
+ 
+  'blue': { bg: 'bg-primary/20', text: 'text-primary', base: 'bg-primary' },
+  'green': { bg: 'bg-success/20', text: 'text-success', base: 'bg-success' },
+  'purple': { bg: 'bg-accent/20', text: 'text-accent', base: 'bg-accent' },
+  'orange': { bg: 'bg-warning/20', text: 'text-warning', base: 'bg-warning' },
+  'red': { bg: 'bg-error/20', text: 'text-error', base: 'bg-error' },
+} as const;
+
+const getColorConfig = (color: ColorKey) => {
+  return colorConfig[color] || colorConfig['primary'];
+};
+
 const colorClass = computed(() => {
-  const classes = {
-    blue: 'bg-blue-100 text-blue-600',
-    green: 'bg-green-100 text-green-600',
-    purple: 'bg-purple-100 text-purple-600',
-    orange: 'bg-orange-100 text-orange-600',
-    red: 'bg-red-100 text-red-600'
-  };
-  return classes[props.color];
+  const config = getColorConfig(props.color);
+  return `${config.bg} ${config.text}`;
+});
+
+const backgroundClass = computed(() => {
+  const config = getColorConfig(props.color);
+  return config.base;
 });
 </script>
 
-<style lang="postcss" scoped >
+<style lang="postcss" scoped>
 .action-button {
   @apply block;
 }
