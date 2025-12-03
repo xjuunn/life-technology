@@ -16,7 +16,7 @@ const features = computed(() => [
   {
     title: t('what_is_life.app.features.control.title'),
     desc: t('what_is_life.app.features.control.desc'),
-    icon: 'mingcute:user-auth-fill'
+    icon: 'heroicons:circle-stack' 
   },
   {
     title: t('what_is_life.app.features.privacy.title'),
