@@ -30,6 +30,9 @@ jobs:
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
+          # 加载 BASE_URL
+          export VITE_BACKBASE_URL=${{ secrets.API_BASE_URL }}
+
           # Node22 构建
           nvm use 22 || nvm install 22
           pnpm install
