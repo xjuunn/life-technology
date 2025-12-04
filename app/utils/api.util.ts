@@ -32,7 +32,7 @@ interface RequestConfig extends AxiosRequestConfig {
 class Request {
   private instance: AxiosInstance
   private baseConfig: AxiosRequestConfig = {
-    baseURL: import.meta.env.VITE_BACKBASE_URL || "https://lifetv.chat/api/",
+    baseURL: import.meta.dev ? "/backendapi/" : (import.meta.env.VITE_BACKBASE_URL ?? "https://lifetv.chat/api/"),
     timeout: 15000,
     headers: {
       'Content-Type': 'application/json;charset=utf-8'

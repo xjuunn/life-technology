@@ -38,7 +38,14 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      base_url: process.env.BASE_URL
+      base_url: process.env.VITE_BACKBASE_URL
+    }
+  },
+  nitro: {
+    routeRules: {
+      '/backendapi/**': {
+        proxy: `${process.env.VITE_BACKBASE_URL}/**`
+      }
     }
   },
   modules: [
