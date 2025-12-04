@@ -1,284 +1,37 @@
-<template>
-<div class="modal" :class="{ 'modal-open': showModal }">
-  <title>life-下载</title>
-    <div class="modal-box max-w-full sm:max-w-10xl max-h-screen sm:max-h-[110vh] w-11/12 sm:w-auto">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-base sm:text-lg font-bold truncate max-w-[60%]">{{ modalTitle }}</h3>
-        <p v-if="modalImages.length > 1" class="text-xs sm:text-sm text-base-content/60">
-          步骤{{ currentImageIndex + 1 }} / {{ modalImages.length }}
-        </p>
-        <button class="btn btn-sm btn-circle" @click="closeModal">✕</button>
-      </div>
-      <div class="flex justify-center items-center relative">
-        <button 
-          v-if="modalImages.length > 1 && currentImageIndex > 0"
-          class="rounded-full bg-base-100 p-2 sm:p-4 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-all duration-500 shadow-sm absolute left-0 sm:left-2 z-10 flex items-center justify-center"
-          @click="prevImage"
-        >
-          <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
-          <div class="relative z-10 w-6 h-6 sm:w-10 sm:h-10 flex items-center justify-center text-accent">
-            <Icon name="heroicons:chevron-left" class="!w-4 !h-4 sm:!w-8 sm:!h-8" />
-          </div>
-        </button>
-        <div class="w-full h-full flex items-center justify-center p-2 sm:p-4">
-          <img 
-            v-if="modalImages.length > 0 && modalImages[currentImageIndex]"
-            :src="modalImages[currentImageIndex]" 
-            :alt="`${modalTitle} - 步骤 ${currentImageIndex + 1}`" 
-            class="max-w-full max-h-[60vh] sm:max-h-[75vh] object-contain rounded-lg sm:rounded-xl shadow-xl sm:shadow-2xl"
-            @error="handleImageError" 
-          />
-        </div>
-        <button 
-          v-if="modalImages.length > 1 && currentImageIndex < modalImages.length - 1"
-          class="rounded-full bg-base-100 p-2 sm:p-4 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-all duration-500 shadow-sm absolute right-0 sm:right-2 z-10 flex items-center justify-center"
-          @click="nextImage"
-        >
-          <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
-          <div class="relative z-10 w-6 h-6 sm:w-10 sm:h-10 flex items-center justify-center text-accent">
-            <Icon name="heroicons:chevron-right" class="!w-4 !h-4 sm:!w-8 sm:!h-8" />
-          </div>
-        </button>
-      </div>
-      <div v-if="modalImages.length > 1" class="flex justify-center mt-4 space-x-1 sm:space-x-2 overflow-x-auto py-2 px-4">
-        <button
-          v-for="(img, index) in modalImages"
-          :key="index"
-          class="w-6 h-6 sm:w-10 sm:h-10 flex-shrink-0 rounded-full transition-all duration-300 border-2 border-base-300"
-          :class="currentImageIndex === index ? 'bg-primary border-primary scale-110 sm:scale-125' : 'bg-base-300 hover:bg-base-400'"
-          @click="currentImageIndex = index"
-          :aria-label="`跳转到步骤 ${index + 1}`"
-        >
-        </button>
-      </div>
-    </div>
-  </div>
-  <div
-    class="min-h-screen bg-base-100 text-base-content font-sans relative overflow-x-hidden selection:bg-primary selection:text-primary-content flex flex-col">
-    <div class="absolute inset-0 bg-base-100 z-0"></div>
-    <!-- 移动端隐藏背景图 -->
-    <div class="absolute inset-y-0 right-0 w-3/4 z-0 hidden sm:block" :style="{
-      backgroundImage: 'url(/imgs/background.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'left 80%',
-      backgroundRepeat: 'no-repeat'
-    }">
-    </div>
-    <div class="absolute inset-0 z-0">
-      <div class="absolute right-1/4 top-1/4 w-32 h-32 bg-primary/20 rounded-full blur-2xl"></div>
-    </div>
+<script setup lang="ts">
+import { ApiList } from '#imports';
+import type { DownloadLinkItem } from '~/api/download';
 
-    <main class="flex-1 w-full flex items-center py-2 sm:py-4 lg:py-8 xl:py-12 overflow-y-auto overflow-x-hidden px-2 sm:px-0">
-      <div class="container mx-auto sm:px-6">
-        <div class="flex flex-col lg:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-12 xl:gap-16">
-          <div class="w-full lg:w-1/2 text-center lg:text-left space-y-4 sm:space-y-5 lg:space-y-6 z-10 order-2 lg:order-1 lg:pr-4 xl:pr-8 2xl:pr-20">
-            <div class="space-y-2 sm:space-y-3">
-              <h1 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-black tracking-tight leading-[1.1]">
-                {{ t('download_page.title_line1') }}<br>
-                <span class="text-primary block sm:inline">{{ t('download_page.title_line2') }}</span>
-              </h1>
-              <p class="text-xs sm:text-sm md:text-base text-base-content/60 max-w-md mx-auto lg:mx-0 leading-relaxed px-2 sm:px-0">
-                {{ t('download_page.description') }}
-              </p>
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center lg:justify-start px-2 sm:px-0">
-              <button
-                class="btn btn-sm sm:btn-md lg:btn-lg h-auto py-2 sm:py-3 px-3 sm:px-4 lg:px-6 rounded-xl border-0 bg-base-content text-base-100 hover:bg-primary hover:scale-[1.02] transition-all shadow-lg shadow-base-content/10 flex items-center justify-start gap-2 sm:gap-3 group text-left w-full sm:w-auto">
-                <Icon name="logos:android-icon" class="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 shrink-0" />
-                <div class="flex flex-col text-left">
-                  <span class="text-[9px] sm:text-xs opacity-70 font-medium">{{ t('download_page.android_sub')
-                  }}</span>
-                  <span class="text-xs sm:text-sm lg:text-base font-bold">{{ t('download_page.android_label') }}</span>
-                </div>
-                <Icon name="heroicons:arrow-down-tray"
-                  class="w-3 h-3 sm:w-4 sm:h-4 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all ml-auto" />
-              </button>
-
-              <button
-                class="btn btn-sm sm:btn-md lg:btn-lg h-auto py-2 sm:py-3 px-3 sm:px-4 lg:px-6 rounded-xl bg-base-200 text-base-content border border-base-content/5 hover:bg-base-300 hover:scale-[1.02] transition-all flex items-center justify-start gap-2 sm:gap-3 group text-left w-full sm:w-auto">
-                <Icon name="mingcute:apple-fill" class="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-base-content shrink-0" />
-                <div class="flex flex-col text-left">
-                  <span class="text-[9px] sm:text-xs opacity-60 font-medium">{{ t('download_page.ios_sub') }}</span>
-                  <span class="text-xs sm:text-sm lg:text-base font-bold">{{ t('download_page.ios_label') }}</span>
-                </div>
-              </button>
-            </div>
-
-            <div class="hidden lg:flex items-center gap-2 lg:gap-3 pt-2 opacity-70">
-              <div class="p-1 bg-white rounded-lg">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://life.app"
-                  class="w-12 h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 mix-blend-multiply" alt="QR Code">
-              </div>
-              <div class="text-xs lg:text-sm xl:text-sm text-base-content/60">
-                <p class="font-bold text-base-content">{{ t('download_page.qr_title') }}</p>
-                <p>{{ t('download_page.qr_desc') }}</p>
-              </div>
-            </div>
-
-            <div
-              class="flex items-center justify-center lg:justify-start gap-1.5 sm:gap-2 lg:gap-3 xl:gap-4 pt-2 text-[8px] sm:text-[9px] md:text-[10px] font-bold text-base-content/40 uppercase tracking-wider flex-wrap">
-              <span class="flex items-center gap-1 sm:gap-1.5">
-                <Icon name="heroicons:shield-check" class="text-success shrink-0 w-3 h-3 sm:w-4 sm:h-4" /> {{ t('download_page.features.aes')
-                }}
-              </span>
-              <span class="flex items-center gap-1 sm:gap-1.5">
-                <Icon name="heroicons:cube-transparent" class="shrink-0 w-3 h-3 sm:w-4 sm:h-4" /> {{ t('download_page.features.multichain') }}
-              </span>
-              <span class="flex items-center gap-1 sm:gap-1.5">
-                <Icon name="heroicons:lock-closed" class="shrink-0 w-3 h-3 sm:w-4 sm:h-4" /> {{ t('download_page.features.custodial') }}
-              </span>
-            </div>
-          </div>
-          <div class="w-full lg:w-2/5 flex justify-center relative order-1 lg:order-2 mb-4 sm:mb-0">
-            <div
-              class="relative w-full max-w-[200px] sm:max-w-[250px] lg:max-w-[300px] xl:max-w-[350px] 2xl:max-w-[400px] flex items-center justify-center">
-              <img src="/imgs/phone.png" alt="LifeChain App Preview"
-                class="w-full h-auto object-contain transform transition-transform duration-700 hover:scale-105 z-20 relative">
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <div class="w-full bg-gradient-to-t from-base-200 to-base-100 border-t border-base-300 flex items-center justify-center pt-4 sm:pt-6 pb-2 sm:pb-4">
-      <div class="container mx-auto px-3 sm:px-4 md:px-6">
-        <div class="text-center mb-3 sm:mb-4">
-          <h3 class="text-lg sm:text-xl font-bold text-base-content mb-1 sm:mb-2">{{ t('tutorial_section.title') }}</h3>
-          <p class="text-xs sm:text-sm text-base-content/60 max-w-2xl mx-auto px-2 sm:px-0">{{ t('tutorial_section.subtitle') }}</p>
-        </div>
-        
-        <div class="relative">
-          <div class="absolute top-6 left-0 right-0 h-0.5 bg-primary/20 hidden sm:block"></div>
-          
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
-            <div class="flex flex-col items-center text-center space-y-2 sm:space-y-3 group cursor-pointer" @click="openStepModal(1)">
-              <div class="relative">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-all duration-300">
-                  <Icon name="heroicons:arrow-down-tray" class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-primary" />
-                </div>
-                <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 bg-primary rounded-full flex items-center justify-center">
-                  <span class="text-white text-[10px] sm:text-xs font-bold">1</span>
-                </div>
-              </div>
-              <div class="space-y-0.5 sm:space-y-1">
-                <p class="font-semibold text-xs sm:text-sm lg:text-base text-base-content">{{ t('tutorial_section.step1_title') }}</p>
-                <p class="text-[10px] sm:text-xs text-base-content/60">{{ t('tutorial_section.step1_desc') }}</p>
-              </div>
-            </div>
-            
-            <div class="flex flex-col items-center text-center space-y-2 sm:space-y-3 group cursor-pointer" @click="openStepModal(2)">
-              <div class="relative">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-success/20 flex items-center justify-center group-hover:bg-success/30 transition-all duration-300">
-                  <Icon name="heroicons:plus-circle" class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-success" />
-                </div>
-                <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 bg-success rounded-full flex items-center justify-center">
-                  <span class="text-white text-[10px] sm:text-xs font-bold">2</span>
-                </div>
-              </div>
-              <div class="space-y-0.5 sm:space-y-1">
-                <p class="font-semibold text-xs sm:text-sm lg:text-base text-base-content">{{ t('tutorial_section.step2_title') }}</p>
-                <p class="text-[10px] sm:text-xs text-base-content/60">{{ t('tutorial_section.step2_desc') }}</p>
-              </div>
-            </div>
-            
-            <div class="flex flex-col items-center text-center space-y-2 sm:space-y-3 group cursor-pointer" @click="openStepModal(3)">
-              <div class="relative">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-warning/20 flex items-center justify-center group-hover:bg-warning/30 transition-all duration-300">
-                  <Icon name="heroicons:key" class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-warning" />
-                </div>
-                <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 bg-warning rounded-full flex items-center justify-center">
-                  <span class="text-white text-[10px] sm:text-xs font-bold">3</span>
-                </div>
-              </div>
-              <div class="space-y-0.5 sm:space-y-1">
-                <p class="font-semibold text-xs sm:text-sm lg:text-base text-base-content">{{ t('tutorial_section.step3_title') }}</p>
-                <p class="text-[10px] sm:text-xs text-base-content/60">{{ t('tutorial_section.step3_desc') }}</p>
-              </div>
-            </div>
-            
-            <div class="flex flex-col items-center text-center space-y-2 sm:space-y-3 group cursor-pointer" @click="openStepModal(4)">
-              <div class="relative">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-info/20 flex items-center justify-center group-hover:bg-info/30 transition-all duration-300">
-                  <Icon name="heroicons:rocket-launch" class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-info" />
-                </div>
-                <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 bg-info rounded-full flex items-center justify-center">
-                  <span class="text-white text-[10px] sm:text-xs font-bold">4</span>
-                </div>
-              </div>
-              <div class="space-y-0.5 sm:space-y-1">
-                <p class="font-semibold text-xs sm:text-sm lg:text-base text-base-content">{{ t('tutorial_section.step4_title') }}</p>
-                <p class="text-[10px] sm:text-xs text-base-content/60">{{ t('tutorial_section.step4_desc') }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-base-300">
-          <div class="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
-            <div class="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 text-xs sm:text-sm">
-              <a href="#" class="text-base-content/70 hover:text-primary transition-colors whitespace-nowrap">{{ t('footer.home') }}</a>
-              <a href="#" class="text-base-content/70 hover:text-primary transition-colors whitespace-nowrap">{{ t('footer.about') }}</a>
-              <a href="#" class="text-base-content/70 hover:text-primary transition-colors whitespace-nowrap">{{ t('footer.apps') }}</a>
-              <a href="#" class="text-base-content/70 hover:text-primary transition-colors whitespace-nowrap">{{ t('footer.blog') }}</a>
-            </div>
-            <div class="text-[10px] sm:text-xs text-base-content/50 text-center sm:text-right mt-2 sm:mt-0">
-              <p>{{ t('footer.copyright') }}</p>
-              <p>{{ t('footer.icp') }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script setup>
 const { t } = useAppI18n();
 
 const showModal = ref(false);
-const modalImages = ref([]);
+const modalImages = ref<string[]>([]);
 const modalTitle = ref('');
 const currentImageIndex = ref(0);
+const links = ref<DownloadLinkItem[]>([]);
+const loading = ref<Record<number, boolean>>({});
 
-const openStepModal = (step) => {
-  const stepConfig = {
+interface StepConfig {
+  images: string[];
+  title: string;
+}
+
+const openStepModal = (step: number) => {
+  const stepConfig: Record<number, StepConfig> = {
     1: {
-      images: [
-        '/imgs/step1/10.png',
-        '/imgs/step1/11.png', 
-        '/imgs/step1/12.png',
-        '/imgs/step1/13.png'
-      ],
+      images: ['/imgs/step1/10.png', '/imgs/step1/11.png', '/imgs/step1/12.png', '/imgs/step1/13.png'],
       title: t('tutorial_section.step1_title')
     },
     2: {
-      images: [
-        '/imgs/step2/13.png',
-        '/imgs/step2/21.png', 
-        '/imgs/step2/22.png',
-        '/imgs/step2/23.png',
-        '/imgs/step2/24.png',
-        '/imgs/step2/25.png'
-      ],
+      images: ['/imgs/step2/13.png', '/imgs/step2/21.png', '/imgs/step2/22.png', '/imgs/step2/23.png', '/imgs/step2/24.png', '/imgs/step2/25.png'],
       title: t('tutorial_section.step2_title')
     },
     3: {
-      images: [
-        '/imgs/step3/31.png',
-        '/imgs/step3/32.png', 
-        '/imgs/step3/33.png'
-      ],
+      images: ['/imgs/step3/31.png', '/imgs/step3/32.png', '/imgs/step3/33.png'],
       title: t('tutorial_section.step3_title')
     },
     4: {
-      images: [
-        '/imgs/step4/41.png',
-        '/imgs/step4/42.png', 
-        '/imgs/step4/43.png',
-        '/imgs/step4/44.png',
-        '/imgs/step4/45.png'
-      ],
+      images: ['/imgs/step4/41.png', '/imgs/step4/42.png', '/imgs/step4/43.png', '/imgs/step4/44.png', '/imgs/step4/45.png'],
       title: t('tutorial_section.step4_title')
     }
   };
@@ -292,7 +45,6 @@ const openStepModal = (step) => {
   }
 };
 
-// 切换图片
 const nextImage = () => {
   if (currentImageIndex.value < modalImages.value.length - 1) {
     currentImageIndex.value++;
@@ -305,30 +57,357 @@ const prevImage = () => {
   }
 };
 
-const handleImageError = (event) => {
-  console.error('图片加载失败:', event.target.src);
+const handleImageError = (event: Event) => {
+  const target = event.target as HTMLImageElement;
+  target.style.display = 'none';
 };
 
 const closeModal = () => {
   showModal.value = false;
-  modalImages.value = [];
-  modalTitle.value = '';
-  currentImageIndex.value = 0;
+  setTimeout(() => {
+    modalImages.value = [];
+    modalTitle.value = '';
+    currentImageIndex.value = 0;
+  }, 300);
 };
+
+const androidLink = computed(() =>
+  links.value.find(l => l.platform === 'android' && l.name === 'lifeapp') ||
+  links.value.find(l => l.platform === 'android')
+);
+
+const iosLink = computed(() =>
+  links.value.find(l => l.platform === 'ios')
+);
+
+const qrCodeUrl = computed(() => {
+  const targetUrl = androidLink.value?.downloadUrl || iosLink.value?.downloadUrl || 'https://life.app';
+  return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=10&data=${encodeURIComponent(targetUrl)}`;
+});
+
+async function initData() {
+  try {
+    const { data } = await ApiList.download.links();
+    links.value = data.downloads;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function handleDownload(link: DownloadLinkItem | undefined) {
+  if (!link) return;
+
+  loading.value[link.id] = true;
+  try {
+    ApiList.download.increaseDownloadsNumber(link.id);
+    window.open(link.downloadUrl, '_blank');
+  } catch (error) {
+    window.open(link.downloadUrl, '_blank');
+  } finally {
+    loading.value[link.id] = false;
+  }
+}
+
+const scrollToTutorial = () => {
+  const el = document.getElementById('tutorial-section');
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+};
+
 onMounted(() => {
-  const handleKeydown = (event) => {
+  const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && showModal.value) {
       closeModal();
     }
   };
-  
+  initData();
   window.addEventListener('keydown', handleKeydown);
-  
+
   onUnmounted(() => {
     window.removeEventListener('keydown', handleKeydown);
   });
 });
 </script>
+
+<template>
+  <div class="modal backdrop-blur-md bg-black/40 transition-all duration-300 z-[999]"
+    :class="{ 'modal-open': showModal, 'opacity-0 pointer-events-none': !showModal, 'opacity-100 pointer-events-auto': showModal }">
+    <div
+      class="modal-box max-w-6xl w-11/12 h-[90vh] bg-base-100/95 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2rem] p-0 overflow-hidden flex flex-col">
+      <div class="flex justify-between items-center p-6 border-b border-base-content/5 bg-base-100/50">
+        <div class="flex flex-col">
+          <h3 class="text-xl font-black tracking-tight flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+            {{ modalTitle }}
+          </h3>
+          <p v-if="modalImages.length > 1" class="text-xs font-mono text-base-content/50 mt-1 pl-4">
+            STEP {{ currentImageIndex + 1 }} / {{ modalImages.length }}
+          </p>
+        </div>
+        <button class="btn btn-sm btn-circle btn-ghost hover:bg-base-content/10 transition-colors"
+          @click="closeModal">✕</button>
+      </div>
+      <div class="relative flex-1 bg-base-200/30 flex items-center justify-center p-4 sm:p-8 overflow-hidden">
+        <button v-if="modalImages.length > 1" :disabled="currentImageIndex === 0"
+          class="absolute left-4 z-20 btn btn-circle btn-lg bg-base-100 border border-base-content/5 shadow-xl hover:scale-105 hover:bg-primary hover:text-primary-content hover:border-primary disabled:opacity-0 transition-all duration-300"
+          @click="prevImage">
+          <Icon name="heroicons:chevron-left" class="w-8 h-8" />
+        </button>
+
+        <Transition name="slide-fade" mode="out-in">
+          <div :key="currentImageIndex" class="w-full h-full flex items-center justify-center">
+            <img v-if="modalImages.length > 0" :src="modalImages[currentImageIndex]"
+              class="max-h-[65vh] w-auto object-contain shadow-2xl rounded-2xl ring-1 ring-base-content/5"
+              @error="handleImageError" />
+          </div>
+        </Transition>
+
+        <button v-if="modalImages.length > 1" :disabled="currentImageIndex === modalImages.length - 1"
+          class="absolute right-4 z-20 btn btn-circle btn-lg bg-base-100 border border-base-content/5 shadow-xl hover:scale-105 hover:bg-primary hover:text-primary-content hover:border-primary disabled:opacity-0 transition-all duration-300"
+          @click="nextImage">
+          <Icon name="heroicons:chevron-right" class="w-8 h-8" />
+        </button>
+      </div>
+
+      <div v-if="modalImages.length > 1"
+        class="p-6 bg-base-100 border-t border-base-content/5 flex justify-center gap-3 overflow-x-auto">
+        <button v-for="(_, index) in modalImages" :key="index"
+          class="h-2 rounded-full transition-all duration-500 ease-out"
+          :class="currentImageIndex === index ? 'bg-primary w-12' : 'bg-base-content/10 w-2 hover:bg-base-content/30'"
+          @click="currentImageIndex = index">
+        </button>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop" @click="closeModal">
+      <button>close</button>
+    </form>
+  </div>
+
+  <div
+    class="bg-base-100 text-base-content font-sans relative overflow-x-hidden selection:bg-primary selection:text-primary-content flex flex-col">
+    <div class="relative pt-20 flex flex-col justify-center overflow-hidden">
+      <div class="absolute inset-0 z-0 pointer-events-none">
+        <div
+          class="absolute top-0 right-0 w-2/3 h-full bg-[url('/imgs/background.png')] bg-cover bg-no-repeat bg-[center_top] opacity-40 hidden lg:block mix-blend-overlay">
+        </div>
+        <div
+          class="absolute right-[-10%] top-[10%] w-[600px] h-[600px] bg-primary/20 rounded-full blur-[150px] animate-pulse">
+        </div>
+        <div class="absolute left-[-10%] bottom-[10%] w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px]">
+        </div>
+      </div>
+      <main class="container mx-auto px-6 relative z-10 flex flex-col justify-center">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-12 h-full py-12 lg:py-0">
+
+          <div class="w-full lg:w-1/2 space-y-12 flex flex-col justify-center order-2 lg:order-1">
+            <div class="space-y-6 text-center lg:text-left">
+              <div
+                class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-base-content/5 border border-base-content/10 w-fit mx-auto lg:mx-0 backdrop-blur-md">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+                </span>
+                <span class="text-xs font-bold uppercase tracking-[0.2em] opacity-70">Web3 Digital Wallet</span>
+              </div>
+              <h1 class="text-5xl sm:text-6xl lg:text-8xl font-black tracking-tighter leading-[1]">
+                {{ t('download_page.title_line1') }}
+                <span
+                  class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] animate-shine block mt-2">{{
+                    t('download_page.title_line2') }}</span>
+              </h1>
+              <p class="text-xl text-base-content/60 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+                {{ t('download_page.description') }}
+              </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+              <button @click="handleDownload(androidLink)"
+                :disabled="!androidLink || (androidLink && loading[androidLink.id])"
+                class="group relative overflow-hidden rounded-2xl bg-base-content text-base-100 p-1 pr-8 transition-all hover:scale-[1.02] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed min-w-[220px]">
+                <div class="absolute inset-0 transition-all group-hover:opacity-90">
+                </div>
+                <div class="relative flex items-center gap-4 bg-transparent p-3.5">
+                  <div
+                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-base-100/10 text-base-100 backdrop-blur-md">
+                    <span v-if="androidLink && loading[androidLink.id]"
+                      class="loading loading-spinner loading-sm"></span>
+                    <Icon v-else name="logos:android-icon" class="h-7 w-7" />
+                  </div>
+                  <div class="flex flex-col items-start">
+                    <span class="text-[10px] font-bold opacity-70 uppercase tracking-widest">Download APK</span>
+                    <span class="text-lg font-bold">Android</span>
+                  </div>
+                  <div
+                    class="ml-auto w-8 h-8 rounded-full bg-base-100/10 flex items-center justify-center opacity-0 -translate-x-4 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+                    <Icon name="heroicons:arrow-down-tray" class="h-4 w-4" />
+                  </div>
+                </div>
+              </button>
+
+              <button @click="handleDownload(iosLink)" :disabled="!iosLink || (iosLink && loading[iosLink.id])"
+                class="group relative overflow-hidden rounded-2xl bg-base-100 text-base-content p-1 pr-8 transition-all hover:scale-[1.02] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:border-primary/50 border border-base-content/10 min-w-[220px] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed">
+                <div class="relative flex items-center gap-4 p-3.5">
+                  <div
+                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-base-200 text-base-content group-hover:bg-primary group-hover:text-primary-content transition-colors duration-300">
+                    <span v-if="iosLink && loading[iosLink.id]" class="loading loading-spinner loading-sm"></span>
+                    <Icon v-else name="mingcute:apple-fill" class="h-7 w-7" />
+                  </div>
+                  <div class="flex flex-col items-start">
+                    <span
+                      class="text-[10px] font-bold opacity-60 uppercase tracking-widest group-hover:text-primary transition-colors">Download
+                      IPA</span>
+                    <span class="text-lg font-bold">iOS</span>
+                  </div>
+                  <div
+                    class="ml-auto w-8 h-8 rounded-full bg-base-200 flex items-center justify-center opacity-0 -translate-x-4 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-hover:bg-primary group-hover:text-primary-content">
+                    <Icon name="heroicons:arrow-down-tray" class="h-4 w-4" />
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-6 pt-6">
+              <div
+                class="relative p-2 bg-white rounded-2xl shadow-xl shadow-base-content/5 border border-base-content/5 group hover:scale-105 transition-transform duration-300">
+                <div
+                  class="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity">
+                </div>
+                <img :src="qrCodeUrl" class="relative z-10 w-24 h-24 mix-blend-multiply" alt="QR Code">
+              </div>
+              <div class="space-y-1.5">
+                <p class="font-bold text-base-content text-lg flex items-center gap-2">
+                  <Icon name="mingcute:scan-line" />
+                  {{ t('download_page.qr_title') }}
+                </p>
+                <p class="text-sm text-base-content/50">{{ t('download_page.qr_desc') }}</p>
+                <div class="flex items-center gap-3 pt-2">
+                  <div class="badge badge-soft font-mono text-[10px]">{{ androidLink?.version ||
+                    'Latest' }}</div>
+                  <div class="text-xs text-base-content/40 font-mono flex items-center gap-1">
+                    <Icon name="mingcute:file-line" />
+                    {{ androidLink?.fileSize || 'N/A' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="flex flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-3 pt-6 border-t border-base-content/5 w-full lg:w-fit px-6 lg:px-0 opacity-70">
+              <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider"
+                v-for="feat in ['aes', 'multichain', 'custodial']" :key="feat">
+                <div class="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center text-success">
+                  <Icon name="heroicons:check" class="w-3 h-3" />
+                </div>
+                {{ t(`download_page.features.${feat}`) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full lg:w-1/2 flex justify-center order-1 lg:order-2 perspective-[2000px] h-full items-center">
+            <div class="relative w-[300px] sm:w-[360px] lg:w-[420px] xl:w-[480px] group">
+              <div
+                class="absolute inset-0 bg-gradient-to-tr from-primary/30 via-secondary/20 to-primary/10 rounded-full blur-[80px] transform scale-90 group-hover:scale-100 transition-transform duration-1000">
+              </div>
+              <img src="/imgs/phone.png" alt="App Preview"
+                class="relative z-10 w-full h-auto drop-shadow-2xl transform transition-all duration-700 group-hover:-translate-y-6 group-hover:rotate-y-12 will-change-transform">
+            </div>
+          </div>
+
+        </div>
+
+        <div
+          class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer opacity-50 hover:opacity-100 transition-opacity"
+          @click="scrollToTutorial">
+          <Icon name="heroicons:chevron-down" class="w-8 h-8" />
+        </div>
+      </main>
+    </div>
+    <br><br>
+    <div id="tutorial-section" class="bg-base-50/50 border-t border-base-content/5 relative z-10 py-20 lg:py-32">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16 lg:mb-24">
+          <div
+            class="inline-block mb-4 px-4 py-1 rounded-full bg-base-200 text-xs font-bold uppercase tracking-widest text-base-content/60">
+            Guide</div>
+          <h3 class="text-4xl md:text-5xl font-black mb-4">{{ t('tutorial_section.title') }}</h3>
+          <p class="text-xl text-base-content/50 max-w-2xl mx-auto">{{ t('tutorial_section.subtitle') }}</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative max-w-7xl mx-auto">
+          <div
+            class="hidden lg:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-transparent via-base-content/10 to-transparent dashed-line">
+          </div>
+
+          <div v-for="step in 4" :key="step" class="relative group cursor-pointer" @click="openStepModal(step)">
+            <div class="flex flex-col items-center text-center gap-6 relative z-10">
+              <div
+                class="w-24 h-24 rounded-[2rem] bg-base-100 border border-base-content/5 flex items-center justify-center shadow-lg group-hover:shadow-2xl group-hover:-translate-y-2 group-hover:border-primary/30 transition-all duration-500 relative overflow-hidden">
+                <div
+                  class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                </div>
+                <Icon
+                  :name="step === 1 ? 'heroicons:user-plus' : step === 2 ? 'heroicons:shield-check' : step === 3 ? 'heroicons:currency-dollar' : 'heroicons:chat-bubble-left-right'"
+                  class="w-10 h-10 transition-all duration-500 group-hover:scale-110"
+                  :class="step === 1 ? 'text-primary' : step === 2 ? 'text-success' : step === 3 ? 'text-warning' : 'text-info'" />
+                <div
+                  class="absolute -bottom-2 -right-2 font-black text-6xl text-base-content/5 select-none font-mono group-hover:text-primary/10 transition-colors">
+                  0{{ step }}</div>
+              </div>
+              <div class="space-y-2">
+                <h4 class="font-bold text-xl group-hover:text-primary transition-colors">{{
+                  t(`tutorial_section.step${step}_title`) }}</h4>
+                <p class="text-sm text-base-content/50 leading-relaxed max-w-[200px] mx-auto">{{
+                  t(`tutorial_section.step${step}_desc`) }}</p>
+              </div>
+
+              <div
+                class="mt-4 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                <span
+                  class="btn btn-xs btn-outline rounded-full border-base-content/20 text-xs font-normal lowercase">view
+                  details</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+  </div>
+</template>
+
+<style scoped>
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.animate-shine {
+  animation: shine 6s linear infinite;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: scale(0.95) translateY(10px);
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: scale(1.05);
+}
+
+.dashed-line {
+  background-image: linear-gradient(to right, currentColor 50%, transparent 50%);
+  background-size: 20px 100%;
+  opacity: 0.1;
+}
+</style>
+
 
 <i18n lang="json">{
   "en": {
@@ -336,29 +415,26 @@ onMounted(() => {
       "title_line1": "Explore Web3",
       "title_line2": "Within Reach",
       "description": "LIFE Wallet provides professional-grade data sovereignty protection and multi-chain asset management. Secure, private, and all-in-one. Start your digital journey now.",
-      "android_sub": "Download APK",
-      "android_label": "Download for Android",
-      "ios_sub": "Installer",
-      "ios_label": "Download for iOS",
+      "title": "Download Client",
       "qr_title": "Scan to Install",
-      "qr_desc": "Use camera or browser to scan",
+      "qr_desc": "Scan via Camera or Browser",
       "features": {
-        "aes": "AES-256",
-        "multichain": "Multi-Chain",
+        "aes": "AES-256 Encryption",
+        "multichain": "Multi-Chain Support",
         "custodial": "Non-Custodial"
       }
     },
     "tutorial_section": {
-      "title": "How to Get Started",
-      "subtitle": "Get started in 4 simple steps",
-      "step1_title": "Create User",
-      "step1_desc": "One-click setup",
+      "title": "Get Started",
+      "subtitle": "Begin your decentralized journey in 4 simple steps",
+      "step1_title": "Create Identity",
+      "step1_desc": "One-click generation of decentralized identity",
       "step2_title": "Secure Backup",
-      "step2_desc": "Protect your assets",
+      "step2_desc": "Safely store your mnemonic phrase offline",
       "step3_title": "Manage Assets",
-      "step3_desc": "Multi-chain support",
-      "step4_title": "Social & Live",
-      "step4_desc": "Chat and earn"
+      "step3_desc": "One-stop management for multi-chain assets",
+      "step4_title": "Ecosystem",
+      "step4_desc": "Connect with rich social and DApp ecosystem"
     }
   },
   "zh-CN": {
@@ -366,10 +442,7 @@ onMounted(() => {
       "title_line1": "畅游 Web3",
       "title_line2": "触手可及",
       "description": "LIFE 钱包为您提供专业级的数据主权保护与多链资产管理。安全、隐私、一站式，即刻开启您的数字之旅。",
-      "android_sub": "Download APK",
-      "android_label": "Android 下载",
-      "ios_sub": "Installer",
-      "ios_label": "iOS 下载",
+      "title": "下载客户端",
       "qr_title": "手机扫码安装",
       "qr_desc": "推荐使用系统相机或浏览器扫码",
       "features": {
@@ -378,17 +451,17 @@ onMounted(() => {
         "custodial": "非托管"
       }
     },
-     "tutorial_section": {
+    "tutorial_section": {
       "title": "使用指南",
       "subtitle": "只需4步，轻松上手",
       "step1_title": "创建用户",
-      "step1_desc": "一键创建",
+      "step1_desc": "一键创建去中心化身份",
       "step2_title": "安全备份",
-      "step2_desc": "保护资产安全",
+      "step2_desc": "离线保存助记词，保护资产安全",
       "step3_title": "资产管理",
-      "step3_desc": "多链支持",
-      "step4_title": "社交直播",
-      "step4_desc": "边聊边赚"
+      "step3_desc": "多链资产一站式管理",
+      "step4_title": "生态交互",
+      "step4_desc": "体验丰富的社交与 DApp 生态"
     }
   },
   "zh-TW": {
@@ -396,10 +469,7 @@ onMounted(() => {
       "title_line1": "暢遊 Web3",
       "title_line2": "觸手可及",
       "description": "LIFE 錢包為您提供專業級的數據主權保護與多鏈資產管理。安全、隱私、一站式，即刻開啟您的數字之旅。",
-      "android_sub": "Download APK",
-      "android_label": "Android 下載",
-      "ios_sub": "Installer",
-      "ios_label": "iOS 下載",
+      "title": "下載客戶端",
       "qr_title": "手機掃碼安裝",
       "qr_desc": "推薦使用系統相機或瀏覽器掃碼",
       "features": {
@@ -412,13 +482,13 @@ onMounted(() => {
       "title": "使用指南",
       "subtitle": "只需4步，輕鬆上手",
       "step1_title": "創建用户",
-      "step1_desc": "一鍵創建",
+      "step1_desc": "一鍵創建去中心化身份",
       "step2_title": "安全備份",
-      "step2_desc": "保護資產安全",
+      "step2_desc": "離線保存助記詞，保護資產安全",
       "step3_title": "資產管理",
-      "step3_desc": "多鏈支持",
-      "step4_title": "社交直播",
-      "step4_desc": "邊聊邊賺"
+      "step3_desc": "多鏈資產一站式管理",
+      "step4_title": "生態交互",
+      "step4_desc": "體驗豐富的社交與 DApp 生態"
     }
   }
 }</i18n>

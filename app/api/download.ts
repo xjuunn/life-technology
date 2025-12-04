@@ -17,7 +17,7 @@ export interface DownloadLinkItem {
  * 获取app下载链接
  * @param platform 平台信息
  */
-export function links(platform: Platform) {
+export function links(platform: Platform | undefined = undefined) {
   return api.get<{ downloads: DownloadLinkItem[] }>(base, { platform });
 }
 
