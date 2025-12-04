@@ -186,6 +186,7 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col gap-6 p-2 md:p-6">
+    <title>life-用户管理</title>
     <div class="flex flex-col md:flex-row justify-between items-center gap-4 relative z-40 shrink-0">
       <div class="w-full md:w-96">
         <label

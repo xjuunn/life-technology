@@ -145,6 +145,7 @@ onMounted(async () => {
 <template>
   <div
     class="min-h-screen text-base-content font-sans relative overflow-x-hidden selection:bg-primary selection:text-primary-content">
+    <title>life-博客</title>
     <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
       <div
         class="absolute -top-32 -right-32 w-120 h-120 lg:w-160 lg:h-160 bg-primary/10 rounded-full blur-[100px] lg:blur-[128px] opacity-40">

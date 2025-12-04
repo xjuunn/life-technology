@@ -1,5 +1,6 @@
 <template>
 <div class="modal" :class="{ 'modal-open': showModal }">
+  <title>life-下载</title>
     <div class="modal-box max-w-full sm:max-w-10xl max-h-screen sm:max-h-[110vh] w-11/12 sm:w-auto">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-base sm:text-lg font-bold truncate max-w-[60%]">{{ modalTitle }}</h3>

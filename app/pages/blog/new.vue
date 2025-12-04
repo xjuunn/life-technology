@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300 relative">
+    <title>life-新建博客</title>
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
       <div
         class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] opacity-40 animate-pulse">

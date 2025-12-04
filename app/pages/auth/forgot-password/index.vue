@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-base-100 text-base-content relative overflow-hidden p-4">
+    <title>life-忘记密码</title>
     <!-- 背景装饰 -->
     <div class="absolute top-1/4 -left-20 w-96 h-96 bg-primary/10 rounded-full blur-[128px] pointer-events-none animate-pulse"></div>
     <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-secondary/10 rounded-full blur-[128px] pointer-events-none"></div>

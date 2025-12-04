@@ -256,6 +256,7 @@ const saveProfile = async () => {
 <template>
   <div
     class="min-h-screen bg-base-100 relative overflow-hidden text-base-content selection:bg-primary selection:text-primary-content pb-20">
+    <title>life-个人资料</title>
 
     <!-- 背景光晕 -->
     <div

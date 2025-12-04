@@ -1,5 +1,6 @@
 <template>
   <div class="flex items-center justify-center bg-base-100 text-base-content relative overflow-hidden p-4 flex-1">
+    <title>life-设置</title>
     <div
       class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none animate-pulse">
     </div>

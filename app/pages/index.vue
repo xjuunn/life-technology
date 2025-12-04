@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300 relative">
+    <title>life-首页</title>
     <div class="absolute w-screen h-[calc(100vh-0px)] z-1 ">
       <EffectGlobalMap></EffectGlobalMap>
     </div>

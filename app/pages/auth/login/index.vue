@@ -1,5 +1,6 @@
 <template>
   <div class="mt-10 flex items-center justify-center bg-base-100 text-base-content relative overflow-hidden p-4">
+    <title>life-登录</title>
     <div
       class="absolute top-1/4 -left-20 w-96 h-96 bg-primary/20 rounded-full blur-[128px] pointer-events-none animate-pulse">
     </div>

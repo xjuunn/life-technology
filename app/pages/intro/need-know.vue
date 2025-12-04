@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans selection:bg-primary selection:text-primary-content">
+    <title>life-你需要知道的事</title>
     <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
       <div class="absolute top-0 right-0 w-[50vw] h-[50vw] bg-primary/5 rounded-full blur-[100px] opacity-50"></div>
       <div class="absolute bottom-0 left-0 w-[50vw] h-[50vw] bg-secondary/5 rounded-full blur-[100px] opacity-50"></div>

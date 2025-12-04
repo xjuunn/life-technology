@@ -1,5 +1,6 @@
 <template>
 <div class="admin-dashboard bg-base-100 min-h-screen p-6">
+  <title>life-管理后台</title>
     <!-- 页面标题 -->
     <div class="mb-8">
       <h1 class="text-4xl font-bold text-base-content bg-base-200/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-base-300">

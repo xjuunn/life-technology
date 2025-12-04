@@ -112,6 +112,7 @@ onUnmounted(() => {
 
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans scroll-smooth transition-colors duration-300">
+    <title>life-白皮书</title>
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-12">
       <div class="flex flex-col lg:flex-row gap-12">
         <aside class="hidden lg:block w-64 shrink-0">
