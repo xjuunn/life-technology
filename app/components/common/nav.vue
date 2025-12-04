@@ -36,29 +36,46 @@
               </nuxt-link>
             </li>
             <li>
-              <nuxt-link class="dropdown dropdown-center p-0">
+              <div class="dropdown dropdown-center p-0">
                 <div tabindex="0" role="button"
                   class="btn btn-ghost text-base-content/70 hover:text-base-content transition-colors py-2 px-5 group overflow-hidden">
-                  {{ t('nav.intro') }}</div>
+                  {{ t('nav.intro') }}
+                </div>
+
                 <ul tabindex="-1"
                   class="dropdown-content bg-base-200 menu border border-base-content/10 rounded-box z-1 w-52 p-2 shadow-sm">
                   <li>
-                    <NuxtLink to="/intro/what-is-life"><a>{{ t('nav.whatIsLife') }}</a></NuxtLink>
+                    <NuxtLink to="/intro/what-is-life" @click="closeDropdown">
+                      {{ t('nav.whatIsLife') }}
+                    </NuxtLink>
                   </li>
+
                   <li>
-                    <NuxtLink to="/intro/what-life-do">{{ t('nav.whatLifeCanDo') }}</NuxtLink>
+                    <NuxtLink to="/intro/what-life-do" @click="closeDropdown">
+                      {{ t('nav.whatLifeCanDo') }}
+                    </NuxtLink>
                   </li>
+
                   <li>
-                    <NuxtLink to="/intro/how-to-use-life">{{ t('nav.howToUseLife') }}</NuxtLink>
+                    <NuxtLink to="/intro/how-to-use-life" @click="closeDropdown">
+                      {{ t('nav.howToUseLife') }}
+                    </NuxtLink>
                   </li>
+
                   <li>
-                    <NuxtLink to="/intro/need-know"><a>{{ t('nav.thingsYouNeedToKnow') }}</a></NuxtLink>
+                    <NuxtLink to="/intro/need-know" @click="closeDropdown">
+                      {{ t('nav.thingsYouNeedToKnow') }}
+                    </NuxtLink>
                   </li>
+
                   <li>
-                    <NuxtLink to="/intro/white-book"><a>{{ t('nav.whitepaper') }}</a></NuxtLink>
+                    <NuxtLink to="/intro/white-book" @click="closeDropdown">
+                      {{ t('nav.whitepaper') }}
+                    </NuxtLink>
                   </li>
                 </ul>
-              </nuxt-link>
+              </div>
+
             </li>
             <li>
               <nuxt-link to="/apps"
@@ -228,7 +245,13 @@ const { y } = useWindowScroll()
 const isScrolled = computed(() => y.value > 20)
 
 const isMobileMenuOpen = ref(false)
-const themeBtnRef = ref(null)
+const themeBtnRef = ref(null);
+
+const closeDropdown = () => {
+  if (document.activeElement) {
+    document.activeElement.blur()
+  }
+}
 
 // 动态菜单
 const menuItems = computed(() => [
@@ -286,7 +309,7 @@ const handleLogout = async () => {
 <i18n lang="json">{
   "en": {
     "footer": {
-       "copyright": "Tianjin Chengjiu Network Technology Co., Ltd. All Rights Reserved.",
+      "copyright": "Tianjin Chengjiu Network Technology Co., Ltd. All Rights Reserved.",
       "compliance": "ICP Filing: Tianjin ICP No. 2025040555-1"
     },
     "nav": {
