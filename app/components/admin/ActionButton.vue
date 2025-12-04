@@ -102,8 +102,8 @@ const backgroundClass = computed(() => {
     "quickActions.blogManagementDesc": "审核与管理博客内容",
     "quickActions.commentReview": "评论审核",
     "quickActions.commentReviewDesc": "审核用户评论内容",
-    "quickActions.systemSettings": "系统设置",
-    "quickActions.systemSettingsDesc": "配置系统参数"
+    "reportManagement": "举报管理",  
+    "reportManagementDesc": "处理用户举报内容"
   },
   "en": {
     "quickActions.userManagement": "User Management",
@@ -112,8 +112,8 @@ const backgroundClass = computed(() => {
     "quickActions.blogManagementDesc": "Review and manage blog content",
     "quickActions.commentReview": "Comment Review",
     "quickActions.commentReviewDesc": "Review user comments",
-    "quickActions.systemSettings": "System Settings",
-    "quickActions.systemSettingsDesc": "Configure system parameters"
+    "reportManagement": "Report Management",
+    "reportManagementDesc": "Handle user reports" 
   },
   "zh-TW": {
     "quickActions.userManagement": "用戶管理",
@@ -122,8 +122,8 @@ const backgroundClass = computed(() => {
     "quickActions.blogManagementDesc": "審核與管理博客內容",
     "quickActions.commentReview": "評論審核",
     "quickActions.commentReviewDesc": "審核用戶評論內容",
-    "quickActions.systemSettings": "系統設定",
-    "quickActions.systemSettingsDesc": "配置系統參數"
+    "reportManagement": "舉報管理",  
+    "reportManagementDesc": "處理用戶舉報內容"
   }
 }
 </i18n>

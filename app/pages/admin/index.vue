@@ -9,6 +9,49 @@
       </h1>
     </div>
 
+    <!-- 数据状态和刷新控制 -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 sm:gap-0">
+      <!-- 最后更新时间 -->
+      <div class="text-sm text-base-content/70 flex items-center gap-2">
+        <span class="hidden sm:inline">{{ t('dataStatus.lastUpdate') }}:</span>
+        <span class="font-medium text-base-content">{{ lastRefreshTime }}</span>
+      </div>  
+      <!-- 刷新控制区域 -->
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <div class="form-control flex-1 sm:flex-none">
+          <label class="label cursor-pointer flex items-center justify-between gap-2 p-0">
+            <span class="label-text text-sm truncate min-w-0">
+              <span class="hidden xs:inline">{{ t('dataStatus.autoRefresh', { seconds: autoRefreshInterval / 1000 }) }}</span>
+              <span class="xs:hidden">{{ t('dataStatus.autoRefresh', { seconds: '' }).replace('()', '') }}</span>
+            </span>
+            <input type="checkbox" class="toggle toggle-sm flex-shrink-0" v-model="autoRefreshEnabled" />
+          </label>
+        </div>
+        
+        <!-- 刷新按钮 -->
+        <button 
+          @click="refreshData" 
+          class="btn btn-sm btn-outline flex-shrink-0 min-w-[unset] px-3 sm:px-4" 
+          :disabled="isLoading"
+          :class="{'btn-square': windowWidth < 640}"
+          :title="windowWidth < 640 ? t('dataStatus.refreshData') : ''"
+        >
+          <Icon 
+            v-if="isLoading" 
+            name="mingcute:refresh-2-line" 
+            class="animate-spin" 
+            :class="{'mr-1': windowWidth >= 640}" 
+          />
+          <Icon 
+            v-else 
+            name="mingcute:refresh-2-line" 
+            :class="{'mr-1': windowWidth >= 640}" 
+          />
+          <span class="hidden sm:inline">{{ t('dataStatus.refreshData') }}</span>
+        </button>
+      </div>
+    </div>
+
     <!-- 统计卡片 -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <DashboardCard  
@@ -61,24 +104,50 @@
             <h2 class="text-xl font-bold text-base-content">{{ t('charts.userGrowth') }}</h2>
             <p class="text-sm text-base-content/70 mt-1">{{ t('charts.userGrowthDesc') }}</p>
           </div>
-          <div class="flex space-x-2">
-            <button @click="setChartRange('month')" :class="['px-3 py-1 rounded-lg text-sm', chartRange === 'month' ? 'bg-primary text-primary-content' : 'text-base-content/70 hover:bg-base-200']">
-              {{ t('charts.monthly') }}
-            </button>
-            <button @click="setChartRange('quarter')" :class="['px-3 py-1 rounded-lg text-sm', chartRange === 'quarter' ? 'bg-primary text-primary-content' : 'text-base-content/70 hover:bg-base-200']">
-              {{ t('charts.quarterly') }}
+          <div class="flex items-center space-x-2">
+            <div class="flex space-x-2 mr-4">
+              <button @click="setChartRange('month')" :class="['px-3 py-1 rounded-lg text-sm', chartRange === 'month' ? 'bg-primary text-primary-content' : 'text-base-content/70 hover:bg-base-200']">
+                {{ t('charts.monthly') }}
+              </button>
+              <button @click="setChartRange('quarter')" :class="['px-3 py-1 rounded-lg text-sm', chartRange === 'quarter' ? 'bg-primary text-primary-content' : 'text-base-content/70 hover:bg-base-200']">
+                {{ t('charts.quarterly') }}
+              </button>
+            </div>
+            <button @click="refreshChartData('userGrowth')" class="btn btn-xs btn-ghost" :title="t('charts.refreshChart')">
+              <Icon name="mingcute:refresh-2-line" />
             </button>
           </div>
         </div>
         <div class="h-[300px]">
-          <LineChart
+          <!-- 添加加载状态 -->
+          <div v-if="isLoading" class="flex items-center justify-center h-full">
+            <div class="text-center">
+              <div class="loading loading-spinner loading-lg text-primary"></div>
+              <p class="mt-2 text-base-content/70">{{ t('loading.chartData') }}</p>
+            </div>
+          </div>
+          <div v-else-if="error" class="flex items-center justify-center h-full">
+            <div class="text-center text-error">
+              <Icon name="mingcute:close-circle-line" class="text-3xl mb-2" />
+              <p>{{ error }}</p>
+              <button @click="refreshData" class="btn btn-sm btn-outline mt-3">{{ t('loading.retry') }}</button>
+            </div>
+          </div>
+          <div v-else-if="!userGrowth.xAxis.length || !userGrowth.seriesData.length" class="flex items-center justify-center h-full">
+            <div class="text-center text-base-content/70">
+              <Icon name="mingcute:chart-line-line" class="text-3xl mb-2" />
+              <p>{{ t('loading.noData') }}</p>
+            </div>
+          </div>
+          <LineChart v-else
             :x-axis-data="userGrowth.xAxis"
             :series-data="userGrowth.seriesData"
-            :series-name="$t('userStats.totalUsers')"
+            :series-name="t('userStats.totalUsers')"
             :area-style="true"
             color="#3b82f6"
             :line-width="3"
             :show-legend="false"
+            :key="'userGrowth-' + chartDataVersion"
           />
         </div>
       </div>
@@ -90,12 +159,36 @@
             <h2 class="text-lg font-bold text-base-content">{{ t('charts.blogGrowth') }}</h2>
             <p class="text-sm text-base-content/70 mt-1">{{ t('charts.blogGrowthDesc') }}</p>
           </div>
-          <div class="text-sm text-base-content/70">
-            {{ t('charts.totalArticles', { total: stats.totalBlogs }) }}
+          <div class="flex items-center">
+            <div class="text-sm text-base-content/70 mr-4">
+              {{ t('charts.totalArticles', { total: stats.totalBlogs }) }}
+            </div>
+            <button @click="refreshChartData('blogGrowth')" class="btn btn-xs btn-ghost" :title="t('charts.refreshChart')">
+              <Icon name="mingcute:refresh-2-line" />
+            </button>
           </div>
         </div>
         <div class="h-[250px]">
-          <LineChart
+          <!-- 添加加载状态 -->
+          <div v-if="isLoading" class="flex items-center justify-center h-full">
+            <div class="text-center">
+              <div class="loading loading-spinner loading-lg text-primary"></div>
+              <p class="mt-2 text-base-content/70">{{ t('loading.chartData') }}</p>
+            </div>
+          </div>
+          <div v-else-if="error" class="flex items-center justify-center h-full">
+            <div class="text-center text-error">
+              <Icon name="mingcute:close-circle-line" class="text-3xl mb-2" />
+              <p>{{ error }}</p>
+            </div>
+          </div>
+          <div v-else-if="!blogGrowth.xAxis.length || !blogGrowth.seriesData.length" class="flex items-center justify-center h-full">
+            <div class="text-center text-base-content/70">
+              <Icon name="mingcute:chart-line-line" class="text-3xl mb-2" />
+              <p>{{ t('loading.noData') }}</p>
+            </div>
+          </div>
+          <LineChart v-else
             :x-axis-data="blogGrowth.xAxis"
             :series-data="blogGrowth.seriesData"
             :series-name="t('userStats.totalBlogs')"
@@ -103,8 +196,9 @@
             color="#10b981"
             :line-width="2"
             :show-legend="false"
+            :key="'blogGrowth-' + chartDataVersion"
           />
-        </div>
+       </div>
       </div>
     </div>
 
@@ -173,7 +267,7 @@
                 </div>
                 <div>
                   <p class="font-medium text-base-content text-sm">{{ author.author.username }}</p>
-                  <p class="text-xs text-base-content/60">{{ author.totalViews }} 浏览</p>
+                  <p class="text-xs text-base-content/60">{{ author.totalViews }} {{ t('topAuthors.views') }}</p>
                 </div>
               </div>
             </div>
@@ -207,71 +301,83 @@
             <h2 class="text-lg font-bold text-base-content">{{ t('monthlyStats.title') }}</h2>
             <p class="text-sm text-base-content/70 mt-1">{{ t('monthlyStats.desc') }}</p>
           </div>
-          <div class="text-sm text-base-content/70">
-            {{ t('monthlyStats.currentMonth', { month: currentMonth }) }}
+          <div class="flex items-center">
+            <div class="text-sm text-base-content/70 mr-4">
+              {{ t('monthlyStats.currentMonth', { month: currentMonth }) }}
+            </div>
+            <button @click="refreshChartData('monthlyStats')" class="btn btn-xs btn-ghost" :title="t('charts.refreshChart')">
+              <Icon name="mingcute:refresh-2-line" />
+            </button>
           </div>
         </div>
         <div class="h-[280px]">
           <ChartBase
             :options="monthlyStats.options"
             height="100%"
+            :key="'monthlyStats-' + chartDataVersion"
           />
         </div>
       </div>
 
-      <!-- 系统概览 -->
-      <div class="bg-base-100 rounded-xl shadow p-4 border border-base-300">
-        <div class="flex justify-between items-center mb-4">
-          <div>
-            <h2 class="text-lg font-bold text-base-content">{{ t('systemOverview.title') }}</h2>
-            <p class="text-sm text-base-content/70 mt-1">{{ t('systemOverview.desc') }}</p>
+      <!-- 用户预览 -->
+      <div class="space-y-4">
+        <!-- 用户统计 -->
+        <div class="flex items-center justify-between p-4 bg-base-200/30 rounded-lg">
+          <div class="flex items-center">
+            <Icon name="mingcute:user-2-line" class="text-primary mr-3" />
+            <div>
+              <p class="text-sm font-medium text-base-content">{{ t('systemOverview.userStats') }}</p>
+              <p class="text-xs text-base-content/70">{{ stats.activeUsers }}/{{ stats.totalUsers }}</p>
+            </div>
           </div>
-          <div :class="['px-2 py-1 rounded text-xs font-medium border flex items-center', 
-                       systemHealthy ? 'bg-success/10 text-success border-success/20' : 'bg-error/10 text-error border-error/20']">
-            <Icon :name="systemHealthy ? 'mingcute:check-circle-line' : 'mingcute:warning-line'" class="mr-1 text-xs" />
-            {{ systemHealthy ? t('systemOverview.runningNormal') : t('systemOverview.systemIssue') }}
+          <div class="text-right">
+            <p class="text-lg font-bold text-base-content">{{ stats.activeUsers }}</p>
+            <p class="text-xs text-base-content/70">{{ t('systemOverview.active') }}</p>
           </div>
         </div>
-        <div class="space-y-4">
-          <SystemInfo
-            :label="t('systemOverview.userStats')"
-            :value="`${stats.activeUsers}/${stats.totalUsers}`"
-            :healthy="true"
-            icon="mingcute:user-2-line"
-            :usage="stats.totalUsers > 0 ? Math.round((stats.activeUsers / stats.totalUsers) * 100) : 0"
-            :details="{ used: `${stats.activeUsers} ${t('systemOverview.active')}`, total: `${stats.totalUsers} ${t('systemOverview.total')}` }"
-          />
-          <SystemInfo
-            :label="t('systemOverview.blogStats')"
-            :value="`${stats.publishedBlogs}/${stats.totalBlogs}`"
-            :healthy="true"
-            icon="mingcute:file-text-line"
-            :usage="stats.totalBlogs > 0 ? Math.round((stats.publishedBlogs / stats.totalBlogs) * 100) : 0"
-            :details="{ used: `${stats.publishedBlogs} ${t('systemOverview.published')}`, total: `${stats.totalBlogs} ${t('systemOverview.total')}` }"
-          />
-          <SystemInfo
-            :label="t('systemOverview.commentStats')"
-            :value="`${stats.totalComments}`"
-            icon="mingcute:message-1-line"
-            :details="{ used: `${stats.totalLikes} ${t('systemOverview.likes')}`, total: `${stats.totalComments} ${t('systemOverview.comments')}` }"
-          />
-          <SystemInfo
-            :label="t('systemOverview.recentActivity')"
-            :value="`${stats.recentUsers} ${t('systemOverview.newUsers')}`"
-            icon="mingcute:time-line"
-            :details="{ used: `${stats.recentUsers} ${t('systemOverview.newUsers')}`, total: `${stats.recentBlogs} ${t('systemOverview.newBlogs')}` }"
-          />
+        
+        <!-- 博客统计 -->
+        <div class="flex items-center justify-between p-4 bg-base-200/30 rounded-lg">
+          <div class="flex items-center">
+            <Icon name="mingcute:file-text-line" class="text-secondary mr-3" />
+            <div>
+              <p class="text-sm font-medium text-base-content">{{ t('systemOverview.blogStats') }}</p>
+              <p class="text-xs text-base-content/70">{{ stats.publishedBlogs }}/{{ stats.totalBlogs }}</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-lg font-bold text-base-content">{{ stats.publishedBlogs }}</p>
+            <p class="text-xs text-base-content/70">{{ t('systemOverview.published') }}</p>
+          </div>
         </div>
-        <div class="mt-6 pt-4 border-t border-base-300">
-          <div class="flex space-x-2">
-            <button @click="refreshData" class="flex-1 px-3 py-2 bg-base-200 text-base-content rounded hover:bg-base-300 transition-colors flex items-center justify-center text-sm">
-              <Icon name="mingcute:refresh-2-line" class="mr-1" />
-              {{ t('systemOverview.refreshStatus') }}
-            </button>
-            <button class="flex-1 px-3 py-2 bg-primary text-primary-content rounded hover:bg-primary/90 transition-colors flex items-center justify-center text-sm">
-              <Icon name="mingcute:chart-line" class="mr-1" />
-              {{ t('systemOverview.detailedReport') }}
-            </button>
+        
+        <!-- 评论统计 -->
+        <div class="flex items-center justify-between p-4 bg-base-200/30 rounded-lg">
+          <div class="flex items-center">
+            <Icon name="mingcute:message-1-line" class="text-accent mr-3" />
+            <div>
+              <p class="text-sm font-medium text-base-content">{{ t('systemOverview.commentStats') }}</p>
+              <p class="text-xs text-base-content/70">{{ stats.totalLikes }}/{{ stats.totalComments }}</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-lg font-bold text-base-content">{{ stats.totalComments }}</p>
+            <p class="text-xs text-base-content/70">{{ t('systemOverview.comments') }}</p>
+          </div>
+        </div>
+        
+        <!-- 最近活动 -->
+        <div class="flex items-center justify-between p-4 bg-base-200/30 rounded-lg">
+          <div class="flex items-center">
+            <Icon name="mingcute:time-line" class="text-info mr-3" />
+            <div>
+              <p class="text-sm font-medium text-base-content">{{ t('systemOverview.recentActivity') }}</p>
+              <p class="text-xs text-base-content/70">{{ stats.recentUsers }}/{{ stats.recentBlogs }}</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-lg font-bold text-base-content">{{ stats.recentUsers }}</p>
+            <p class="text-xs text-base-content/70">{{ t('systemOverview.newUsers') }}</p>
           </div>
         </div>
       </div>
@@ -287,11 +393,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, onActivated, onDeactivated } from 'vue';
+import { useRoute } from 'vue-router';
 import DashboardCard from '~/components/admin/DashboardCard.vue'
 import LineChart from '~/components/echarts/line-chart.vue'
 import ActionButton from '~/components/admin/ActionButton.vue'
-import SystemInfo from '~/components/admin/SystemInfo.vue'
 import ChartBase from '~/components/echarts/chart-base.vue'
 import { Stats as fetchStats } from '~/api/admin'
 import type { EChartsCoreOption } from 'echarts/core';
@@ -325,21 +431,25 @@ interface TopAuthor {
   };
 }
 
-interface StatsResponse {
-  stats: DashboardStats & { trend: TrendData };
-  topAuthors: TopAuthor[];
-}
-
 interface ChartData {
   xAxis: string[];
   seriesData: number[];
 }
 
-const { t , locale} = useI18n();
+const { t, locale } = useI18n();
+const route = useRoute();
 
 // 添加加载状态和错误处理
 const isLoading = ref(false);
 const error = ref<string | null>(null);
+const chartRange = ref('month');
+
+// 数据刷新控制
+const autoRefreshEnabled = ref(true);
+const autoRefreshInterval = ref(30000); // 30秒
+let autoRefreshTimer: NodeJS.Timeout | null = null;
+const lastRefreshTime = ref<string>('');
+const chartDataVersion = ref(0); 
 
 // 统计数据
 const stats = ref<DashboardStats>({
@@ -364,21 +474,16 @@ const trendData = ref<TrendData>({
 // 顶级作者
 const topAuthors = ref<TopAuthor[]>([]);
 
-// 用户增长数据 - 使用响应式变量
+// 用户增长数据 
 const userGrowth = ref<ChartData>({
   xAxis: [],
   seriesData: []
 });
 
-// 博客增长数据 - 使用响应式变量
+// 博客增长数据
 const blogGrowth = ref<ChartData>({
   xAxis: [],
   seriesData: []
-});
-
-// 系统健康状态
-const systemHealthy = computed(() => {
-  return stats.value.totalUsers > 0 && stats.value.totalBlogs > 0;
 });
 
 // 月度统计图表配置
@@ -386,22 +491,57 @@ const monthlyStats = ref({
   options: {} as EChartsCoreOption
 });
 
-// 图表时间范围
-const chartRange = ref('month');
+// 更新最后刷新时间
+const updateLastRefreshTime = () => {
+  const now = new Date();
+  lastRefreshTime.value = now.toLocaleString('zh-CN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+};
 
-// 设置图表时间范围
 const setChartRange = async (range: string) => {
   chartRange.value = range;
   processChartData(range);
+  chartDataVersion.value++;
+};
+
+const refreshChartData = (chartType: string) => {
+  console.log(`刷新图表数据: ${chartType}`);
+  chartDataVersion.value++; 
+
+  if (chartType === 'userGrowth' || chartType === 'blogGrowth') {
+    processChartData(chartRange.value);
+  } else if (chartType === 'monthlyStats') {
+    generateMonthlyStats(
+      userGrowth.value.xAxis,
+      blogGrowth.value.seriesData,
+      trendData.value.comments.slice(-userGrowth.value.xAxis.length)
+    );
+  }
 };
 
 // 处理图表数据
 const processChartData = (range: string) => {
-  if (!trendData.value?.dates?.length) {
-    console.warn('趋势数据为空');
+  console.log('处理图表数据，范围:', range);
+  
+  if (!trendData.value || trendData.value.dates.length === 0) {
+    console.warn('没有趋势数据可用');
+    userGrowth.value = {
+      xAxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
+      seriesData: [0, 0, 0, 0, 0, 0]
+    };
+    blogGrowth.value = {
+      xAxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
+      seriesData: [0, 0, 0, 0, 0, 0]
+    };
+    generateMonthlyStats();
     return;
   }
+
   const { dates, users = [], blogs = [], comments = [] } = trendData.value;
+  console.log('原始趋势数据:', { dates, users, blogs, comments });
   
   let processedDates: string[] = [];
   let processedUsers: number[] = [];
@@ -412,17 +552,44 @@ const processChartData = (range: string) => {
     const quarterData = new Map<string, { users: number, blogs: number, comments: number }>();
     
     dates.forEach((date, index) => {
-      const [year, month] = date.split('-').map(Number);
-      if (!year || !month) return;
+      if (!date) return; 
       
-      const quarter = Math.floor((month - 1) / 3) + 1;
-      const quarterKey = `${year}年Q${quarter}`;
-      
-      const data = quarterData.get(quarterKey) || { users: 0, blogs: 0, comments: 0 };
-      data.users += users[index] || 0;
-      data.blogs += blogs[index] || 0;
-      data.comments += comments[index] || 0;
-      quarterData.set(quarterKey, data);
+      const dateStr = String(date);
+      if (dateStr.includes('-')) {
+
+        const [yearStr, monthStr] = dateStr.split('-');
+        const year = Number(yearStr);
+        const month = Number(monthStr);
+
+        if (isNaN(year) || isNaN(month) || month < 1 || month > 12) {
+          console.warn('无效的日期格式:', dateStr);
+          return;
+        }
+        
+        const quarter = Math.floor((month - 1) / 3) + 1;
+        const currentLang = locale.value || 'zh-CN';
+        let quarterKey = '';
+        if (currentLang === 'en') {
+          quarterKey = `Q${quarter} ${year}`;
+        } else if (currentLang === 'zh-TW') {
+          quarterKey = `${year}年第${quarter}季度`;
+        } else {
+          quarterKey = `${year}年Q${quarter}`;
+        }
+        
+        const data = quarterData.get(quarterKey) || { users: 0, blogs: 0, comments: 0 };
+        data.users += (users[index] || 0);
+        data.blogs += (blogs[index] || 0);
+        data.comments += (comments[index] || 0);
+        quarterData.set(quarterKey, data);
+      } else {
+        const quarterKey = dateStr;
+        const data = quarterData.get(quarterKey) || { users: 0, blogs: 0, comments: 0 };
+        data.users += (users[index] || 0);
+        data.blogs += (blogs[index] || 0);
+        data.comments += (comments[index] || 0);
+        quarterData.set(quarterKey, data);
+      }
     });
     
     processedDates = Array.from(quarterData.keys());
@@ -431,16 +598,67 @@ const processChartData = (range: string) => {
     processedComments = Array.from(quarterData.values()).map(d => d.comments);
   } else {
     const recentCount = Math.min(dates.length, 12);
-    processedDates = dates.slice(-recentCount);
-    processedUsers = users.slice(-recentCount);
-    processedBlogs = blogs.slice(-recentCount);
-    processedComments = comments.slice(-recentCount);
-  }
+    
+    // 过滤掉无效的日期数据
+    const validDates = dates.slice(-recentCount).filter(date => date != null);
+    const validUsers = users.slice(-recentCount);
+    const validBlogs = blogs.slice(-recentCount);
+    const validComments = comments.slice(-recentCount);
+    
+    processedDates = validDates.map(date => {
+      if (date && typeof date === 'string' && date.includes('-')) {
+        const [year, month] = date.split('-');
+        const monthNum = parseInt(month);
+        const currentLang = locale.value || 'zh-CN';
 
-  userGrowth.value = { xAxis: processedDates, seriesData: processedUsers };
-  blogGrowth.value = { xAxis: processedDates, seriesData: processedBlogs };
+        if (isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+          return t('charts.unknownMonth');
+        }
+
+        const monthNames = {
+          'zh-CN': ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+          'zh-TW': ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+          'en': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        };
+        
+        return monthNames[currentLang as keyof typeof monthNames]?.[monthNum - 1] || `${monthNum}月`;
+      }
+      return date || t('charts.unknownMonth');
+    });
+    
+    processedUsers = validUsers;
+    processedBlogs = validBlogs;
+    processedComments = validComments;
+  }
   
- generateMonthlyStats(processedDates, processedBlogs, processedComments);
+  console.log('处理后的图表数据:', {
+    dates: processedDates,
+    users: processedUsers,
+    blogs: processedBlogs,
+    comments: processedComments
+  });
+  
+  const minLength = Math.min(
+    processedDates.length, 
+    processedUsers.length, 
+    processedBlogs.length, 
+    processedComments.length
+  );
+  userGrowth.value = {
+    xAxis: processedDates.slice(0, minLength),
+    seriesData: processedUsers.slice(0, minLength)
+  };
+  
+  blogGrowth.value = {
+    xAxis: processedDates.slice(0, minLength),
+    seriesData: processedBlogs.slice(0, minLength)
+  };
+  
+  generateMonthlyStats(
+    processedDates.slice(0, minLength), 
+    processedBlogs.slice(0, minLength), 
+    processedComments.slice(0, minLength)
+  );
 };
 
 watch(locale, () => {
@@ -452,6 +670,15 @@ watch(locale, () => {
 // 生成月度统计图表
 const generateMonthlyStats = (dates: string[] = [], blogs: number[] = [], comments: number[] = []) => {
   if (dates.length === 0) {
+    // 默认月份的国际化处理
+    const monthNames = {
+      'zh-CN': ['1月', '2月', '3月', '4月', '5月', '6月'],
+      'zh-TW': ['1月', '2月', '3月', '4月', '5月', '6月'],
+      'en': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+    };
+    const currentLang = locale.value || 'zh-CN';
+    const defaultMonths = monthNames[currentLang as keyof typeof monthNames] || monthNames['zh-CN'];
+    
     monthlyStats.value.options = {
       tooltip: {
         trigger: 'axis',
@@ -475,7 +702,7 @@ const generateMonthlyStats = (dates: string[] = [], blogs: number[] = [], commen
       },
       xAxis: {
         type: 'category',
-        data: dates.length > 0 ? dates : ['1月', '2月', '3月', '4月', '5月', '6月'],
+        data: dates.length > 0 ? dates : defaultMonths,
         axisLine: {
           lineStyle: {
             color: '#e5e7eb'
@@ -668,6 +895,12 @@ const fetchDashboardData = async () => {
       
       // 处理图表数据
       processChartData(chartRange.value);
+      
+      // 更新刷新时间
+      updateLastRefreshTime();
+      
+      // 增加图表数据版本，强制重新渲染
+      chartDataVersion.value++;
     } else {
       console.warn('API返回空响应或没有data字段');
       throw new Error('数据获取失败：无效的响应');
@@ -732,6 +965,9 @@ const fetchDashboardData = async () => {
     
     // 处理图表数据
     processChartData(chartRange.value);
+    
+    // 更新刷新时间
+    updateLastRefreshTime();
   } finally {
     isLoading.value = false;
   }
@@ -741,6 +977,59 @@ const fetchDashboardData = async () => {
 const refreshData = async () => {
   await fetchDashboardData();
 };
+
+// 设置自动刷新定时器
+const setupAutoRefresh = () => {
+  clearAutoRefresh();
+  
+  if (autoRefreshEnabled.value) {
+    autoRefreshTimer = setInterval(async () => {
+      console.log('自动刷新数据...');
+      await refreshData();
+    }, autoRefreshInterval.value);
+  }
+};
+
+// 清除自动刷新定时器
+const clearAutoRefresh = () => {
+  if (autoRefreshTimer) {
+    clearInterval(autoRefreshTimer);
+    autoRefreshTimer = null;
+  }
+};
+
+// 监听自动刷新设置变化
+watch(autoRefreshEnabled, (newValue) => {
+  if (newValue) {
+    setupAutoRefresh();
+  } else {
+    clearAutoRefresh();
+  }
+});
+
+// 监听路由变化，当切换页面时刷新数据
+watch(() => route.path, (newPath, oldPath) => {
+  if (newPath === '/admin' && newPath !== oldPath) {
+    console.log('切换到仪表板页面，刷新数据');
+    refreshData();
+  }
+});
+
+onActivated(() => {
+  console.log('页面激活，刷新数据');
+  refreshData();
+
+  setupAutoRefresh();
+});
+
+onDeactivated(() => {
+  console.log('页面失活，清除定时器');
+  clearAutoRefresh();
+});
+
+onUnmounted(() => {
+  clearAutoRefresh();
+});
 
 // 当前日期
 const currentDate = computed(() => {
@@ -753,7 +1042,6 @@ const currentDate = computed(() => {
   });
 });
 
-// 当前时间
 const currentTime = computed(() => {
   const now = new Date();
   return now.toLocaleString('zh-CN', { 
@@ -766,7 +1054,6 @@ const currentTime = computed(() => {
   });
 });
 
-// 当前月份
 const currentMonth = computed(() => {
   const now = new Date();
   const monthIndex = now.getMonth(); 
@@ -780,17 +1067,33 @@ const currentMonth = computed(() => {
            'July', 'August', 'September', 'October', 'November', 'December']
   };
 
-  const currentLang = useI18n().locale.value || 'zh-CN';
+  const currentLang = locale.value || 'zh-CN';
 
-  return monthNames[currentLang]?.[monthIndex] || monthNames['zh-CN'][monthIndex];
+  return monthNames[currentLang as keyof typeof monthNames]?.[monthIndex] || monthNames['zh-CN'][monthIndex];
 });
 
 onMounted(async () => {
   await fetchDashboardData();
+  setupAutoRefresh();
 });
 
 definePageMeta({
   layout: 'admin',
+});
+
+// 添加窗口宽度响应式
+const windowWidth = ref(window.innerWidth);
+
+const updateWindowWidth = () => {
+  windowWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', updateWindowWidth);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateWindowWidth);
 });
 </script>
 
@@ -820,6 +1123,20 @@ definePageMeta({
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--bc)/0.5);
 }
+
+/* 刷新动画 */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
 </style>
 
 <i18n lang="json">
@@ -827,6 +1144,16 @@ definePageMeta({
   "zh-CN": {
     "dashboard": "管理仪表板",
     "welcome": "欢迎回来，管理员！今天是 {date}",
+    "dataStatus": {
+      "lastUpdate": "数据最后更新",
+      "autoRefresh": "自动刷新 ({seconds}秒)",
+      "refreshData": "刷新数据"
+    },
+    "loading": {
+      "chartData": "加载图表数据中...",
+      "noData": "暂无数据",
+      "retry": "重试"
+    },
     "userStats": {
       "totalUsers": "总用户数",
       "totalBlogs": "博客文章", 
@@ -835,7 +1162,10 @@ definePageMeta({
       "activeUsers": "活跃用户",
       "activeUsersDesc": "总计 {total} 用户",
       "published": "已发布",
-      "vsLastMonth": "较上月新增"
+      "vsLastMonth": "较上月新增",
+      "systemStatus": "系统状态", 
+      "normal": "正常",            
+      "uptime": "正常运行时间 {uptime}"  
     },
     "charts": {
       "userGrowth": "用户增长趋势",
@@ -844,7 +1174,9 @@ definePageMeta({
       "quarterly": "季度",
       "blogGrowth": "博客增长趋势",
       "blogGrowthDesc": "近12个月博客发布情况",
-      "totalArticles": "总计 {total} 篇"
+      "totalArticles": "总计 {total} 篇",
+      "unknownMonth": "未知月份",
+      "refreshChart": "刷新图表数据"
     },
     "quickActions": {
       "title": "快速操作",
@@ -862,6 +1194,7 @@ definePageMeta({
       "title": "顶级作者",
       "desc": "博客发布排行榜",
       "blogs": "篇博客",
+      "views": "浏览",
       "published": "已发布",
       "totalLikes": "总点赞"
     },
@@ -908,6 +1241,16 @@ definePageMeta({
   "en": {
     "dashboard": "Admin Dashboard",
     "welcome": "Welcome back, Admin! Today is {date}",
+    "dataStatus": {
+      "lastUpdate": "Data last updated",
+      "autoRefresh": "Auto refresh ({seconds} seconds)",
+      "refreshData": "Refresh Data"
+    },
+    "loading": {
+      "chartData": "Loading chart data...",
+      "noData": "No data available",
+      "retry": "Retry"
+    },
     "userStats": {
       "totalUsers": "Total Users",
       "totalBlogs": "Blog Articles",
@@ -916,7 +1259,10 @@ definePageMeta({
       "activeUsers": "Active Users",
       "activeUsersDesc": "Total {total} users",
       "published": "Published",
-      "vsLastMonth": "New this month"
+      "vsLastMonth": "New this month",
+      "systemStatus": "System Status",  
+      "normal": "Normal", 
+      "uptime": "Uptime {uptime}"
     },
     "charts": {
       "userGrowth": "User Growth Trend",
@@ -925,7 +1271,9 @@ definePageMeta({
       "quarterly": "Quarterly",
       "blogGrowth": "Blog Growth Trend",
       "blogGrowthDesc": "Blog publishing over the past 12 months",
-      "totalArticles": "Total {total} articles"
+      "totalArticles": "Total {total} articles",
+      "unknownMonth": "Unknown month",
+      "refreshChart": "Refresh chart data"
     },
     "quickActions": {
       "title": "Quick Actions",
@@ -943,6 +1291,7 @@ definePageMeta({
       "title": "Top Authors",
       "desc": "Blog Publishing Ranking",
       "blogs": "blogs",
+      "views": "views",
       "published": "Published",
       "totalLikes": "Total Likes"
     },
@@ -989,6 +1338,16 @@ definePageMeta({
   "zh-TW": {
     "dashboard": "管理儀表板",
     "welcome": "歡迎回來，管理員！今天是 {date}",
+    "dataStatus": {
+      "lastUpdate": "數據最後更新",
+      "autoRefresh": "自動刷新 ({seconds}秒)",
+      "refreshData": "刷新數據"
+    },
+    "loading": {
+      "chartData": "加載圖表數據中...",
+      "noData": "暫無數據",
+      "retry": "重試"
+    },
     "userStats": {
       "totalUsers": "總用戶數",
       "totalBlogs": "博客文章",
@@ -997,7 +1356,10 @@ definePageMeta({
       "activeUsers": "活躍用戶",
       "activeUsersDesc": "總計 {total} 用戶",
       "published": "已發布",
-      "vsLastMonth": "較上月新增"
+      "vsLastMonth": "較上月新增",
+       "systemStatus": "系統狀態",      
+      "normal": "正常",           
+      "uptime": "正常運行時間 {uptime}" 
     },
     "charts": {
       "userGrowth": "用戶增長趨勢",
@@ -1006,7 +1368,9 @@ definePageMeta({
       "quarterly": "季度",
       "blogGrowth": "博客增長趨勢",
       "blogGrowthDesc": "近12個月博客發布情況",
-      "totalArticles": "總計 {total} 篇"
+      "totalArticles": "總計 {total} 篇",
+      "unknownMonth": "未知月份",
+      "refreshChart": "刷新圖表數據"
     },
     "quickActions": {
       "title": "快速操作",
@@ -1024,6 +1388,7 @@ definePageMeta({
       "title": "頂級作者",
       "desc": "博客發布排行榜",
       "blogs": "篇博客",
+      "views": "瀏覽",
       "published": "已發布",
       "totalLikes": "總點讚"
     },
