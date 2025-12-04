@@ -3,13 +3,14 @@
     class="z-0 flex w-full h-full justify-center items-start overflow-hidden bg-base-100 transition-colors duration-300">
 
     <div
-      class="relative w-full aspect-1056/495 mask-[linear-gradient(to_bottom,transparent,white_30%,white_70%,transparent)]">
-      <!-- 底图 -->
-      <img :src="`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`"
-        class="pointer-events-none absolute inset-0 block size-full select-none" alt="world map" :draggable="false" />
+      class="relative w-full aspect-1056/495 mask-[linear-gradient(to_bottom,transparent,white_30%,white_70%,transparent)]"
+      :style="{ color: themeColors.mapDots }">
 
-      <!-- 线条层 -->
-      <svg viewBox="0 0 1056 495" class="pointer-events-none absolute inset-0 size-full select-none">
+      <div v-html="svgContent"
+        class="pointer-events-none absolute inset-0 block size-full select-none [&>svg]:w-full [&>svg]:h-full transition-opacity duration-1000 ease-in-out"
+        :class="isMapReady ? 'opacity-100' : 'opacity-0'"></div>
+
+      <svg v-if="isMapReady" viewBox="0 0 1056 495" class="pointer-events-none absolute inset-0 size-full select-none">
         <g v-for="(dot, i) in routes" :key="`path-group-${i}`">
           <Motion as="path" :d="createCurvedPath(dot)" fill="none" stroke="url(#path-gradient)" stroke-width="1"
             :initial="{ pathLength: 0 }" :animate="{ pathLength: 1 }" :transition="{
@@ -54,13 +55,35 @@
 <script setup lang="ts">
 import DottedMap from "dotted-map";
 import { Motion } from "motion-v";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useThemeStore } from "@/stores/theme";
 
 const themeStore = useThemeStore();
 
+const svgContent = ref('');
+const isMapReady = ref(false);
+
 onMounted(() => {
   themeStore.initTheme();
+
+  setTimeout(() => {
+    requestAnimationFrame(() => {
+      const map = new DottedMap({ height: 100, grid: "diagonal" });
+
+      const svg = map.getSVG({
+        radius: 0.22,
+        color: 'currentColor',
+        shape: "circle",
+        backgroundColor: 'transparent',
+      });
+
+      svgContent.value = svg;
+
+      requestAnimationFrame(() => {
+        isMapReady.value = true;
+      });
+    });
+  }, 500);
 });
 
 const themeColors = computed(() => {
@@ -78,17 +101,6 @@ const themeColors = computed(() => {
     };
   }
 });
-
-const map = new DottedMap({ height: 100, grid: "diagonal" });
-
-const svgMap = computed(() =>
-  map.getSVG({
-    radius: 0.22,
-    color: themeColors.value.mapDots,
-    shape: "circle",
-    backgroundColor: themeColors.value.bg,
-  })
-);
 
 const routes = [
   {
