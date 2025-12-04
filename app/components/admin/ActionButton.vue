@@ -11,8 +11,8 @@
       </div>
 
       <div class="relative">
-        <h3 class="font-semibold text-base-content mb-1 group-hover:text-primary transition-colors">{{ label }}</h3>
-        <p class="text-sm text-base-content/70 line-clamp-2">{{ description }}</p>
+        <h3 class="font-semibold text-base-content mb-1 group-hover:text-primary transition-colors">{{ t(label) }}</h3>
+        <p class="text-sm text-base-content/70 line-clamp-2">{{ t(description) }}</p>
       </div>
 
       <div class="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
@@ -24,6 +24,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 type ColorKey = 
   | 'primary' | 'secondary' | 'accent' | 'neutral'
@@ -34,8 +37,8 @@ type ColorKey =
 interface Props {
   to: string;
   icon: string;
-  label: string;
-  description: string;
+  label: string;  
+  description: string; 
   color?: ColorKey; 
 }
 
@@ -44,7 +47,6 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const colorConfig = {
-
   'primary': { bg: 'bg-primary/20', text: 'text-primary', base: 'bg-primary' },
   'secondary': { bg: 'bg-secondary/20', text: 'text-secondary', base: 'bg-secondary' },
   'accent': { bg: 'bg-accent/20', text: 'text-accent', base: 'bg-accent' },
@@ -53,12 +55,10 @@ const colorConfig = {
   'base-200': { bg: 'bg-base-200/20', text: 'text-base-content', base: 'bg-base-200' },
   'base-300': { bg: 'bg-base-300/20', text: 'text-base-content', base: 'bg-base-300' },
   'base-content': { bg: 'bg-base-content/20', text: 'text-base-100', base: 'bg-base-content' },
-
   'info': { bg: 'bg-info/20', text: 'text-info', base: 'bg-info' },
   'success': { bg: 'bg-success/20', text: 'text-success', base: 'bg-success' },
   'warning': { bg: 'bg-warning/20', text: 'text-warning', base: 'bg-warning' },
   'error': { bg: 'bg-error/20', text: 'text-error', base: 'bg-error' },
- 
   'blue': { bg: 'bg-primary/20', text: 'text-primary', base: 'bg-primary' },
   'green': { bg: 'bg-success/20', text: 'text-success', base: 'bg-success' },
   'purple': { bg: 'bg-accent/20', text: 'text-accent', base: 'bg-accent' },
@@ -92,3 +92,38 @@ const backgroundClass = computed(() => {
   overflow: hidden;
 }
 </style>
+
+<i18n lang="json">
+{
+  "zh-CN": {
+    "quickActions.userManagement": "用户管理",
+    "quickActions.userManagementDesc": "管理用户账户与权限",
+    "quickActions.blogManagement": "博客管理",
+    "quickActions.blogManagementDesc": "审核与管理博客内容",
+    "quickActions.commentReview": "评论审核",
+    "quickActions.commentReviewDesc": "审核用户评论内容",
+    "quickActions.systemSettings": "系统设置",
+    "quickActions.systemSettingsDesc": "配置系统参数"
+  },
+  "en": {
+    "quickActions.userManagement": "User Management",
+    "quickActions.userManagementDesc": "Manage user accounts and permissions",
+    "quickActions.blogManagement": "Blog Management",
+    "quickActions.blogManagementDesc": "Review and manage blog content",
+    "quickActions.commentReview": "Comment Review",
+    "quickActions.commentReviewDesc": "Review user comments",
+    "quickActions.systemSettings": "System Settings",
+    "quickActions.systemSettingsDesc": "Configure system parameters"
+  },
+  "zh-TW": {
+    "quickActions.userManagement": "用戶管理",
+    "quickActions.userManagementDesc": "管理用戶帳戶與權限",
+    "quickActions.blogManagement": "博客管理",
+    "quickActions.blogManagementDesc": "審核與管理博客內容",
+    "quickActions.commentReview": "評論審核",
+    "quickActions.commentReviewDesc": "審核用戶評論內容",
+    "quickActions.systemSettings": "系統設定",
+    "quickActions.systemSettingsDesc": "配置系統參數"
+  }
+}
+</i18n>

@@ -18,8 +18,8 @@
           <Icon name="mingcute:time-line" class="text-base-content/40 text-sm mr-1" />
           <span class="text-sm text-base-content/60">{{ activity.time }}</span>
           
-          <span v-if="activity.module" class="ml-3 px-2 py-0.5 text-xs rounded-full bg-base-200 text-base-content/70">
-            {{ activity.module }}
+          <span v-if="activity.type" class="ml-3 px-2 py-0.5 text-xs rounded-full bg-base-200 text-base-content/70">
+            {{ getTypeText(activity.type) }}
           </span>
         </div>
       </div>
@@ -30,7 +30,7 @@
           class="text-sm text-primary hover:text-primary/80 px-3 py-1 rounded-lg hover:bg-primary/10 transition-colors"
           @click="handleView"
         >
-          {{ $t('common.view') }}
+          {{ t('common.view') }}
         </button>
       </div>
     </div>
@@ -39,6 +39,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 interface Activity {
   id: number;
@@ -46,8 +49,7 @@ interface Activity {
   action: string;
   target?: string;
   time: string;
-  type: 'user' | 'blog' | 'comment' | 'system' | 'login';
-  module?: string;
+  type: 'user' | 'blog' | 'comment' | 'report' | 'download' | 'login';
 }
 
 interface Props {
@@ -68,10 +70,11 @@ const typeIcon = computed(() => {
     user: 'mingcute:user-2-line',
     blog: 'mingcute:file-text-line',
     comment: 'mingcute:message-1-line',
-    system: 'mingcute:settings-3-line',
+    report: 'mingcute:flag-2-line',
+    download: 'mingcute:download-2-line',
     login: 'mingcute:login-circle-line'
   };
-  return icons[props.activity.type];
+  return icons[props.activity.type] || 'mingcute:info-circle-line';
 });
 
 const typeColor = computed(() => {
@@ -79,19 +82,76 @@ const typeColor = computed(() => {
     user: 'bg-primary/20 text-primary',
     blog: 'bg-success/20 text-success',
     comment: 'bg-accent/20 text-accent',
-    system: 'bg-warning/20 text-warning',
-    login: 'bg-info/20 text-info'
+    report: 'bg-warning/20 text-warning',
+    download: 'bg-info/20 text-info',
+    login: 'bg-secondary/20 text-secondary'
   };
-  return colors[props.activity.type];
+  return colors[props.activity.type] || 'bg-base-200 text-base-content';
 });
+
+const getTypeText = (type: Activity['type']): string => {
+  const typeMap: Record<Activity['type'], string> = {
+    user: t('activity.types.user'),
+    blog: t('activity.types.blog'),
+    comment: t('activity.types.comment'),
+    report: t('activity.types.report'),
+    download: t('activity.types.download'),
+    login: t('activity.types.login')
+  };
+  return typeMap[type] || type;
+};
 
 const handleView = () => {
   emit('view', props.activity.id);
 };
 </script>
 
-<style lang="postcss" scoped>
-.activity-item {
-  @apply border-b border-base-300 last:border-0 hover:bg-base-200 rounded-lg px-2 -mx-2 transition-colors;
+<i18n lang="json">
+{
+  "zh-CN": {
+    "common": {
+      "view": "查看"
+    },
+    "activity": {
+      "types": {
+        "user": "用户",
+        "blog": "博客",
+        "comment": "评论",
+        "report": "举报",
+        "download": "下载",
+        "login": "登录"
+      }
+    }
+  },
+  "en": {
+    "common": {
+      "view": "View"
+    },
+    "activity": {
+      "types": {
+        "user": "User",
+        "blog": "Blog",
+        "comment": "Comment",
+        "report": "Report",
+        "download": "Download",
+        "login": "Login"
+      }
+    }
+  },
+  "zh-TW": {
+    "common": {
+      "view": "查看"
+    },
+    "activity": {
+      "types": {
+        "user": "用戶",
+        "blog": "博客",
+        "comment": "評論",
+        "report": "舉報",
+        "download": "下載",
+        "login": "登入"
+      }
+    }
+  }
 }
-</style>
+</i18n>

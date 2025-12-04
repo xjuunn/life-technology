@@ -20,7 +20,7 @@
 
       <div v-if="usage !== undefined" class="mt-3">
         <div class="flex justify-between text-sm text-base-content/60 mb-1">
-          <span>{{ $t('admin.dashboard.usage') }}</span>
+          <span>{{ t('systemInfo.usage') }}</span>
           <span>{{ usage }}%</span>
         </div>
         <div class="h-2 bg-base-300 rounded-full overflow-hidden">
@@ -41,7 +41,7 @@
         <div class="flex items-start text-warning-content bg-warning/10 px-3 py-2 rounded-lg border border-warning/20">
           <Icon name="mingcute:warning-line" class="mr-2 mt-0.5 flex-shrink-0 text-warning" />
           <span class="text-sm text-warning-content">
-            {{ $t('admin.dashboard.warning_high_usage') }}
+            {{ t('systemInfo.warningHighUsage') }}
           </span>
         </div>
       </div>
@@ -51,7 +51,7 @@
           class="text-sm text-primary hover:text-primary/80 px-3 py-1 rounded-lg hover:bg-primary/10 transition-colors"
           @click="handleAction"
         >
-          {{ actionText || $t('common.manage') }}
+          {{ actionText || t('common.manage') }}
         </button>
       </div>
     </div>
@@ -60,6 +60,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 interface Details {
   used: string;
@@ -122,3 +125,35 @@ const handleAction = () => {
   @apply border-b border-base-300 last:border-0;
 }
 </style>
+
+<i18n lang="json">
+{
+  "zh-CN": {
+    "systemInfo": {
+      "usage": "使用率",
+      "warningHighUsage": "使用率过高，请及时处理"
+    },
+    "common": {
+      "manage": "管理"
+    }
+  },
+  "en": {
+    "systemInfo": {
+      "usage": "Usage",
+      "warningHighUsage": "Usage is too high, please handle it promptly"
+    },
+    "common": {
+      "manage": "Manage"
+    }
+  },
+  "zh-TW": {
+    "systemInfo": {
+      "usage": "使用率",
+      "warningHighUsage": "使用率過高，請及時處理"
+    },
+    "common": {
+      "manage": "管理"
+    }
+  }
+}
+</i18n>

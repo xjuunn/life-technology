@@ -82,38 +82,40 @@
         </div>
       </div>
 
-      <!-- 内容分布 -->
-      <div class="bg-base-100 rounded-2xl shadow-lg p-6 border border-base-300">
-        <div class="flex justify-between items-center mb-6">
+      <!-- 博客增长趋势 -->
+      <div class="bg-base-100 rounded-xl shadow p-4 border border-base-300">
+        <div class="flex justify-between items-center mb-4">
           <div>
-            <h2 class="text-xl font-bold text-base-content">{{ t('charts.contentDistribution') }}</h2>
-            <p class="text-sm text-base-content/70 mt-1">{{ t('charts.contentDistributionDesc') }}</p>
+            <h2 class="text-lg font-bold text-base-content">{{ t('charts.blogGrowth') }}</h2>
+            <p class="text-sm text-base-content/70 mt-1">{{ t('charts.blogGrowthDesc') }}</p>
           </div>
           <div class="text-sm text-base-content/70">
-            {{ t('charts.totalArticles', { total: contentDistribution.total }) }}
+            {{ t('charts.totalArticles', { total: stats.totalBlogs }) }}
           </div>
         </div>
-        <div class="h-[300px]">
-          <PieChart
-            :data="contentDistribution.data"
-            :donut="true"
-            :show-legend="true"
-            :center="['50%', '40%']"
+        <div class="h-[250px]">
+          <LineChart
+            :x-axis-data="blogGrowth.xAxis"
+            :series-data="blogGrowth.seriesData"
+            :series-name="t('userStats.totalBlogs')"
+            :area-style="true"
+            color="#10b981"
+            :line-width="2"
+            :show-legend="false"
           />
         </div>
       </div>
     </div>
 
-    <!-- 快速操作和访问统计 -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-      <!-- 快速操作 -->
+    <!-- 快速操作和作者排行 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
       <div class="lg:col-span-2">
-        <div class="bg-base-100 rounded-2xl shadow-lg p-6 border border-base-300">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold text-base-content">{{ t('quickActions.title') }}</h2>
-            <span class="text-sm text-base-content/70 bg-base-200 px-3 py-1 rounded-lg">{{ t('quickActions.desc') }}</span>
+        <div class="bg-base-100 rounded-xl shadow p-4 border border-base-300">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-base-content">{{ t('quickActions.title') }}</h2>
+            <span class="text-xs text-base-content/70 bg-base-200 px-3 py-1 rounded-lg">{{ t('quickActions.desc') }}</span>
           </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <ActionButton 
               to="/admin/users"
               icon="mingcute:user-2-line"
@@ -136,69 +138,59 @@
               color="accent"
             />
             <ActionButton
-              to="/admin/system"
-              icon="mingcute:settings-3-line"
-              :label="t('quickActions.systemSettings')"
-              :description="t('quickActions.systemSettingsDesc')"
+              to="/admin/reports"
+              icon="mingcute:flag-2-line"
+              :label="t('quickActions.reportManagement')"
+              :description="t('quickActions.reportManagementDesc')"
               color="warning"
             />
           </div>
         </div>
       </div>
 
-      <!-- 访问统计 -->
-      <div class="bg-base-100 rounded-2xl shadow-lg p-6 border border-base-300">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-bold text-base-content">{{ t('visitorStats.title') }}</h2>
-          <div class="flex items-center text-sm text-base-content/70">
-            <Icon name="mingcute:calendar-line" class="mr-2" />
-            {{ t('visitorStats.today') }}
+      <!-- 顶级作者排行 -->
+      <div class="bg-base-100 rounded-xl shadow p-4 border border-base-300">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-bold text-base-content">{{ t('topAuthors.title') }}</h2>
+          <div class="flex items-center text-xs text-base-content/70">
+            <Icon name="mingcute:crown-line" class="mr-1" />
+            {{ t('topAuthors.desc') }}
           </div>
         </div>
-        <div class="space-y-4">
-          <div class="flex justify-between items-center p-3 bg-primary/10 rounded-lg">
-            <div class="flex items-center">
-              <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">
-                <Icon name="mingcute:eye-line" class="text-primary" />
-              </div>
-              <div>
-                <p class="font-medium text-base-content">{{ t('visitorStats.pageViews') }}</p>
-                <p class="text-sm text-base-content/70">{{ t('visitorStats.pageViewsEn') }}</p>
+        <div class="space-y-3">
+          <div v-for="(author, index) in topAuthors" :key="author.authorId" class="flex items-center p-2 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors">
+            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-2 font-bold text-primary text-sm">
+              {{ index + 1 }}
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center">
+                <div class="w-6 h-6 rounded-full bg-base-300 mr-2 overflow-hidden">
+                  <img v-if="author.author.avatar" :src="author.author.avatar" :alt="author.author.username" class="w-full h-full object-cover">
+                  <div v-else class="w-full h-full flex items-center justify-center bg-base-300 text-base-content/70 text-xs">
+                    {{ author.author.username.charAt(0).toUpperCase() }}
+                  </div>
+                </div>
+                <div>
+                  <p class="font-medium text-base-content text-sm">{{ author.author.username }}</p>
+                  <p class="text-xs text-base-content/60">{{ author.totalViews }} 浏览</p>
+                </div>
               </div>
             </div>
             <div class="text-right">
-              <p class="text-2xl font-bold text-primary">{{ visitorStats.pv }}</p>
-              <p class="text-sm text-success">+12.5%</p>
+              <p class="font-bold text-base-content">{{ author.blogCount }}</p>
+              <p class="text-xs text-base-content/60">{{ t('topAuthors.blogs') }}</p>
             </div>
           </div>
-          <div class="flex justify-between items-center p-3 bg-secondary/10 rounded-lg">
-            <div class="flex items-center">
-              <div class="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center mr-3">
-                <Icon name="mingcute:user-line" class="text-secondary" />
-              </div>
-              <div>
-                <p class="font-medium text-base-content">{{ t('visitorStats.uniqueVisitors') }}</p>
-                <p class="text-sm text-base-content/70">{{ t('visitorStats.uniqueVisitorsEn') }}</p>
-              </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-base-300">
+          <div class="grid grid-cols-2 gap-3 text-center">
+            <div>
+              <p class="text-xl font-bold text-primary">{{ stats.publishedBlogs }}</p>
+              <p class="text-xs text-base-content/70">{{ t('topAuthors.published') }}</p>
             </div>
-            <div class="text-right">
-              <p class="text-2xl font-bold text-secondary">{{ visitorStats.uv }}</p>
-              <p class="text-sm text-success">+8.3%</p>
-            </div>
-          </div>
-          <div class="flex justify-between items-center p-3 bg-accent/10 rounded-lg">
-            <div class="flex items-center">
-              <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center mr-3">
-                <Icon name="mingcute:mouse-line" class="text-accent" />
-              </div>
-              <div>
-                <p class="font-medium text-base-content">{{ t('visitorStats.clicks') }}</p>
-                <p class="text-sm text-base-content/70">{{ t('visitorStats.clicksEn') }}</p>
-              </div>
-            </div>
-            <div class="text-right">
-              <p class="text-2xl font-bold text-accent">{{ visitorStats.clicks }}</p>
-              <p class="text-sm text-success">+15.2%</p>
+            <div>
+              <p class="text-xl font-bold text-secondary">{{ stats.totalLikes }}</p>
+              <p class="text-xs text-base-content/70">{{ t('topAuthors.totalLikes') }}</p>
             </div>
           </div>
         </div>
@@ -206,109 +198,87 @@
     </div>
 
     <!-- 主要内容区域 -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <!-- 最近活动 -->
-      <div class="bg-base-100 rounded-2xl shadow-lg p-6 border border-base-300">
-        <div class="flex justify-between items-center mb-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- 月度统计图表 -->
+      <div class="bg-base-100 rounded-xl shadow p-4 border border-base-300">
+        <div class="flex justify-between items-center mb-4">
           <div>
-            <h2 class="text-xl font-bold text-base-content">{{ t('recentActivities.title') }}</h2>
-            <p class="text-sm text-base-content/70 mt-1">{{ t('recentActivities.desc') }}</p>
-          </div>
-          <button class="px-4 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg font-medium transition-colors duration-200 border border-primary/20 flex items-center">
-            <Icon name="mingcute:list-check-line" class="mr-2" />
-            {{ t('recentActivities.viewAll') }}
-          </button>
-        </div>
-        <div class="space-y-4">
-          <ActivityItem  
-            v-for="activity in recentActivities"
-            :key="activity.id"
-            :activity="activity"
-          />
-        </div>
-      </div>
-
-      <!-- 系统概览 -->
-      <div class="bg-base-100 rounded-2xl shadow-lg p-6 border border-base-300">
-        <div class="flex justify-between items-center mb-6">
-          <div>
-            <h2 class="text-xl font-bold text-base-content">{{ t('systemOverview.title') }}</h2>
-            <p class="text-sm text-base-content/70 mt-1">{{ t('systemOverview.desc') }}</p>
-          </div>
-          <div class="px-3 py-1 bg-success/10 text-success rounded-lg font-medium border border-success/20 flex items-center">
-            <Icon name="mingcute:check-circle-line" class="mr-1" />
-            {{ t('systemOverview.runningNormal') }}
-          </div>
-        </div>
-        <div class="space-y-6">
-          <SystemInfo
-            :label="$t('systemOverview.serverStatus')"
-            :value="systemInfo.serverStatus"
-            :healthy="true"
-            icon="mingcute:server-line"
-            :usage="45"
-          />
-          <SystemInfo
-            :label="$t('systemOverview.databaseStatus')"
-            :value="systemInfo.databaseStatus"
-            :healthy="true"
-            icon="mingcute:database-line"
-            :usage="32"
-          />
-          <SystemInfo
-            :label="$t('systemOverview.storage')"
-            :value="systemInfo.storage"
-            :details="{ used: '85 GB', total: '100 GB' }"
-            icon="mingcute:hard-drive-line"
-            :usage="85"
-          />
-          <SystemInfo
-            :label="$t('systemOverview.memory')"
-            :value="systemInfo.memory"
-            :details="{ used: '7.2 GB', total: '10 GB' }"
-            icon="mingcute:chip-line"
-            :usage="72"
-          />
-        </div>
-        <div class="mt-8 pt-6 border-t border-base-300">
-          <div class="flex space-x-3">
-            <button class="flex-1 px-4 py-2 bg-base-200 text-base-content rounded-lg hover:bg-base-300 transition-colors flex items-center justify-center">
-              <Icon name="mingcute:refresh-2-line" class="mr-2" />
-              {{ $t('systemOverview.refreshStatus') }}
-            </button>
-            <button class="flex-1 px-4 py-2 bg-primary text-primary-content rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center">
-              <Icon name="mingcute:chart-line" class="mr-2" />
-              {{ $t('systemOverview.detailedReport') }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 月度发布统计 -->
-    <div class="mt-8">
-      <div class="bg-base-100 rounded-2xl shadow-lg p-6 border border-base-300">
-        <div class="flex justify-between items-center mb-6">
-          <div>
-            <h2 class="text-xl font-bold text-base-content">{{ t('monthlyStats.title') }}</h2>
+            <h2 class="text-lg font-bold text-base-content">{{ t('monthlyStats.title') }}</h2>
             <p class="text-sm text-base-content/70 mt-1">{{ t('monthlyStats.desc') }}</p>
           </div>
           <div class="text-sm text-base-content/70">
             {{ t('monthlyStats.currentMonth', { month: currentMonth }) }}
           </div>
         </div>
-        <div class="h-[350px]">
+        <div class="h-[280px]">
           <ChartBase
             :options="monthlyStats.options"
             height="100%"
           />
         </div>
       </div>
+
+      <!-- 系统概览 -->
+      <div class="bg-base-100 rounded-xl shadow p-4 border border-base-300">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-base-content">{{ t('systemOverview.title') }}</h2>
+            <p class="text-sm text-base-content/70 mt-1">{{ t('systemOverview.desc') }}</p>
+          </div>
+          <div :class="['px-2 py-1 rounded text-xs font-medium border flex items-center', 
+                       systemHealthy ? 'bg-success/10 text-success border-success/20' : 'bg-error/10 text-error border-error/20']">
+            <Icon :name="systemHealthy ? 'mingcute:check-circle-line' : 'mingcute:warning-line'" class="mr-1 text-xs" />
+            {{ systemHealthy ? t('systemOverview.runningNormal') : t('systemOverview.systemIssue') }}
+          </div>
+        </div>
+        <div class="space-y-4">
+          <SystemInfo
+            :label="t('systemOverview.userStats')"
+            :value="`${stats.activeUsers}/${stats.totalUsers}`"
+            :healthy="true"
+            icon="mingcute:user-2-line"
+            :usage="stats.totalUsers > 0 ? Math.round((stats.activeUsers / stats.totalUsers) * 100) : 0"
+            :details="{ used: `${stats.activeUsers} ${t('systemOverview.active')}`, total: `${stats.totalUsers} ${t('systemOverview.total')}` }"
+          />
+          <SystemInfo
+            :label="t('systemOverview.blogStats')"
+            :value="`${stats.publishedBlogs}/${stats.totalBlogs}`"
+            :healthy="true"
+            icon="mingcute:file-text-line"
+            :usage="stats.totalBlogs > 0 ? Math.round((stats.publishedBlogs / stats.totalBlogs) * 100) : 0"
+            :details="{ used: `${stats.publishedBlogs} ${t('systemOverview.published')}`, total: `${stats.totalBlogs} ${t('systemOverview.total')}` }"
+          />
+          <SystemInfo
+            :label="t('systemOverview.commentStats')"
+            :value="`${stats.totalComments}`"
+            icon="mingcute:message-1-line"
+            :details="{ used: `${stats.totalLikes} ${t('systemOverview.likes')}`, total: `${stats.totalComments} ${t('systemOverview.comments')}` }"
+          />
+          <SystemInfo
+            :label="t('systemOverview.recentActivity')"
+            :value="`${stats.recentUsers} ${t('systemOverview.newUsers')}`"
+            icon="mingcute:time-line"
+            :details="{ used: `${stats.recentUsers} ${t('systemOverview.newUsers')}`, total: `${stats.recentBlogs} ${t('systemOverview.newBlogs')}` }"
+          />
+        </div>
+        <div class="mt-6 pt-4 border-t border-base-300">
+          <div class="flex space-x-2">
+            <button @click="refreshData" class="flex-1 px-3 py-2 bg-base-200 text-base-content rounded hover:bg-base-300 transition-colors flex items-center justify-center text-sm">
+              <Icon name="mingcute:refresh-2-line" class="mr-1" />
+              {{ t('systemOverview.refreshStatus') }}
+            </button>
+            <button class="flex-1 px-3 py-2 bg-primary text-primary-content rounded hover:bg-primary/90 transition-colors flex items-center justify-center text-sm">
+              <Icon name="mingcute:chart-line" class="mr-1" />
+              {{ t('systemOverview.detailedReport') }}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 添加底部装饰 -->
-    <div class="mt-10 pt-6 border-t border-base-300">
-      <p class="text-center text-base-content/50 text-sm">
+    <div class="mt-8 pt-4 border-t border-base-300">
+      <p class="text-center text-base-content/50 text-xs">
         {{ t('footer.lastUpdate', { time: currentTime }) }} | {{ t('footer.contactSupport') }}
       </p>
     </div>
@@ -316,113 +286,253 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, watch } from 'vue';
 import DashboardCard from '~/components/admin/DashboardCard.vue'
 import LineChart from '~/components/echarts/line-chart.vue'
 import ActionButton from '~/components/admin/ActionButton.vue'
-import PieChart from '~/components/echarts/pie-chart.vue'
-import ActivityItem from '~/components/admin/ActivityItem.vue'
 import SystemInfo from '~/components/admin/SystemInfo.vue'
 import ChartBase from '~/components/echarts/chart-base.vue'
-
+import { Stats as fetchStats } from '~/api/admin'
 import type { EChartsCoreOption } from 'echarts/core';
 
-// 导入类型定义
 interface DashboardStats {
   totalUsers: number;
   totalBlogs: number;
   totalComments: number;
+  totalLikes: number;
+  activeUsers: number;
+  publishedBlogs: number;
+  recentUsers: number;
+  recentBlogs: number;
 }
 
-interface Activity {
-  id: number;
-  user: string;
-  action: string;
-  target: string;
-  time: string;
-  type: 'user' | 'blog' | 'comment';
+interface TrendData {
+  dates: string[];
+  users: number[];
+  blogs: number[];
+  comments: number[];
 }
 
-interface SystemInfoType {
-  serverStatus: string;
-  databaseStatus: string;
-  storage: string;
-  memory: string;
+interface TopAuthor {
+  authorId: string;
+  blogCount: number;
+  totalViews: number;
+  author: {
+    id: string;
+    username: string;
+    avatar: string;
+  };
 }
 
-interface VisitorStats {
-  pv: number;
-  uv: number;
-  clicks: number;
+interface StatsResponse {
+  stats: DashboardStats & { trend: TrendData };
+  topAuthors: TopAuthor[];
 }
 
-// 使用Nuxt 3的useI18n
-const { t } = useI18n();
+interface ChartData {
+  xAxis: string[];
+  seriesData: number[];
+}
+
+const { t , locale} = useI18n();
+
+// 添加加载状态和错误处理
+const isLoading = ref(false);
+const error = ref<string | null>(null);
 
 // 统计数据
 const stats = ref<DashboardStats>({
-  totalUsers: 1542,
-  totalBlogs: 328,
-  totalComments: 4289
+  totalUsers: 0,
+  totalBlogs: 0,
+  totalComments: 0,
+  totalLikes: 0,
+  activeUsers: 0,
+  publishedBlogs: 0,
+  recentUsers: 0,
+  recentBlogs: 0
 });
 
-// 用户增长数据
-const userGrowth = ref({
-  xAxis: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-  seriesData: [120, 132, 101, 134, 90, 230, 210, 182, 191, 234, 290, 330]
+// 趋势数据
+const trendData = ref<TrendData>({
+  dates: [],
+  users: [],
+  blogs: [],
+  comments: []
 });
 
-// 内容分布数据
-const contentDistribution = ref({
-  data: [
-    { name: t('contentTypes.technical'), value: 45, color: '#3b82f6' }, 
-    { name: t('contentTypes.life'), value: 25, color: '#10b981' },
-    { name: t('contentTypes.product'), value: 15, color: '#8b5cf6' }, 
-    { name: t('contentTypes.industry'), value: 10, color: '#f59e0b' }, 
-    { name: t('contentTypes.other'), value: 5, color: '#ef4444' }
-  ],
-  total: 100
+// 顶级作者
+const topAuthors = ref<TopAuthor[]>([]);
+
+// 用户增长数据 - 使用响应式变量
+const userGrowth = ref<ChartData>({
+  xAxis: [],
+  seriesData: []
 });
 
-// 最近活动
-const recentActivities = ref<Activity[]>([
-  { id: 1, user: '张三', action: t('actions.newBlog'), target: 'Vue3入门指南', time: '10分钟前', type: 'blog' },
-  { id: 2, user: '李四', action: t('actions.commented'), target: 'TypeScript最佳实践', time: '25分钟前', type: 'comment' },
-  { id: 3, user: '王五', action: t('actions.registered'), target: '', time: '1小时前', type: 'user' },
-  { id: 4, user: '赵六', action: t('actions.updatedProfile'), target: '', time: '2小时前', type: 'user' },
-]);
-
-// 系统信息
-const systemInfo = ref<SystemInfoType>({
-  serverStatus: '运行中',
-  databaseStatus: '已连接',
-  storage: '85 GB / 100 GB',
-  memory: '7.2 GB / 10 GB'
+// 博客增长数据 - 使用响应式变量
+const blogGrowth = ref<ChartData>({
+  xAxis: [],
+  seriesData: []
 });
 
-// 访问统计
-const visitorStats = ref<VisitorStats>({
-  pv: 12458,
-  uv: 3421,
-  clicks: 54879
-});
-
-const lineChartAreaColor = computed(() => {
-  return {
-    type: 'linear',
-    x: 0,
-    y: 0,
-    x2: 0,
-    y2: 1,
-    colorStops: [
-      { offset: 0, color: '#3b82f680' }, 
-      { offset: 1, color: '#3b82f620' }
-    ]
-  };
+// 系统健康状态
+const systemHealthy = computed(() => {
+  return stats.value.totalUsers > 0 && stats.value.totalBlogs > 0;
 });
 
 // 月度统计图表配置
 const monthlyStats = ref({
-  options: {
+  options: {} as EChartsCoreOption
+});
+
+// 图表时间范围
+const chartRange = ref('month');
+
+// 设置图表时间范围
+const setChartRange = async (range: string) => {
+  chartRange.value = range;
+  processChartData(range);
+};
+
+// 处理图表数据
+const processChartData = (range: string) => {
+  if (!trendData.value?.dates?.length) {
+    console.warn('趋势数据为空');
+    return;
+  }
+  const { dates, users = [], blogs = [], comments = [] } = trendData.value;
+  
+  let processedDates: string[] = [];
+  let processedUsers: number[] = [];
+  let processedBlogs: number[] = [];
+  let processedComments: number[] = [];
+  
+  if (range === 'quarter') {
+    const quarterData = new Map<string, { users: number, blogs: number, comments: number }>();
+    
+    dates.forEach((date, index) => {
+      const [year, month] = date.split('-').map(Number);
+      if (!year || !month) return;
+      
+      const quarter = Math.floor((month - 1) / 3) + 1;
+      const quarterKey = `${year}年Q${quarter}`;
+      
+      const data = quarterData.get(quarterKey) || { users: 0, blogs: 0, comments: 0 };
+      data.users += users[index] || 0;
+      data.blogs += blogs[index] || 0;
+      data.comments += comments[index] || 0;
+      quarterData.set(quarterKey, data);
+    });
+    
+    processedDates = Array.from(quarterData.keys());
+    processedUsers = Array.from(quarterData.values()).map(d => d.users);
+    processedBlogs = Array.from(quarterData.values()).map(d => d.blogs);
+    processedComments = Array.from(quarterData.values()).map(d => d.comments);
+  } else {
+    const recentCount = Math.min(dates.length, 12);
+    processedDates = dates.slice(-recentCount);
+    processedUsers = users.slice(-recentCount);
+    processedBlogs = blogs.slice(-recentCount);
+    processedComments = comments.slice(-recentCount);
+  }
+
+  userGrowth.value = { xAxis: processedDates, seriesData: processedUsers };
+  blogGrowth.value = { xAxis: processedDates, seriesData: processedBlogs };
+  
+ generateMonthlyStats(processedDates, processedBlogs, processedComments);
+};
+
+watch(locale, () => {
+  if (trendData.value.dates.length > 0) {
+    processChartData(chartRange.value);
+  }
+});
+
+// 生成月度统计图表
+const generateMonthlyStats = (dates: string[] = [], blogs: number[] = [], comments: number[] = []) => {
+  if (dates.length === 0) {
+    monthlyStats.value.options = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      legend: {
+        data: [t('monthlyStats.blogs'), t('monthlyStats.comments')],
+        bottom: 10,
+        textStyle: {
+          color: '#6b7280'
+        }
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '15%',
+        top: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: dates.length > 0 ? dates : ['1月', '2月', '3月', '4月', '5月', '6月'],
+        axisLine: {
+          lineStyle: {
+            color: '#e5e7eb'
+          }
+        },
+        axisLabel: {
+          color: '#6b7280'
+        }
+      },
+      yAxis: {
+        type: 'value',
+        axisLine: {
+          lineStyle: {
+            color: '#e5e7eb'
+          }
+        },
+        axisLabel: {
+          color: '#6b7280'
+        },
+        splitLine: {
+          lineStyle: {
+            color: '#f3f4f6'
+          }
+        }
+      },
+      series: [
+        {
+          name: t('monthlyStats.blogs'),
+          type: 'bar',
+          data: blogs.length > 0 ? blogs : [12, 15, 18, 10, 14, 20],
+          itemStyle: {
+            color: '#3b82f6'
+          },
+          emphasis: {
+            itemStyle: {
+              color: '#2563eb'
+            }
+          }
+        },
+        {
+          name: t('monthlyStats.comments'),
+          type: 'bar',
+          data: comments.length > 0 ? comments : [32, 40, 28, 35, 42, 48],
+          itemStyle: {
+            color: '#10b981'
+          },
+          emphasis: {
+            itemStyle: {
+              color: '#059669'
+            }
+          }
+        }
+      ]
+    } as EChartsCoreOption;
+    return;
+  }
+  
+  monthlyStats.value.options = {
     tooltip: {
       trigger: 'axis',
       axisPointer: {
@@ -430,13 +540,7 @@ const monthlyStats = ref({
       }
     },
     legend: {
-      data: [
-        t('contentTypes.technical'),
-        t('contentTypes.life'), 
-        t('contentTypes.product'),
-        t('contentTypes.industry'),
-        t('contentTypes.other')
-      ],
+      data: [t('monthlyStats.blogs'), t('monthlyStats.comments')],
       bottom: 10,
       textStyle: {
         color: '#6b7280'
@@ -451,7 +555,7 @@ const monthlyStats = ref({
     },
     xAxis: {
       type: 'category',
-      data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      data: dates,
       axisLine: {
         lineStyle: {
           color: '#e5e7eb'
@@ -479,86 +583,162 @@ const monthlyStats = ref({
     },
     series: [
       {
-        name: t('contentTypes.technical'),
+        name: t('monthlyStats.blogs'),
         type: 'bar',
-        stack: '总量',
-        data: [12, 15, 18, 10, 14, 20, 22, 18, 16, 25, 28, 30],
+        data: blogs,
         itemStyle: {
-          color: '#3b82f6' // 蓝色
+          color: '#3b82f6'
         },
         emphasis: {
           itemStyle: {
-            color: '#2563eb' // 更深的蓝色
+            color: '#2563eb'
           }
         }
       },
       {
-        name: t('contentTypes.life'),
+        name: t('monthlyStats.comments'),
         type: 'bar',
-        stack: '总量',
-        data: [8, 6, 10, 12, 8, 15, 14, 12, 10, 18, 16, 20],
+        data: comments,
         itemStyle: {
-          color: '#10b981' // 绿色
+          color: '#10b981'
         },
         emphasis: {
           itemStyle: {
-            color: '#059669' // 更深的绿色
-          }
-        }
-      },
-      {
-        name: t('contentTypes.product'),
-        type: 'bar',
-        stack: '总量',
-        data: [5, 4, 6, 8, 6, 10, 9, 8, 7, 12, 10, 14],
-        itemStyle: {
-          color: '#8b5cf6' // 紫色
-        },
-        emphasis: {
-          itemStyle: {
-            color: '#7c3aed' // 更深的紫色
-          }
-        }
-      },
-      {
-        name: t('contentTypes.industry'),
-        type: 'bar',
-        stack: '总量',
-        data: [3, 2, 4, 5, 4, 6, 7, 5, 4, 8, 6, 9],
-        itemStyle: {
-          color: '#f59e0b' // 橙色
-        },
-        emphasis: {
-          itemStyle: {
-            color: '#d97706' // 更深的橙色
-          }
-        }
-      },
-      {
-        name: t('contentTypes.other'),
-        type: 'bar',
-        stack: '总量',
-        data: [1, 2, 1, 3, 2, 4, 3, 2, 1, 5, 4, 6],
-        itemStyle: {
-          color: '#ef4444' // 红色
-        },
-        emphasis: {
-          itemStyle: {
-            color: '#dc2626' // 更深的红色
+            color: '#059669'
           }
         }
       }
     ]
-  } as EChartsCoreOption
-});
+  } as EChartsCoreOption;
+};
 
-// 图表时间范围
-const chartRange = ref('month');
+// 获取仪表盘数据
+const fetchDashboardData = async () => {
+  isLoading.value = true;
+  error.value = null;
+  
+  try {
+    const response = await fetchStats();
+    console.log('API响应:', response); 
+    
+    if (response && response.data) {
+      const statsData = response.data;
+      
+      console.log('statsData:', statsData);
+      console.log('statsData.stats:', statsData?.stats);
+      console.log('statsData.topAuthors:', statsData?.topAuthors);
 
-// 设置图表时间范围
-const setChartRange = (range: string) => {
-  chartRange.value = range;
-  // 这里可以添加根据时间范围更新数据的逻辑
+      if (statsData?.stats) {
+        stats.value = {
+          totalUsers: statsData.stats.totalUsers || 0,
+          totalBlogs: statsData.stats.totalBlogs || 0,
+          totalComments: statsData.stats.totalComments || 0,
+          totalLikes: statsData.stats.totalLikes || 0,
+          activeUsers: statsData.stats.activeUsers || 0,
+          publishedBlogs: statsData.stats.publishedBlogs || 0,
+          recentUsers: statsData.stats.recentUsers || 0,
+          recentBlogs: statsData.stats.recentBlogs || 0
+        };
+
+        if (statsData.stats.trend) {
+          trendData.value = {
+            dates: statsData.stats.trend.dates || [],
+            users: statsData.stats.trend.users || [],
+            blogs: statsData.stats.trend.blogs || [],
+            comments: statsData.stats.trend.comments || []
+          };
+        }
+      } else {
+        console.warn('API返回的数据中没有stats字段');
+        stats.value = {
+          totalUsers: 0,
+          totalBlogs: 0,
+          totalComments: 0,
+          totalLikes: 0,
+          activeUsers: 0,
+          publishedBlogs: 0,
+          recentUsers: 0,
+          recentBlogs: 0
+        };
+      }
+      
+      // 更新顶级作者
+      topAuthors.value = statsData?.topAuthors || [];
+      
+      // 处理图表数据
+      processChartData(chartRange.value);
+    } else {
+      console.warn('API返回空响应或没有data字段');
+      throw new Error('数据获取失败：无效的响应');
+    }
+    
+  } catch (err: any) {
+    console.error('获取仪表盘数据失败:', err);
+    error.value = err.message || '获取数据失败';
+
+    stats.value = {
+      totalUsers: 45,
+      totalBlogs: 120,
+      totalComments: 890,
+      totalLikes: 3450,
+      activeUsers: 32,
+      publishedBlogs: 98,
+      recentUsers: 5,
+      recentBlogs: 12
+    };
+
+    trendData.value = {
+      dates: ['2024-01', '2024-02', '2024-03', '2024-04', '2024-05', '2024-06', 
+              '2024-07', '2024-08', '2024-09', '2024-10', '2024-11', '2024-12'],
+      users: [25, 28, 30, 32, 35, 38, 40, 42, 43, 44, 45, 45],
+      blogs: [85, 88, 92, 95, 100, 105, 108, 112, 115, 118, 120, 120],
+      comments: [650, 680, 700, 720, 750, 780, 800, 830, 850, 870, 890, 890]
+    };
+    
+    // 设置模拟顶级作者数据
+    topAuthors.value = [
+      {
+        authorId: '1',
+        blogCount: 15,
+        totalViews: 12500,
+        author: {
+          id: '1',
+          username: '张三',
+          avatar: ''
+        }
+      },
+      {
+        authorId: '2',
+        blogCount: 12,
+        totalViews: 9800,
+        author: {
+          id: '2',
+          username: '李四',
+          avatar: ''
+        }
+      },
+      {
+        authorId: '3',
+        blogCount: 10,
+        totalViews: 7600,
+        author: {
+          id: '3',
+          username: '王五',
+          avatar: ''
+        }
+      }
+    ];
+    
+    // 处理图表数据
+    processChartData(chartRange.value);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// 手动刷新数据
+const refreshData = async () => {
+  await fetchDashboardData();
 };
 
 // 当前日期
@@ -572,7 +752,7 @@ const currentDate = computed(() => {
   });
 });
 
-// 当前时间（带时分秒）
+// 当前时间
 const currentTime = computed(() => {
   const now = new Date();
   return now.toLocaleString('zh-CN', { 
@@ -588,11 +768,26 @@ const currentTime = computed(() => {
 // 当前月份
 const currentMonth = computed(() => {
   const now = new Date();
-  const months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
-  return months[now.getMonth()];
+  const monthIndex = now.getMonth(); 
+
+  const monthNames = {
+    'zh-CN': ['一月', '二月', '三月', '四月', '五月', '六月', 
+              '七月', '八月', '九月', '十月', '十一月', '十二月'],
+    'zh-TW': ['一月', '二月', '三月', '四月', '五月', '六月', 
+              '七月', '八月', '九月', '十月', '十一月', '十二月'],
+    'en': ['January', 'February', 'March', 'April', 'May', 'June', 
+           'July', 'August', 'September', 'October', 'November', 'December']
+  };
+
+  const currentLang = useI18n().locale.value || 'zh-CN';
+
+  return monthNames[currentLang]?.[monthIndex] || monthNames['zh-CN'][monthIndex];
 });
 
-// 定义页面元信息
+onMounted(async () => {
+  await fetchDashboardData();
+});
+
 definePageMeta({
   layout: 'admin',
 });
@@ -635,18 +830,19 @@ definePageMeta({
       "totalUsers": "总用户数",
       "totalBlogs": "博客文章", 
       "totalComments": "评论总数",
-      "systemStatus": "系统状态",
-      "normal": "正常",
-      "uptime": "在线率: {uptime}",
-      "vsLastMonth": "较上月"
+      "totalLikes": "总点赞数",
+      "activeUsers": "活跃用户",
+      "activeUsersDesc": "总计 {total} 用户",
+      "published": "已发布",
+      "vsLastMonth": "较上月新增"
     },
     "charts": {
       "userGrowth": "用户增长趋势",
       "userGrowthDesc": "近12个月用户增长情况",
       "monthly": "月度",
       "quarterly": "季度",
-      "contentDistribution": "内容类型分布",
-      "contentDistributionDesc": "各类文章占比统计",
+      "blogGrowth": "博客增长趋势",
+      "blogGrowthDesc": "近12个月博客发布情况",
       "totalArticles": "总计 {total} 篇"
     },
     "quickActions": {
@@ -658,18 +854,15 @@ definePageMeta({
       "blogManagementDesc": "编辑博客文章",
       "commentReview": "评论审核",
       "commentReviewDesc": "审核用户评论",
-      "systemSettings": "系统设置",
-      "systemSettingsDesc": "系统配置"
+      "reportManagement": "举报管理",
+      "reportManagementDesc": "处理用户举报"
     },
-    "visitorStats": {
-      "title": "访问统计",
-      "today": "今日",
-      "pageViews": "页面浏览量",
-      "pageViewsEn": "Page Views",
-      "uniqueVisitors": "独立访客",
-      "uniqueVisitorsEn": "Unique Visitors",
-      "clicks": "点击次数",
-      "clicksEn": "Total Clicks"
+    "topAuthors": {
+      "title": "顶级作者",
+      "desc": "博客发布排行榜",
+      "blogs": "篇博客",
+      "published": "已发布",
+      "totalLikes": "总点赞"
     },
     "recentActivities": {
       "title": "最近活动",
@@ -680,35 +873,36 @@ definePageMeta({
       "title": "系统概览",
       "desc": "当前系统运行状态",
       "runningNormal": "运行正常",
-      "serverStatus": "服务器状态",
-      "databaseStatus": "数据库连接",
-      "storage": "存储空间",
-      "memory": "内存使用",
+      "systemIssue": "系统异常",
+      "userStats": "用户统计",
+      "blogStats": "博客统计",
+      "commentStats": "评论统计",
+      "recentActivity": "最近活动",
+      "active": "活跃",
+      "total": "总计",
+      "published": "已发布",
+      "likes": "点赞",
+      "comments": "评论",
+      "newUsers": "新用户",
+      "newBlogs": "新博客",
       "refreshStatus": "刷新状态",
       "detailedReport": "详细报告"
     },
     "monthlyStats": {
-      "title": "月度发布统计",
-      "desc": "各分类月度文章发布数量",
-      "currentMonth": "当前月份: {month}"
-    },
-    "contentTypes": {
-      "technical": "技术文章",
-      "life": "生活分享",
-      "product": "产品介绍",
-      "industry": "行业资讯",
-      "other": "其他"
+      "title": "月度统计",
+      "desc": "博客和评论月度统计",
+      "currentMonth": "当前月份: {month}",
+      "blogs": "博客发布",
+      "comments": "评论数量"
     },
     "footer": {
       "lastUpdate": "最后更新: {time}",
       "contactSupport": "如有问题请联系技术支持"
     },
-    "actions": {
-      "newBlog": "发布了新博客",
-      "commented": "评论了",
-      "registered": "注册了新账户",
-      "updatedProfile": "更新了个人资料"
-    }
+    "months": [
+      "一月", "二月", "三月", "四月", "五月", "六月", 
+      "七月", "八月", "九月", "十月", "十一月", "十二月"
+    ]
   },
   "en": {
     "dashboard": "Admin Dashboard",
@@ -717,18 +911,19 @@ definePageMeta({
       "totalUsers": "Total Users",
       "totalBlogs": "Blog Articles",
       "totalComments": "Total Comments",
-      "systemStatus": "System Status",
-      "normal": "Normal",
-      "uptime": "Uptime: {uptime}",
-      "vsLastMonth": "vs last month"
+      "totalLikes": "Total Likes",
+      "activeUsers": "Active Users",
+      "activeUsersDesc": "Total {total} users",
+      "published": "Published",
+      "vsLastMonth": "New this month"
     },
     "charts": {
       "userGrowth": "User Growth Trend",
       "userGrowthDesc": "User growth over the past 12 months",
       "monthly": "Monthly",
       "quarterly": "Quarterly",
-      "contentDistribution": "Content Type Distribution",
-      "contentDistributionDesc": "Distribution of article types",
+      "blogGrowth": "Blog Growth Trend",
+      "blogGrowthDesc": "Blog publishing over the past 12 months",
       "totalArticles": "Total {total} articles"
     },
     "quickActions": {
@@ -740,18 +935,15 @@ definePageMeta({
       "blogManagementDesc": "Edit blog articles",
       "commentReview": "Comment Review",
       "commentReviewDesc": "Review user comments",
-      "systemSettings": "System Settings",
-      "systemSettingsDesc": "System configuration"
+      "reportManagement": "Report Management",
+      "reportManagementDesc": "Handle user reports"
     },
-    "visitorStats": {
-      "title": "Visitor Statistics",
-      "today": "Today",
-      "pageViews": "Page Views",
-      "pageViewsEn": "Page Views",
-      "uniqueVisitors": "Unique Visitors",
-      "uniqueVisitorsEn": "Unique Visitors",
-      "clicks": "Total Clicks",
-      "clicksEn": "Total Clicks"
+    "topAuthors": {
+      "title": "Top Authors",
+      "desc": "Blog Publishing Ranking",
+      "blogs": "blogs",
+      "published": "Published",
+      "totalLikes": "Total Likes"
     },
     "recentActivities": {
       "title": "Recent Activities",
@@ -762,35 +954,36 @@ definePageMeta({
       "title": "System Overview",
       "desc": "Current system operation status",
       "runningNormal": "Running Normal",
-      "serverStatus": "Server Status",
-      "databaseStatus": "Database Connection",
-      "storage": "Storage Space",
-      "memory": "Memory Usage",
+      "systemIssue": "System Issue",
+      "userStats": "User Statistics",
+      "blogStats": "Blog Statistics",
+      "commentStats": "Comment Statistics",
+      "recentActivity": "Recent Activity",
+      "active": "active",
+      "total": "total",
+      "published": "published",
+      "likes": "likes",
+      "comments": "comments",
+      "newUsers": "new users",
+      "newBlogs": "new blogs",
       "refreshStatus": "Refresh Status",
       "detailedReport": "Detailed Report"
     },
     "monthlyStats": {
-      "title": "Monthly Publishing Statistics",
-      "desc": "Monthly article publishing count by category",
-      "currentMonth": "Current month: {month}"
-    },
-    "contentTypes": {
-      "technical": "Technical Articles",
-      "life": "Life Sharing",
-      "product": "Product Introduction",
-      "industry": "Industry News",
-      "other": "Other"
+      "title": "Monthly Statistics",
+      "desc": "Monthly blog and comment statistics",
+      "currentMonth": "Current month: {month}",
+      "blogs": "Blogs Published",
+      "comments": "Comments"
     },
     "footer": {
       "lastUpdate": "Last update: {time}",
       "contactSupport": "Contact technical support if you have any problems"
     },
-    "actions": {
-      "newBlog": "published a new blog",
-      "commented": "commented on",
-      "registered": "registered a new account",
-      "updatedProfile": "updated profile"
-    }
+    "months": [
+      "January", "February", "March", "April", "May", "June", 
+      "July", "August", "September", "October", "November", "December"
+    ]
   },
   "zh-TW": {
     "dashboard": "管理儀表板",
@@ -799,18 +992,19 @@ definePageMeta({
       "totalUsers": "總用戶數",
       "totalBlogs": "博客文章",
       "totalComments": "評論總數",
-      "systemStatus": "系統狀態",
-      "normal": "正常",
-      "uptime": "上線率: {uptime}",
-      "vsLastMonth": "較上月"
+      "totalLikes": "總點讚數",
+      "activeUsers": "活躍用戶",
+      "activeUsersDesc": "總計 {total} 用戶",
+      "published": "已發布",
+      "vsLastMonth": "較上月新增"
     },
     "charts": {
       "userGrowth": "用戶增長趨勢",
       "userGrowthDesc": "近12個月用戶增長情況",
       "monthly": "月度",
       "quarterly": "季度",
-      "contentDistribution": "內容類型分佈",
-      "contentDistributionDesc": "各類文章佔比統計",
+      "blogGrowth": "博客增長趨勢",
+      "blogGrowthDesc": "近12個月博客發布情況",
       "totalArticles": "總計 {total} 篇"
     },
     "quickActions": {
@@ -822,18 +1016,15 @@ definePageMeta({
       "blogManagementDesc": "編輯博客文章",
       "commentReview": "評論審核",
       "commentReviewDesc": "審核用戶評論",
-      "systemSettings": "系統設定",
-      "systemSettingsDesc": "系統配置"
+      "reportManagement": "舉報管理",
+      "reportManagementDesc": "處理用戶舉報"
     },
-    "visitorStats": {
-      "title": "訪問統計",
-      "today": "今日",
-      "pageViews": "頁面瀏覽量",
-      "pageViewsEn": "Page Views",
-      "uniqueVisitors": "獨立訪客",
-      "uniqueVisitorsEn": "Unique Visitors",
-      "clicks": "點擊次數",
-      "clicksEn": "Total Clicks"
+    "topAuthors": {
+      "title": "頂級作者",
+      "desc": "博客發布排行榜",
+      "blogs": "篇博客",
+      "published": "已發布",
+      "totalLikes": "總點讚"
     },
     "recentActivities": {
       "title": "最近活動",
@@ -844,35 +1035,36 @@ definePageMeta({
       "title": "系統概覽",
       "desc": "當前系統運行狀態",
       "runningNormal": "運行正常",
-      "serverStatus": "伺服器狀態",
-      "databaseStatus": "數據庫連接",
-      "storage": "存儲空間",
-      "memory": "記憶體使用",
+      "systemIssue": "系統異常",
+      "userStats": "用戶統計",
+      "blogStats": "博客統計",
+      "commentStats": "評論統計",
+      "recentActivity": "最近活動",
+      "active": "活躍",
+      "total": "總計",
+      "published": "已發布",
+      "likes": "點讚",
+      "comments": "評論",
+      "newUsers": "新用戶",
+      "newBlogs": "新博客",
       "refreshStatus": "刷新狀態",
       "detailedReport": "詳細報告"
     },
     "monthlyStats": {
-      "title": "月度發佈統計",
-      "desc": "各分類月度文章發佈數量",
-      "currentMonth": "當前月份: {month}"
-    },
-    "contentTypes": {
-      "technical": "技術文章",
-      "life": "生活分享",
-      "product": "產品介紹",
-      "industry": "行業資訊",
-      "other": "其他"
+      "title": "月度統計",
+      "desc": "博客和評論月度統計",
+      "currentMonth": "當前月份: {month}",
+      "blogs": "博客發布",
+      "comments": "評論數量"
     },
     "footer": {
       "lastUpdate": "最後更新: {time}",
       "contactSupport": "如有問題請聯繫技術支援"
     },
-    "actions": {
-      "newBlog": "發佈了新博客",
-      "commented": "評論了",
-      "registered": "註冊了新賬戶",
-      "updatedProfile": "更新了個人資料"
-    }
+    "months": [
+      "一月", "二月", "三月", "四月", "五月", "六月", 
+      "七月", "八月", "九月", "十月", "十一月", "十二月"
+    ]
   }
 }
 </i18n>

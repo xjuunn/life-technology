@@ -10,27 +10,32 @@
           </div>
           
           <!-- 变化率 -->
-          <div v-if="change !== undefined" class="mt-3 flex items-center">
+          <div v-if="change !== undefined && change !== 0" class="mt-3 flex items-center">
             <Icon 
               :name="changeIcon" 
               class="mr-1"
               :class="change > 0 ? 'text-success' : 'text-error'"
             />
             <span class="text-sm font-medium" :class="change > 0 ? 'text-success' : 'text-error'">
-              {{ change > 0 ? '+' : '' }}{{ change }}%
+              {{ change > 0 ? '+' : '' }}{{ change }}{{ changeType === 'percent' ? '%' : '' }}
             </span>
-            <span class="text-base-content/60 text-sm ml-2"></span>
+            <span v-if="changeLabel" class="text-base-content/60 text-sm ml-2">{{ changeLabel }}</span>
           </div>
           
           <!-- 正常运行时间 -->
           <div v-if="uptime" class="mt-3">
-            <p class="text-sm text-base-content/60"></p>
+            <p class="text-sm text-base-content/60">{{ t('dashboardCard.uptime') }}</p>
             <p class="text-lg font-semibold text-base-content">{{ uptime }}</p>
+          </div>
+
+          <!-- 描述信息 -->
+          <div v-if="description" class="mt-2">
+            <p class="text-sm text-base-content/60">{{ description }}</p>
           </div>
         </div>
         
         <div class="ml-4 flex-shrink-0">
-          <div class="p-3 rounded-lg bg-base-200">
+          <div class="p-3 rounded-lg" :class="iconBgColor">
             <Icon :name="icon" class="text-2xl" :class="iconColor" />
           </div>
         </div>
@@ -38,7 +43,7 @@
       
       <div v-if="usage !== undefined" class="mt-4">
         <div class="flex justify-between text-sm text-base-content/60 mb-1">
-          <span>{{ t('usage') }}</span>
+          <span>{{ t('dashboardCard.usage') }}</span>
           <span>{{ usage }}%</span>
         </div>
         <div class="h-2 bg-base-300 rounded-full overflow-hidden">
@@ -66,11 +71,17 @@ interface Props {
   icon: string;
   color: string;
   change?: number;
+  changeType?: 'percent' | 'number';
+  changeLabel?: string;
   uptime?: string;
+  description?: string;
   usage?: number;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  changeType: 'percent',
+  description: ''
+});
 
 const formattedCount = computed(() => {
   if (props.count === undefined) return '';
@@ -80,7 +91,7 @@ const formattedCount = computed(() => {
   } else if (props.count >= 1000) {
     return (props.count / 1000).toFixed(1) + 'K';
   }
-  return props.count.toString();
+  return props.count.toLocaleString();
 });
 
 const changeIcon = computed(() => {
@@ -115,6 +126,26 @@ const iconColor = computed(() => {
   
   return colorMap[props.color] || 'text-primary';
 });
+
+const iconBgColor = computed(() => {
+  const colorMap: Record<string, string> = {
+    'primary': 'bg-primary/10',
+    'secondary': 'bg-secondary/10',
+    'accent': 'bg-accent/10',
+    'success': 'bg-success/10',
+    'warning': 'bg-warning/10',
+    'error': 'bg-error/10',
+    'info': 'bg-info/10',
+    'neutral': 'bg-neutral/10',
+    'blue': 'bg-primary/10',
+    'green': 'bg-success/10',
+    'purple': 'bg-accent/10',
+    'orange': 'bg-warning/10',
+    'red': 'bg-error/10'
+  };
+  
+  return colorMap[props.color] || 'bg-primary/10';
+});
 </script>
 
 <style lang="postcss" scoped>
@@ -122,3 +153,26 @@ const iconColor = computed(() => {
   @apply rounded-xl shadow-sm transition-all duration-300 hover:shadow-md bg-base-100 border border-base-300;
 }
 </style>
+
+<i18n lang="json">
+{
+  "zh-CN": {
+    "dashboardCard": {
+      "usage": "使用率",
+      "uptime": "正常运行时间"
+    }
+  },
+  "en": {
+    "dashboardCard": {
+      "usage": "Usage",
+      "uptime": "Uptime"
+    }
+  },
+  "zh-TW": {
+    "dashboardCard": {
+      "usage": "使用率",
+      "uptime": "正常運行時間"
+    }
+  }
+}
+</i18n>
