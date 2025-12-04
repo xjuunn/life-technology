@@ -557,6 +557,7 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans">
+    <title>life-博客详情</title>
     <div class="sticky top-0 bg-base-100/80 backdrop-blur-md border-b border-base-content/5">
       <div class="container mx-auto px-4 max-w-4xl h-16 flex items-center justify-between">
         <button @click="router.back()"

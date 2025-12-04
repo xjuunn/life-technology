@@ -18,6 +18,7 @@ const goBack = () => {
 <template>
   <div
     class="relative w-full min-h-screen bg-base-300 flex items-center justify-center overflow-hidden font-sans selection:bg-error/20">
+    <title>life-无权访问</title>
     <div
       class="absolute inset-0 pointer-events-none ">
       <EffectSquares :square-size="20" :speed="0.2" border-color="#ffffff10"></EffectSquares>

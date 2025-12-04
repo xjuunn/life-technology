@@ -145,6 +145,7 @@ onMounted(async () => {
 <template>
   <div
     class="min-h-screen text-base-content font-sans relative overflow-x-hidden selection:bg-primary selection:text-primary-content">
+    <title>life-博客</title>
     <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
       <div
         class="absolute -top-32 -right-32 w-120 h-120 lg:w-160 lg:h-160 bg-primary/10 rounded-full blur-[100px] lg:blur-[128px] opacity-40">
@@ -168,7 +169,7 @@ onMounted(async () => {
 
           <div
             class="flex flex-col sm:flex-row gap-3 items-center justify-between bg-base-100/80 backdrop-blur-xl border border-base-content/10 p-2 rounded-2xl shadow-lg relative z-10">
-            <div class="relative flex-1 w-full">
+            <div class="relative flex-1 w-full flex">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Icon name="mingcute:search-line" class="w-5 h-5 text-base-content/40" />
               </div>
@@ -179,8 +180,8 @@ onMounted(async () => {
                 class="absolute inset-y-0 right-3 flex items-center btn btn-ghost btn-xs btn-circle">
                 <Icon name="mingcute:close-line" class="w-4 h-4" />
               </button>
+              <button class="btn btn-primary btn-ghost" @click="performSearch">{{ t('blog_page.search') }}</button>
             </div>
-            <button class="btn btn-primary btn-ghost" @click="performSearch">{{ t('blog_page.search') }}</button>
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end px-2">
               <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-sm rounded-lg font-normal gap-2">

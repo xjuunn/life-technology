@@ -49,6 +49,7 @@ const highlights = computed(() => [
 
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans selection:bg-primary selection:text-primary-content">
+    <title>life-什么是life</title>
     <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
       <div class="absolute -top-[20%] -right-[10%] w-[70vw] h-[70vw] bg-primary/5 rounded-full blur-[120px] opacity-40">
       </div>

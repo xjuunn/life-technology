@@ -91,6 +91,7 @@ onUnmounted(() => {
 
 <template>
   <div class="min-h-screen pt-20 pb-10 px-4 flex justify-center items-start">
+    <title>life-实名认证</title>
     <div class="w-full max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       <!-- 标题区域 -->

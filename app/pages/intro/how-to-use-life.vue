@@ -142,6 +142,7 @@ const setTimelineItemRef = (el: HTMLElement | null, index: number) => {
 
 <template>
   <div class="min-h-screen bg-linear-to-br from-base-200/50 to-primary/5 relative">
+    <title>life-如何使用life</title>
     <!-- 背景装饰图案 -->
     <div class="absolute inset-0 z-0">
       <div class="pattern-grid-lg opacity-10 w-full h-full"></div>
