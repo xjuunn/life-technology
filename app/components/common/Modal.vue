@@ -57,7 +57,7 @@ const closeModal = () => {
 <template>
     <dialog ref="modalRef" class="modal modal-bottom sm:modal-middle" @close="handleNativeClose">
         <!-- Modal Box -->
-        <div class="modal-box relative overflow-hidden bg-base-100/80 backdrop-blur-md border border-base-content/5 shadow-2xl transition-all duration-300"
+        <div class="modal-box relative overflow-hidden bg-base-100/80 backdrop-blur-md border border-base-content/5 shadow-2xl transition-all duration-300 flex flex-col"
             :class="[props.maxWidth]">
             <!-- 顶部 Header -->
             <div class="flex items-center justify-between mb-4">
@@ -75,7 +75,7 @@ const closeModal = () => {
             </div>
 
             <!-- 内容区域 -->
-            <div class="py-2">
+            <div class="py-2 flex-1 overflow-auto">
                 <slot></slot>
             </div>
 

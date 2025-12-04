@@ -58,6 +58,7 @@ const menuItems = [
   { key: 'admin.nav.users', link: '/admin/users', icon: 'mingcute:user-3-fill' },
   { key: 'admin.nav.blogs', link: '/admin/blogs', icon: 'mingcute:document-3-fill' },
   { key: 'admin.nav.comments', link: '/admin/comments', icon: 'mingcute:chat-3-fill' },
+  { key: 'admin.nav.download', link: '/admin/downloads', icon: 'mingcute:download-2-fill' },
   { key: 'admin.nav.system', link: '/admin/system', icon: 'mingcute:settings-4-fill' },
 ]
 
@@ -90,7 +91,8 @@ const handleLogout = async () => {
         "dashboard": "Dashboard",
         "users": "User Mgmt",
         "blogs": "Content",
-        "comments": "Comment Management", 
+        "comments": "Comment Management",
+        "download": "Download Link",
         "system": "System",
         "settings": "Settings",
         "backToHome": "Back to Home",
@@ -108,6 +110,7 @@ const handleLogout = async () => {
         "users": "用户管理",
         "blogs": "内容管理",
         "comments": "评论管理",
+        "download": "下载链接",
         "system": "系统设置",
         "settings": "配置中心",
         "backToHome": "返回前台",
@@ -125,6 +128,7 @@ const handleLogout = async () => {
         "users": "用戶管理",
         "blogs": "內容管理",
         "comments": "評論管理",
+        "download": "下載鏈接",
         "system": "系統設置",
         "settings": "配置中心",
         "backToHome": "返回前台",
