@@ -27,8 +27,8 @@ jobs:
           cd ${{ secrets.SERVER_PROJECT_DIR }}
 
           # 拉取最新代码
-          git reset --hard
-          git pull origin master
+          git fetch --all
+          git reset --hard origin/master
 
           # 加载 nvm
           export NVM_DIR="$HOME/.nvm"
