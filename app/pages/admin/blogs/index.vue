@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { EditorContent, useEditor, type JSONContent } from '@tiptap/vue-3';
 import type { ListBlogItem, ListBlogRequest } from '~/api/admin'
 
 definePageMeta({
@@ -45,6 +46,38 @@ const statusOptions = [
   { value: 'rejected', label: 'status.rejected', color: 'badge-error' },
   { value: 'archived', label: 'status.archived', color: 'badge-info' }
 ]
+
+const blogContent = computed(() => {
+  if (viewingBlog.value?.content) {
+    try {
+      return JSON.parse(viewingBlog.value.content)
+    } catch (e) {
+      console.error('Failed to parse blog content:', e)
+    }
+  }
+  return {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": []
+      }
+    ]
+  } as JSONContent
+})
+
+const editor = useEditor({
+  extensions: GlobalEditorExtensions,
+  editorProps: {
+
+  },
+  content: blogContent.value,
+  editable: false,
+})
+
+watch(blogContent, (newContent) => {
+  editor.value?.commands.setContent(newContent)
+})
 
 const selectAll = computed({
   get: () => blogs.value.length > 0 && blogs.value.every(b => selectedIds.value.has(b.id)),
@@ -331,7 +364,7 @@ onMounted(() => {
                     <div class="flex items-center gap-2">
                       <span class="badge badge-xs badge-neutral badge-outline">{{ blog.category }}</span>
                       <span class="text-xs text-base-content/50 truncate max-w-[200px] font-mono">/{{ blog.slug
-                        }}</span>
+                      }}</span>
                     </div>
                   </div>
                 </div>
@@ -501,9 +534,9 @@ onMounted(() => {
         </div>
 
         <div class="prose prose-sm md:prose-base max-w-none">
-          <pre class="whitespace-pre-wrap font-sans bg-transparent p-0 border-none text-base-content">{{ viewingBlog.content
-        }}</pre>
+          <editor-content :editor="editor"></editor-content>
         </div>
+
 
         <div class="flex flex-wrap gap-2">
           <span v-for="tag in viewingBlog.tags" :key="tag" class="badge badge-outline">#{{ tag }}</span>
@@ -521,7 +554,7 @@ onMounted(() => {
       <template #actions="{ close }">
         <template v-if="viewingBlog?.status === 'pending'">
           <button class="btn btn-warning" @click="viewingBlog && openRejectModal(viewingBlog)">{{ t('action.reject')
-            }}</button>
+          }}</button>
           <button class="btn btn-success text-white" @click="viewingBlog && handleApprove(viewingBlog)">{{
             t('action.approve') }}</button>
         </template>
