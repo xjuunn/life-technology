@@ -33,11 +33,11 @@ const features = computed(() => [
     desc: t('what_is_life.app.features.audit.desc'),
     icon: 'mingcute:safe-shield-fill'
   },
-  {
-    title: t('what_is_life.app.features.opensource.title'),
-    desc: t('what_is_life.app.features.opensource.desc'),
-    icon: 'mingcute:github-fill'
-  }
+  // {
+  //   title: t('what_is_life.app.features.opensource.title'),
+  //   desc: t('what_is_life.app.features.opensource.desc'),
+  //   icon: 'mingcute:github-fill'
+  // }
 ]);
 
 const highlights = computed(() => [

@@ -247,7 +247,7 @@ const useCases = [
                     size="24" 
                   />
                 </div>
-                <h3 class="text-xl font-bold text-primary">{{ useCase.category }}</h3>
+                <!-- <h3 class="text-xl font-bold text-primary">{{ useCase.category }}</h3> -->
               </div>
 
               <div class="space-y-4">
