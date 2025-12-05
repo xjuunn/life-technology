@@ -314,12 +314,6 @@ onMounted(() => {
           </div>
 
         </div>
-
-        <div
-          class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer opacity-50 hover:opacity-100 transition-opacity"
-          @click="scrollToTutorial">
-          <Icon name="heroicons:chevron-down" class="w-8 h-8" />
-        </div>
       </main>
     </div>
     <br><br>
@@ -347,10 +341,10 @@ onMounted(() => {
                 </div>
                 <Icon
                   :name="step === 1 ? 'heroicons:user-plus' : step === 2 ? 'heroicons:shield-check' : step === 3 ? 'heroicons:currency-dollar' : 'heroicons:chat-bubble-left-right'"
-                  class="w-10 h-10 transition-all duration-500 group-hover:scale-110"
+                  class="!w-10 !h-10 transition-all duration-500 group-hover:scale-110"
                   :class="step === 1 ? 'text-primary' : step === 2 ? 'text-success' : step === 3 ? 'text-warning' : 'text-info'" />
                 <div
-                  class="absolute -bottom-2 -right-2 font-black text-6xl text-base-content/5 select-none font-mono group-hover:text-primary/10 transition-colors">
+                  class="absolute -bottom-3 -right-3 font-black text-7xl text-base-content/5 select-none font-mono group-hover:text-primary/10 transition-colors">
                   0{{ step }}</div>
               </div>
               <div class="space-y-2">

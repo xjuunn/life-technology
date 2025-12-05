@@ -1,35 +1,35 @@
 <template>
   <div class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300 relative">
     <title>life-首页</title>
-    <div class="absolute w-screen h-[calc(100vh-0px)] z-1 ">
+    <div class="absolute w-screen h-[calc(100vh-0px)] z-1 top-20 md:top-0">
       <ClientOnly>
-        <EffectGlobalMap></EffectGlobalMap>
+        <EffectGlobalMap class="relative"></EffectGlobalMap>
       </ClientOnly>
     </div>
-    <section class="relative pt-40 pb-20 md:pt-40 md:pb-32 px-4 z-2">
+    <section class="relative pt-8 pb-4 md:pt-40 md:pb-32 px-4 z-2">
       <div class="container mx-auto text-center max-w-5xl">
         <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-base-content/10 bg-base-content/5 mb-8 backdrop-blur-sm">
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-base-content/10 bg-base-content/5 mb-4 md:mb-8 backdrop-blur-sm">
           <div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
           <span class="text-xs font-bold tracking-widest uppercase opacity-80">{{ t('hero.subtitle') }}</span>
         </div>
-        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none mb-8">
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none mb-4 md:mb-8">
           {{ t('hero.title_prefix') }}<span
             class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{{ t('hero.title_highlight')
             }}</span>
           <br />
           {{ t('hero.title_suffix') }}
         </h1>
-        <p class="text-lg md:text-xl text-base-content/60 max-w-3xl mx-auto mb-10 leading-relaxed font-medium">
+        <p class="text-lg md:text-xl text-base-content/60 max-w-3xl mx-auto mb-6 md:mb-10 leading-relaxed font-medium">
           {{ t('hero.description') }}
         </p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md mx-auto">
           <button
-            class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-10 min-w-[180px] text-primary-content border-none shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
+            class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-10 px-8 py-4 w-full text-primary-content border-none shadow-xl shadow-primary/20 hover:scale-105 transition-transform flex-1">
             {{ t('hero.btn_start') }}
           </button>
           <nuxt-link to="/intro/white-book"
-            class="btn btn-ghost btn-lg rounded-full px-10 min-w-[180px] border border-base-content/30 hover:bg-base-content hover:text-base-100">
+            class="btn btn-ghost btn-lg rounded-full px-10 px-8 py-4 w-full border border-base-content/30 hover:bg-base-content hover:text-base-100 flex-1">
             {{ t('hero.btn_whitepaper') }}
           </nuxt-link>
         </div>
@@ -49,8 +49,8 @@
     </div>
     <section class="relative py-32 px-4 z-2">
       <div class="container mx-auto max-w-6xl">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-          <div class="max-w-xl">
+        <div class="flex flex-col md:flex-row justify-between items-center items-end mb-16 gap-6 text-center md:text-left">
+          <div class="max-w-xl w-full">
             <h2 class="text-xs font-bold text-primary uppercase tracking-widest mb-3">{{ t('trends.subtitle') }}</h2>
             <h3 class="text-4xl md:text-5xl font-bold tracking-tight">{{ t('trends.title') }}</h3>
           </div>
@@ -112,8 +112,7 @@
               <Icon name="heroicons:finger-print" size="300" />
             </div>
             <div class="relative z-10 h-full flex flex-col justify-between">
-              <div
-                class="w-20 h-20 rounded-2xl bg-white/10 flex items-center justify-center backdrop-blur-md text-white">
+              <div class="w-20 h-20 rounded-2xl bg-base-200/80 flex items-center justify-center text-accent shadow-lg">
                 <Icon name="heroicons:shield-check" class="w-10! h-10!" />
               </div>
               <div>
@@ -210,14 +209,6 @@
                   </div>
                 </div>
               </div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
             </div>
           </div>
           <div class="lg:w-1/2">
@@ -290,7 +281,8 @@
               {{ t('cta.btn_download') }}
             </button>
             <button
-              class="btn btn-outline btn-lg rounded-full px-12 min-w-[200px] border-base-content/20 hover:bg-base-content hover:text-base-100">
+              class="btn btn-outline btn-lg rounded-full px-12 min-w-[200px] border-base-content/20 hover:bg-base-content hover:text-base-100"
+              style="border-image: linear-gradient(to right, var(--primary), var(--secondary)) 1;">
               {{ t('cta.btn_contact') }}
             </button>
           </div>
