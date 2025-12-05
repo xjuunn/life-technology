@@ -53,37 +53,36 @@
 </template>
 
 <script setup lang="ts">
-import DottedMap from "dotted-map";
 import { Motion } from "motion-v";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useThemeStore } from "@/stores/theme";
 
 const themeStore = useThemeStore();
 
 const svgContent = ref('');
 const isMapReady = ref(false);
+let mapWorker: Worker | null = null;
 
 onMounted(() => {
   themeStore.initTheme();
 
-  setTimeout(() => {
-    requestAnimationFrame(() => {
-      const map = new DottedMap({ height: 100, grid: "diagonal" });
+  mapWorker = new Worker(new URL('~/assets/workers/map.worker.ts', import.meta.url), { type: 'module' });
 
-      const svg = map.getSVG({
-        radius: 0.22,
-        color: 'currentColor',
-        shape: "circle",
-        backgroundColor: 'transparent',
-      });
+  mapWorker.onmessage = (e: MessageEvent) => {
+    svgContent.value = e.data;
+    isMapReady.value = true;
+    mapWorker?.terminate();
+    mapWorker = null;
+  };
 
-      svgContent.value = svg;
+  mapWorker.postMessage('init');
+});
 
-      requestAnimationFrame(() => {
-        isMapReady.value = true;
-      });
-    });
-  }, 500);
+onUnmounted(() => {
+  if (mapWorker) {
+    mapWorker.terminate();
+    mapWorker = null;
+  }
 });
 
 const themeColors = computed(() => {
