@@ -441,7 +441,7 @@ onMounted(() => {
     "download_page": {
       "title_line1": "畅游 Web3",
       "title_line2": "触手可及",
-      "description": "LIFE 钱包为您提供专业级的数据主权保护与多链资产管理。安全、隐私、一站式，即刻开启您的数字之旅。",
+      "description": "LIFE 资产为您提供专业级的数据主权保护与多链资产管理。安全、隐私、一站式，即刻开启您的数字之旅。",
       "title": "下载客户端",
       "qr_title": "手机扫码安装",
       "qr_desc": "推荐使用系统相机或浏览器扫码",

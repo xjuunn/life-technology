@@ -121,7 +121,7 @@
             </div>
           </button>
 
-          <!-- 连接钱包 (独立显示) -->
+          <!-- 连接资产 (独立显示) -->
           <button
             class="btn bg-linear-to-r from-primary to-secondary btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 hidden sm:flex">
             <span>{{ t('nav.connect_wallet') }}</span>
@@ -356,7 +356,7 @@ const handleLogout = async () => {
       "whatLifeCanDo": "LIFE 能为你做什么",
       "howToUseLife": "如何使用 LIFE",
       "thingsYouNeedToKnow": "你需要知道的事情",
-      "whitepaper": "LIFE 代币白皮书"
+      "whitepaper": "LIFE 积分白皮书"
     }
   },
   "zh-TW": {

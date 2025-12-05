@@ -215,7 +215,7 @@ const socialLinks = [
       "whatLifeCanDo": "LIFE 能为你做什么",
       "howToUseLife": "如何使用 LIFE",
       "thingsYouNeedToKnow": "你需要知道的事情",
-      "whitepaper": "LIFE 代币白皮书"
+      "whitepaper": "LIFE 积分白皮书"
     }
   },
   "zh-TW": {

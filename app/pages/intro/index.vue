@@ -331,7 +331,7 @@ const safetyTips = computed(() => [
         "badge": "ABOUT LIFE",
         "title_prefix": "专业的区块链服务",
         "title_highlight": "值得信赖的选择",
-        "description": "LIFE 不仅是一个钱包，更是一个开放的 Web3 生态系统。我们致力于推动个人数据主权、数字身份及资产的自由流通，为您构建通往数字未来的安全桥梁。"
+        "description": "LIFE 不仅是一个资产，更是一个开放的 Web3 生态系统。我们致力于推动个人数据主权、数字身份及资产的自由流通，为您构建通往数字未来的安全桥梁。"
       },
       "definition": {
         "main_card": {
@@ -371,7 +371,7 @@ const safetyTips = computed(() => [
       },
       "wallet": {
         "subtitle": "The Gateway",
-        "title": "LIFE 钱包：Web3 入口",
+        "title": "LIFE 资产：Web3 入口",
         "desc": "专为数据主权和资产安全设计。代码完全开源，核心合约通过权威审计，是您通往去中心化世界的安全管家。",
         "features": {
           "multichain": {
@@ -441,7 +441,7 @@ const safetyTips = computed(() => [
           "scam": {
             "title": "防范诈骗与钓鱼",
             "line1": "警惕假冒客服、空投、高额返利等骗局。",
-            "line2": "请务必通过官网下载钱包，防止恶意软件盗取资产。",
+            "line2": "请务必通过官网下载资产，防止恶意软件盗取资产。",
             "line3": "授权 DApp 前请仔细核查来源，不要随意点击陌生链接。"
           },
           "tx": {
@@ -452,14 +452,14 @@ const safetyTips = computed(() => [
           },
           "compliance": {
             "title": "隐私与合规声明",
-            "line1": "LIFE 钱包不收集、不存储您的个人数据。",
+            "line1": "LIFE 资产不收集、不存储您的个人数据。",
             "line2": "请遵守您所在地区的法律法规，合法使用数字资产。",
             "line3": "部分国家/地区对加密资产有特殊监管政策，请自行了解。"
           },
           "support": {
             "title": "常见问题与支持",
             "line1": "忘记助记词资产将永久丢失，官方无法找回。",
-            "line2": "若发现钱包被盗，请立即转移剩余资产并重置设备。",
+            "line2": "若发现资产被盗，请立即转移剩余资产并重置设备。",
             "line3": "如需帮助，请仅通过官网或官方社群联系，警惕假冒客服。"
           }
         }
