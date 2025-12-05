@@ -133,6 +133,8 @@ export interface ListUserRequest {
   limit: number;
   search: string;
   status: UserStatus | undefined;
+  // 实名认证状态筛选（verified=已实名，unverified=未实名）
+  verified: 'verified' | 'unverified';
 }
 
 export interface AdminUserListItem {

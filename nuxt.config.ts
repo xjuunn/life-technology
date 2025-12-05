@@ -19,7 +19,9 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/ico', href: '/favicon.ico' }
       ]
-    }
+    },
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: { name: 'layout', mode: 'out-in' }
   },
   build: {
     transpile: ['gsap'],

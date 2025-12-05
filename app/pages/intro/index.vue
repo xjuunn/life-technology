@@ -163,10 +163,10 @@
                 <div class="font-bold mb-1">{{ t('about_page.wallet.features.privacy.title') }}</div>
                 <div class="text-xs text-base-content/60">{{ t('about_page.wallet.features.privacy.desc') }}</div>
               </div>
-              <div class="p-4 rounded-2xl bg-base-200/50 border border-base-content/5">
+              <!-- <div class="p-4 rounded-2xl bg-base-200/50 border border-base-content/5">
                 <div class="font-bold mb-1">{{ t('about_page.wallet.features.opensource.title') }}</div>
                 <div class="text-xs text-base-content/60">{{ t('about_page.wallet.features.opensource.desc') }}</div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
