@@ -31,7 +31,7 @@ const openStepModal = (step: number) => {
       title: t('tutorial_section.step3_title')
     },
     4: {
-      images: ['/imgs/step4/41.png', '/imgs/step4/42.png', '/imgs/step4/43.png', '/imgs/step4/44.png', '/imgs/step4/45.png'],
+      images: ['/imgs/step4/41.png', '/imgs/step4/42.png', '/imgs/step4/44.png', '/imgs/step4/45.png'],
       title: t('tutorial_section.step4_title')
     }
   };
