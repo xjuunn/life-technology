@@ -68,7 +68,7 @@ const emit = defineEmits<{
 const typeIcon = computed(() => {
   const icons: Record<Activity['type'], string> = {
     user: 'mingcute:user-2-line',
-    blog: 'mingcute:file-text-line',
+    blog: 'mingcute:file-line',
     comment: 'mingcute:message-1-line',
     report: 'mingcute:flag-2-line',
     download: 'mingcute:download-2-line',

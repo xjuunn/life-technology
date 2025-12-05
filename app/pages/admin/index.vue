@@ -67,7 +67,7 @@
       <DashboardCard 
         :title="t('userStats.totalBlogs')"
         :count="stats.totalBlogs"
-        icon="mingcute:file-text-line"
+        icon="mingcute:file-line"
         :change="8"
         trend="up"
         color="secondary"
@@ -220,7 +220,7 @@
             />
             <ActionButton 
               to="/admin/blogs"
-              icon="mingcute:file-text-line"
+              icon="mingcute:file-line"
               :label="t('quickActions.blogManagement')"
               :description="t('quickActions.blogManagementDesc')"
               color="secondary"
@@ -248,7 +248,7 @@
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-lg font-bold text-base-content">{{ t('topAuthors.title') }}</h2>
           <div class="flex items-center text-xs text-base-content/70">
-            <Icon name="mingcute:crown-line" class="mr-1" />
+            <Icon name="mingcute:medal-line" class="mr-1" />
             {{ t('topAuthors.desc') }}
           </div>
         </div>
@@ -339,7 +339,7 @@
         <!-- 博客统计 -->
         <div class="flex items-center justify-between p-4 bg-base-200/30 rounded-lg">
           <div class="flex items-center">
-            <Icon name="mingcute:file-text-line" class="text-secondary mr-3" />
+            <Icon name="mingcute:file-line" class="text-secondary mr-3" />
             <div>
               <p class="text-sm font-medium text-base-content">{{ t('systemOverview.blogStats') }}</p>
               <p class="text-xs text-base-content/70">{{ stats.publishedBlogs }}/{{ stats.totalBlogs }}</p>
@@ -599,7 +599,6 @@ const processChartData = (range: string) => {
   } else {
     const recentCount = Math.min(dates.length, 12);
     
-    // 过滤掉无效的日期数据
     const validDates = dates.slice(-recentCount).filter(date => date != null);
     const validUsers = users.slice(-recentCount);
     const validBlogs = blogs.slice(-recentCount);
@@ -670,7 +669,6 @@ watch(locale, () => {
 // 生成月度统计图表
 const generateMonthlyStats = (dates: string[] = [], blogs: number[] = [], comments: number[] = []) => {
   if (dates.length === 0) {
-    // 默认月份的国际化处理
     const monthNames = {
       'zh-CN': ['1月', '2月', '3月', '4月', '5月', '6月'],
       'zh-TW': ['1月', '2月', '3月', '4月', '5月', '6月'],
@@ -899,7 +897,7 @@ const fetchDashboardData = async () => {
       // 更新刷新时间
       updateLastRefreshTime();
       
-      // 增加图表数据版本，强制重新渲染
+      // 增加图表数据版本
       chartDataVersion.value++;
     } else {
       console.warn('API返回空响应或没有data字段');
@@ -929,7 +927,6 @@ const fetchDashboardData = async () => {
       comments: [650, 680, 700, 720, 750, 780, 800, 830, 850, 870, 890, 890]
     };
     
-    // 设置模拟顶级作者数据
     topAuthors.value = [
       {
         authorId: '1',

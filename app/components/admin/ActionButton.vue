@@ -11,8 +11,8 @@
       </div>
 
       <div class="relative">
-        <h3 class="font-semibold text-base-content mb-1 group-hover:text-primary transition-colors">{{ t(label) }}</h3>
-        <p class="text-sm text-base-content/70 line-clamp-2">{{ t(description) }}</p>
+        <h3 class="font-semibold text-base-content mb-1 group-hover:text-primary transition-colors">{{ (label) }}</h3>
+        <p class="text-sm text-base-content/70 line-clamp-2">{{ (description) }}</p>
       </div>
 
       <div class="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
@@ -24,9 +24,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-
-const { t } = useI18n();
 
 type ColorKey = 
   | 'primary' | 'secondary' | 'accent' | 'neutral'
@@ -92,38 +89,3 @@ const backgroundClass = computed(() => {
   overflow: hidden;
 }
 </style>
-
-<i18n lang="json">
-{
-  "zh-CN": {
-    "quickActions.userManagement": "用户管理",
-    "quickActions.userManagementDesc": "管理用户账户与权限",
-    "quickActions.blogManagement": "博客管理",
-    "quickActions.blogManagementDesc": "审核与管理博客内容",
-    "quickActions.commentReview": "评论审核",
-    "quickActions.commentReviewDesc": "审核用户评论内容",
-    "reportManagement": "举报管理",  
-    "reportManagementDesc": "处理用户举报内容"
-  },
-  "en": {
-    "quickActions.userManagement": "User Management",
-    "quickActions.userManagementDesc": "Manage user accounts and permissions",
-    "quickActions.blogManagement": "Blog Management",
-    "quickActions.blogManagementDesc": "Review and manage blog content",
-    "quickActions.commentReview": "Comment Review",
-    "quickActions.commentReviewDesc": "Review user comments",
-    "reportManagement": "Report Management",
-    "reportManagementDesc": "Handle user reports" 
-  },
-  "zh-TW": {
-    "quickActions.userManagement": "用戶管理",
-    "quickActions.userManagementDesc": "管理用戶帳戶與權限",
-    "quickActions.blogManagement": "博客管理",
-    "quickActions.blogManagementDesc": "審核與管理博客內容",
-    "quickActions.commentReview": "評論審核",
-    "quickActions.commentReviewDesc": "審核用戶評論內容",
-    "reportManagement": "舉報管理",  
-    "reportManagementDesc": "處理用戶舉報內容"
-  }
-}
-</i18n>
