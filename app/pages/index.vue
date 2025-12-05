@@ -13,7 +13,10 @@
           <div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
           <span class="text-xs font-bold tracking-widest uppercase opacity-80">{{ t('hero.subtitle') }}</span>
         </div>
-        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none mb-4 md:mb-8">
+        <h1 :class="[
+          'font-black tracking-tight leading-none mb-4 md:mb-8',
+          isEn ? 'text-4xl md:text-7xl lg:text-8xl' : 'text-5xl md:text-7xl lg:text-8xl'
+        ]">
           {{ t('hero.title_prefix') }}<span
             class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{{ t('hero.title_highlight')
             }}</span>
@@ -25,11 +28,11 @@
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md mx-auto">
           <button
-            class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-10 px-8 py-4 w-full text-primary-content border-none shadow-xl shadow-primary/20 hover:scale-105 transition-transform flex-1">
+            class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-8 py-4 w-full sm:w-auto sm:min-w-[220px] text-white border-none shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
             {{ t('hero.btn_start') }}
           </button>
           <nuxt-link to="/intro/white-book"
-            class="btn btn-ghost btn-lg rounded-full px-10 px-8 py-4 w-full border border-base-content/30 hover:bg-base-content hover:text-base-100 flex-1">
+            class="btn btn-ghost btn-lg rounded-full px-8 py-4 w-full sm:w-auto sm:min-w-[220px] border border-base-content/30 hover:bg-base-content hover:text-base-100">
             {{ t('hero.btn_whitepaper') }}
           </nuxt-link>
         </div>
@@ -55,13 +58,13 @@
             <h3 class="text-4xl md:text-5xl font-bold tracking-tight">{{ t('trends.title') }}</h3>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[400px]">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:auto-rows-[400px]">
           <div
-            class="md:col-span-2 rounded-[2.5rem] bg-base-200 p-10 relative overflow-hidden group border border-base-content/5 hover:border-primary/30 transition-all duration-500">
+            class="md:col-span-2 rounded-[2.5rem] bg-base-200 p-10 relative overflow-hidden group border border-base-content/5 hover:border-primary/30 transition-all duration-500 min-h-[450px] md:min-h-0">
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
-              <div class="w-20 h-20 rounded-2xl bg-base-100 flex items-center justify-center shadow-sm text-primary">
-                <Icon name="heroicons:circle-stack" class="w-10! h-10!" />
+              <div class="w-20 h-20 rounded-2xl bg-base-100 flex items-center justify-center shadow-sm text-primary mb-6">
+                <Icon name="heroicons:circle-stack" size="40" />
               </div>
               <div>
                 <h4 class="text-3xl font-bold mb-3">{{ t('trends.assets.title') }}</h4>
@@ -77,11 +80,11 @@
             </div>
           </div>
           <div
-            class="rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-secondary/30 transition-all duration-500 shadow-sm">
+            class="rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-secondary/30 transition-all duration-500 shadow-sm min-h-[380px] md:min-h-0">
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
-              <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-secondary">
-                <Icon name="heroicons:chart-bar-square" class="w-10! h-10!" />
+              <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-secondary mb-6">
+                <Icon name="heroicons:chart-bar-square" size="40" />
               </div>
               <div>
                 <h4 class="text-2xl font-bold mb-3">{{ t('trends.quantified.title') }}</h4>
@@ -92,11 +95,11 @@
             </div>
           </div>
           <div
-            class="rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-all duration-500 shadow-sm">
+            class="rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-all duration-500 shadow-sm min-h-[380px] md:min-h-0">
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
-              <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-accent">
-                <Icon name="heroicons:user-group" class="w-10! h-10!" />
+              <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-accent mb-6">
+                <Icon name="heroicons:user-group" size="40" />
               </div>
               <div>
                 <h4 class="text-2xl font-bold mb-3">{{ t('trends.credit.title') }}</h4>
@@ -107,13 +110,13 @@
             </div>
           </div>
           <div
-            class="md:col-span-2 rounded-[2.5rem] bg-neutral text-neutral-content p-10 relative overflow-hidden group">
+            class="md:col-span-2 rounded-[2.5rem] bg-neutral text-neutral-content p-10 relative overflow-hidden group min-h-[450px] md:min-h-0">
             <div class="absolute -right-10 -top-10 opacity-10 rotate-12">
               <Icon name="heroicons:finger-print" size="300" />
             </div>
             <div class="relative z-10 h-full flex flex-col justify-between">
-              <div class="w-20 h-20 rounded-2xl bg-base-200/80 flex items-center justify-center text-accent shadow-lg">
-                <Icon name="heroicons:shield-check" class="w-10! h-10!" />
+              <div class="w-20 h-20 rounded-2xl bg-base-200/80 flex items-center justify-center text-accent shadow-lg mb-6">
+                <Icon name="heroicons:shield-check" size="40" />
               </div>
               <div>
                 <h4 class="text-3xl font-bold mb-3 text-white">{{ t('trends.security.title') }}</h4>
@@ -298,7 +301,8 @@
 <script setup lang="ts">
 import { type StatsResponse } from '~/api/system'
 import { computed } from 'vue';
-const { t } = useAppI18n();
+const { t , locale } = useAppI18n();
+const isEn = computed(() => locale.value === 'en');
 const statsData = ref<StatsResponse>()
 onMounted(() => {
   initData();
