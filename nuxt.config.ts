@@ -21,6 +21,9 @@ export default defineNuxtConfig({
       ]
     }
   },
+  build: {
+    transpile: ['gsap'],
+  },
   i18n: {
     strategy: 'no_prefix',
     defaultLocale: 'zh-CN',
