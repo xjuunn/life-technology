@@ -207,6 +207,7 @@ export const blog = {
   approve,
   reject,
   delBlog,
+  updateTopOrder,
 }
 
 export interface ListBlogRequest {
@@ -245,6 +246,20 @@ export interface ListBlogItem {
     email: string;
     avatar: string;
   }
+}
+
+// 置顶更新请求接口
+export interface UpdateBlogTopOrderRequest {
+  topOrder: number;
+}
+
+/**
+ * 更新博客置顶顺序
+ * @param id 博客ID
+ * @param data 置顶顺序数据
+ */
+function updateTopOrder(id: string, data: UpdateBlogTopOrderRequest) {
+  return api.put<{ message: string }>(base + `/blogs/${id}/top-order`, data);
 }
 
 /**

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { EditorContent, useEditor, type JSONContent } from '@tiptap/vue-3';
-import type { ListBlogItem, ListBlogRequest } from '~/api/admin'
+import type { ListBlogItem, ListBlogRequest, UpdateBlogTopOrderRequest } from '~/api/admin'
 
 definePageMeta({
   layout: "admin"
@@ -103,7 +103,19 @@ const loadData = async () => {
 
     const res = await ApiList.admin.blog.listBlogs(params)
 
-    blogs.value = res.data.blogs
+    blogs.value = res.data.blogs.sort((a, b) => {
+      if (a.topOrder > 0 && b.topOrder > 0) {
+        return b.topOrder - a.topOrder
+      }
+      if (a.topOrder > 0 && b.topOrder === 0) {
+        return -1
+      }
+      if (a.topOrder === 0 && b.topOrder > 0) {
+        return 1
+      }
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    })
+    
     pagination.value = res.data.pagination
     selectedIds.value.clear()
 
@@ -232,10 +244,41 @@ const confirmReject = async () => {
   }
 }
 
+const toggleTopOrder = async (blog: ListBlogItem) => {
+  const newTopOrder = blog.topOrder > 0 ? 0 : 1
+  
+  try {
+    const data: UpdateBlogTopOrderRequest = {
+      topOrder: newTopOrder
+    }
+    await ApiList.admin.blog.updateTopOrder(blog.id, data)
+    toast.success(t('common.success'))
+    loadData()
+  } catch (error) {
+    toast.error(t('common.error'))
+  }
+}
+
 const getStatusBadge = (status: string) => {
   const option = statusOptions.find(o => o.value === status)
   return option ? option.color : 'badge-ghost'
 }
+
+const getTopOrderDisplay = (topOrder: number) => {
+  if (topOrder > 0) {
+    return {
+      text: `${t('admin.top')}`,
+      variant: 'primary'
+    }
+  }
+  return {
+    text: t('admin.not_top'),
+    variant: 'ghost'
+  }
+}
+
+const viewingBlogTopOrder = computed(() => viewingBlog.value?.topOrder || 0)
+const viewingBlogTopOrderDisplay = computed(() => getTopOrderDisplay(viewingBlogTopOrder.value))
 
 onMounted(() => {
   if (route.query.search) filter.search = route.query.search as string
@@ -314,22 +357,23 @@ onMounted(() => {
               <th class="py-4 text-sm font-semibold min-w-[300px]">{{ t('blog.info') }}</th>
               <th class="py-4 text-sm font-semibold min-w-[150px]">{{ t('blog.author') }}</th>
               <th class="py-4 text-sm font-semibold min-w-[120px]">{{ t('blog.status') }}</th>
+              <th class="py-4 text-sm font-semibold min-w-[120px] text-center">{{ t('blog.top_order') }}</th>
               <th class="py-4 text-sm font-semibold min-w-[180px]">{{ t('blog.stats') }}</th>
               <th class="py-4 text-sm font-semibold min-w-[120px]">{{ t('common.updated_at') }}</th>
               <th
-                class="sticky right-0 bg-base-200/50 shadow-[-5px_0_10px_-5px_rgba(0,0,0,0.05)] text-center w-40 py-4 text-sm font-semibold">
+                class="sticky right-0 bg-base-200/50 shadow-[-5px_0_10px_-5px_rgba(0,0,0,0.05)] text-center w-48 py-4 text-sm font-semibold">
                 {{ t('common.action') }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="loading">
-              <td colspan="7" class="h-64 text-center">
+              <td colspan="8" class="h-64 text-center">
                 <span class="loading loading-spinner loading-lg text-primary/50"></span>
               </td>
             </tr>
 
             <tr v-else-if="blogs.length === 0">
-              <td colspan="7" class="h-64 text-center text-base-content/40">
+              <td colspan="8" class="h-64 text-center text-base-content/40">
                 <div class="flex flex-col items-center gap-3">
                   <div class="bg-base-200 p-6 rounded-full">
                     <Icon name="mingcute:ghost-line" class="text-5xl" />
@@ -392,6 +436,15 @@ onMounted(() => {
                   {{ blog.rejectReason }}
                 </div>
               </td>
+              <td class="py-4 text-center">
+                  <button
+                    class="btn btn-sm gap-1.5 font-medium px-3 py-1 h-7"
+                    :class="blog.topOrder > 0 ? 'btn-primary' : 'btn-ghost border border-base-300'"
+                    @click="toggleTopOrder(blog)"
+                    :title="blog.topOrder > 0 ? t('action.cancel_top') : t('action.set_top')">
+                    {{ getTopOrderDisplay(blog.topOrder).text }}
+                  </button>
+              </td>
               <td class="py-4">
                 <div class="flex gap-4 text-xs text-base-content/70">
                   <span class="flex items-center gap-1" :title="t('stats.views')">
@@ -429,6 +482,12 @@ onMounted(() => {
                       class="btn btn-sm btn-square btn-ghost join-item text-base-content/70 hover:bg-base-200 hover:text-primary w-9 h-9"
                       v-else :title="t('common.view')" @click="openViewModal(blog)">
                       <Icon name="mingcute:external-link-line" size="18" />
+                    </button>
+                    <button
+                      class="btn btn-sm btn-square btn-ghost join-item text-primary/70 hover:bg-primary/10 hover:text-primary w-9 h-9"
+                      :title="blog.topOrder > 0 ? t('action.cancel_top') : t('action.set_top')"
+                      @click="toggleTopOrder(blog)">
+                      <Icon :name="blog.topOrder > 0 ? 'mingcute:pin-fill' : 'mingcute:pin-line'" size="18" />
                     </button>
                     <button
                       class="btn btn-sm btn-square btn-ghost join-item text-error/70 hover:bg-error/10 hover:text-error w-9 h-9"
@@ -522,6 +581,12 @@ onMounted(() => {
             <span class="badge badge-lg" :class="getStatusBadge(viewingBlog.status)">
               {{ t(`status.${viewingBlog.status}`) }}
             </span>
+            <button class="btn btn-sm gap-1.5 font-medium px-3 py-1 h-7 mt-1"
+                    :class="viewingBlogTopOrder > 0 ? 'btn-primary' : 'btn-ghost border border-base-300'"
+                    @click="toggleTopOrder(viewingBlog)"
+                    :title="viewingBlogTopOrder > 0 ? t('action.cancel_top') : t('action.set_top')">
+              {{ viewingBlogTopOrderDisplay.text }}
+            </button>
             <span class="text-xs text-base-content/50">
               {{ new Date(viewingBlog.updatedAt).toLocaleString() }}
             </span>
@@ -537,7 +602,6 @@ onMounted(() => {
           <editor-content :editor="editor"></editor-content>
         </div>
 
-
         <div class="flex flex-wrap gap-2">
           <span v-for="tag in viewingBlog.tags" :key="tag" class="badge badge-outline">#{{ tag }}</span>
         </div>
@@ -552,23 +616,34 @@ onMounted(() => {
       </div>
 
       <template #actions="{ close }">
-        <template v-if="viewingBlog?.status === 'pending'">
-          <button class="btn btn-warning" @click="viewingBlog && openRejectModal(viewingBlog)">{{ t('action.reject')
-          }}</button>
-          <button class="btn btn-success text-white" @click="viewingBlog && handleApprove(viewingBlog)">{{
-            t('action.approve') }}</button>
-        </template>
-        <button class="btn btn-ghost" @click="close">{{ t('common.cancel') }}</button>
+        <div class="flex flex-wrap gap-2 w-full">
+          <template v-if="viewingBlog?.status === 'pending'">
+            <button class="btn btn-warning" @click="viewingBlog && openRejectModal(viewingBlog)">
+              {{ t('action.reject') }}
+            </button>
+            <button class="btn btn-success text-white" @click="viewingBlog && handleApprove(viewingBlog)">
+              {{ t('action.approve') }}
+            </button>
+          </template>
+          <div class="flex-1"></div>
+          <button class="btn btn-primary" @click="viewingBlog && toggleTopOrder(viewingBlog)">
+            <Icon :name="viewingBlogTopOrder > 0 ? 'mingcute:pin-fill' : 'mingcute:pin-line'" size="18" />
+            {{ viewingBlogTopOrder > 0 ? t('action.cancel_top') : t('action.set_top') }}
+          </button>
+          <button class="btn btn-ghost" @click="close">{{ t('common.cancel') }}</button>
+        </div>
       </template>
     </common-modal>
   </div>
 </template>
 
-<i18n lang="json">{
+<i18n lang="json">
+{
   "zh-CN": {
     "blog.info": "博客信息",
     "blog.author": "作者",
     "blog.status": "状态",
+    "blog.top_order": "置顶状态",
     "blog.stats": "数据统计",
     "status.draft": "草稿",
     "status.pending": "审核中",
@@ -584,11 +659,18 @@ onMounted(() => {
     "admin.reject_reason_placeholder": "请输入具体的驳回原因，以便作者修改...",
     "admin.reject_hint": "原因将通过系统通知发送给作者",
     "admin.reject_reason_required": "请填写驳回原因",
+    "admin.top": "置顶",
+    "admin.not_top": "未置顶",
     "action.publish": "发布",
     "action.archive": "归档",
     "action.approve": "通过",
     "action.reject": "驳回",
+    "action.set_top": "设为置顶",
+    "action.cancel_top": "取消置顶",
+    "action.increase_top": "提高优先级",
+    "action.decrease_top": "降低优先级",
     "action.reject_confirm": "确认驳回",
+    "action.save": "保存",
     "stats.views": "浏览",
     "stats.likes": "点赞",
     "stats.comments": "评论",
@@ -611,6 +693,7 @@ onMounted(() => {
     "blog.info": "Blog Info",
     "blog.author": "Author",
     "blog.status": "Status",
+    "blog.top_order": "Top Status",
     "blog.stats": "Stats",
     "status.draft": "Draft",
     "status.pending": "Pending",
@@ -626,11 +709,18 @@ onMounted(() => {
     "admin.reject_reason_placeholder": "Reason for rejection...",
     "admin.reject_hint": "Author will be notified.",
     "admin.reject_reason_required": "Reason is required",
+    "admin.top": "Top",
+    "admin.not_top": "Not Top",
     "action.publish": "Publish",
     "action.archive": "Archive",
     "action.approve": "Approve",
     "action.reject": "Reject",
+    "action.set_top": "Set Top",
+    "action.cancel_top": "Cancel Top",
+    "action.increase_top": "Increase Priority",
+    "action.decrease_top": "Decrease Priority",
     "action.reject_confirm": "Reject",
+    "action.save": "Save",
     "stats.views": "Views",
     "stats.likes": "Likes",
     "stats.comments": "Comments",
@@ -653,6 +743,7 @@ onMounted(() => {
     "blog.info": "博客信息",
     "blog.author": "作者",
     "blog.status": "狀態",
+    "blog.top_order": "置頂狀態",
     "blog.stats": "數據統計",
     "status.draft": "草稿",
     "status.pending": "審核中",
@@ -668,11 +759,18 @@ onMounted(() => {
     "admin.reject_reason_placeholder": "請輸入具體的駁回原因，以便作者修改...",
     "admin.reject_hint": "原因將通過系統通知發送給作者",
     "admin.reject_reason_required": "請填寫駁回原因",
+    "admin.top": "置頂",
+    "admin.not_top": "未置頂",
     "action.publish": "發布",
     "action.archive": "歸檔",
     "action.approve": "通過",
     "action.reject": "駁回",
+    "action.set_top": "設為置頂",
+    "action.cancel_top": "取消置頂",
+    "action.increase_top": "提高優先級",
+    "action.decrease_top": "降低優先級",
     "action.reject_confirm": "確認駁回",
+    "action.save": "保存",
     "stats.views": "瀏覽",
     "stats.likes": "點贊",
     "stats.comments": "評論",
@@ -691,4 +789,5 @@ onMounted(() => {
     "common.error": "操作失敗",
     "common.view": "查看詳情"
   }
-}</i18n>
+}
+</i18n>
