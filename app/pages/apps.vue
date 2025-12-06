@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ApiList } from '#imports';
 import type { DownloadLinkItem } from '~/api/download';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const { t } = useAppI18n();
 
@@ -10,6 +14,8 @@ const modalTitle = ref('');
 const currentImageIndex = ref(0);
 const links = ref<DownloadLinkItem[]>([]);
 const loading = ref<Record<number, boolean>>({});
+const mainContainer = ref<HTMLElement | null>(null);
+let ctx: gsap.Context;
 
 interface StepConfig {
   images: string[];
@@ -112,31 +118,95 @@ async function handleDownload(link: DownloadLinkItem | undefined) {
   }
 }
 
-const scrollToTutorial = () => {
-  const el = document.getElementById('tutorial-section');
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
-};
-
 onMounted(() => {
   setTimeout(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 50);
+
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && showModal.value) {
       closeModal();
     }
   };
+
   initData();
   window.addEventListener('keydown', handleKeydown);
+  if (mainContainer.value)
+    ctx = gsap.context(() => {
+      const heroTl = gsap.timeline();
+
+      heroTl.to('.hero-anim-item', {
+        autoAlpha: 1,
+        y: 0,
+        duration: 1,
+        stagger: 0.1,
+        ease: 'power3.out'
+      });
+
+      gsap.fromTo('.hero-phone-wrapper',
+        { autoAlpha: 0, x: 100, rotateY: 30, scale: 0.8 },
+        { autoAlpha: 1, x: 0, rotateY: 0, scale: 1, duration: 1.5, ease: 'power2.out', delay: 0.2 }
+      );
+
+      gsap.to('.hero-phone-img', {
+        y: -20,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: 1.5
+      });
+
+      gsap.to('.bg-blob', {
+        y: -50,
+        scrollTrigger: {
+          trigger: 'body',
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 1
+        }
+      });
+
+      const tutorialTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#tutorial-section',
+          start: 'top 75%',
+          toggleActions: 'play none none reverse'
+        }
+      });
+
+      tutorialTl.to('.tutorial-header', {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out'
+      })
+        .to('.dashed-line', {
+          width: '80%',
+          opacity: 0.2,
+          duration: 1,
+          ease: 'power2.inOut'
+        }, '-=0.5')
+        .to('.tutorial-card', {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'back.out(1.7)'
+        }, '-=0.8');
+
+    }, mainContainer.value);
 
   onUnmounted(() => {
     window.removeEventListener('keydown', handleKeydown);
+    ctx.revert();
   });
 });
 </script>
 
 <template>
-  <div>
+  <div ref="mainContainer">
     <div class="modal backdrop-blur-md bg-black/40 transition-all duration-300 z-[999]"
       :class="{ 'modal-open': showModal, 'opacity-0 pointer-events-none': !showModal, 'opacity-100 pointer-events-auto': showModal }">
       <div
@@ -160,7 +230,6 @@ onMounted(() => {
             @click="prevImage">
             <Icon name="heroicons:chevron-left" class="w-8 h-8" />
           </button>
-
           <Transition name="slide-fade" mode="out-in">
             <div :key="currentImageIndex" class="w-full h-full flex items-center justify-center">
               <img v-if="modalImages.length > 0" :src="modalImages[currentImageIndex]"
@@ -195,12 +264,13 @@ onMounted(() => {
       <div class="relative pt-20 flex flex-col justify-center overflow-hidden">
         <div class="absolute inset-0 z-0 pointer-events-none">
           <div
-            class="absolute top-0 right-0 w-2/3 h-full bg-[url('/imgs/background.png')] bg-cover bg-no-repeat bg-[center_top] opacity-40 hidden lg:block mix-blend-overlay">
+            class="absolute top-0 right-0 w-2/3 h-full bg-[url('/imgs/background.png')] bg-cover bg-no-repeat bg-position-[center_top] opacity-70 hidden lg:block mix-blend-overlay">
           </div>
           <div
-            class="absolute right-[-10%] top-[10%] w-[600px] h-[600px] bg-primary/20 rounded-full blur-[150px] animate-pulse">
+            class="bg-blob absolute right-[-10%] top-[10%] w-[600px] h-[600px] bg-primary/20 rounded-full blur-[150px] animate-pulse">
           </div>
-          <div class="absolute left-[-10%] bottom-[10%] w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px]">
+          <div
+            class="bg-blob absolute left-[-10%] bottom-[10%] w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px]">
           </div>
         </div>
         <main class="container mx-auto px-6 relative z-10 flex flex-col justify-center">
@@ -209,7 +279,7 @@ onMounted(() => {
             <div class="w-full lg:w-1/2 space-y-12 flex flex-col justify-center order-2 lg:order-1">
               <div class="space-y-6 text-center lg:text-left">
                 <div
-                  class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-base-content/5 border border-base-content/10 w-fit mx-auto lg:mx-0 backdrop-blur-md">
+                  class="hero-anim-item invisible translate-y-10 inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-base-content/5 border border-base-content/10 w-fit mx-auto lg:mx-0 backdrop-blur-md">
                   <span class="relative flex h-2.5 w-2.5">
                     <span
                       class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
@@ -217,18 +287,21 @@ onMounted(() => {
                   </span>
                   <span class="text-xs font-bold uppercase tracking-[0.2em] opacity-70">Web3 Digital Wallet</span>
                 </div>
-                <h1 class="text-5xl sm:text-6xl lg:text-8xl font-black tracking-tighter leading-[1]">
+                <h1
+                  class="hero-anim-item invisible translate-y-10 text-5xl sm:text-6xl lg:text-8xl font-black tracking-tighter leading-[1]">
                   {{ t('download_page.title_line1') }}
                   <span
                     class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] animate-shine block mt-2">{{
                       t('download_page.title_line2') }}</span>
                 </h1>
-                <p class="text-xl text-base-content/60 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+                <p
+                  class="hero-anim-item invisible translate-y-10 text-xl text-base-content/60 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
                   {{ t('download_page.description') }}
                 </p>
               </div>
 
-              <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+              <div
+                class="hero-anim-item invisible translate-y-10 flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
                 <button @click="handleDownload(androidLink)"
                   :disabled="!androidLink || (androidLink && loading[androidLink.id])"
                   class="group relative overflow-hidden rounded-2xl bg-base-content text-base-100 p-1 pr-8 transition-all hover:scale-[1.02] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed min-w-[220px]">
@@ -274,7 +347,7 @@ onMounted(() => {
                 </button>
               </div>
 
-              <div class="hidden lg:flex items-center gap-6 pt-6">
+              <div class="hero-anim-item invisible translate-y-10 hidden lg:flex items-center gap-6 pt-6">
                 <div
                   class="relative p-2 bg-white rounded-2xl shadow-xl shadow-base-content/5 border border-base-content/5 group hover:scale-105 transition-transform duration-300">
                   <div
@@ -300,7 +373,7 @@ onMounted(() => {
               </div>
 
               <div
-                class="flex flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-3 pt-6 border-t border-base-content/5 w-full lg:w-fit px-6 lg:px-0 opacity-70">
+                class="hero-anim-item invisible translate-y-10 flex flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-3 pt-6 border-t border-base-content/5 w-full lg:w-fit px-6 lg:px-0 opacity-70">
                 <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider"
                   v-for="feat in ['aes', 'multichain', 'custodial']" :key="feat">
                   <div class="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center text-success">
@@ -313,12 +386,12 @@ onMounted(() => {
 
             <div
               class="w-full lg:w-1/2 flex justify-center order-1 lg:order-2 perspective-[2000px] h-full items-center">
-              <div class="relative w-[300px] sm:w-[360px] lg:w-[420px] xl:w-[480px] group">
+              <div class="hero-phone-wrapper invisible relative w-[300px] sm:w-[360px] lg:w-[420px] xl:w-[480px] group">
                 <div
                   class="absolute inset-0 bg-gradient-to-tr from-primary/30 via-secondary/20 to-primary/10 rounded-full blur-[80px] transform scale-90 group-hover:scale-100 transition-transform duration-1000">
                 </div>
                 <img src="/imgs/phone.png" alt="App Preview"
-                  class="relative z-10 w-full h-auto drop-shadow-2xl transform transition-all duration-700 group-hover:-translate-y-6 group-hover:rotate-y-12 will-change-transform">
+                  class="hero-phone-img relative z-10 w-full h-auto drop-shadow-2xl transform transition-all duration-700 group-hover:-translate-y-6 group-hover:rotate-y-12 will-change-transform">
               </div>
             </div>
 
@@ -328,7 +401,7 @@ onMounted(() => {
       <br><br>
       <div id="tutorial-section" class="bg-base-50/50 border-t border-base-content/5 relative z-10 py-20 lg:py-32">
         <div class="container mx-auto px-6">
-          <div class="text-center mb-16 lg:mb-24">
+          <div class="tutorial-header invisible translate-y-10 text-center mb-16 lg:mb-24">
             <div
               class="inline-block mb-4 px-4 py-1 rounded-full bg-base-200 text-xs font-bold uppercase tracking-widest text-base-content/60">
               Guide</div>
@@ -338,10 +411,12 @@ onMounted(() => {
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative max-w-7xl mx-auto">
             <div
-              class="hidden lg:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-transparent via-base-content/10 to-transparent dashed-line">
+              class="dashed-line hidden lg:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-transparent via-base-content/10 to-transparent w-0 opacity-0">
             </div>
 
-            <div v-for="step in 4" :key="step" class="relative group cursor-pointer" @click="openStepModal(step)">
+            <div v-for="step in 4" :key="step"
+              class="tutorial-card invisible translate-y-10 scale-90 relative group cursor-pointer"
+              @click="openStepModal(step)">
               <div class="flex flex-col items-center text-center gap-6 relative z-10">
                 <div
                   class="w-24 h-24 rounded-[2rem] bg-base-100 border border-base-content/5 flex items-center justify-center shadow-lg group-hover:shadow-2xl group-hover:-translate-y-2 group-hover:border-primary/30 transition-all duration-500 relative overflow-hidden">
@@ -408,7 +483,6 @@ onMounted(() => {
 .dashed-line {
   background-image: linear-gradient(to right, currentColor 50%, transparent 50%);
   background-size: 20px 100%;
-  opacity: 0.1;
 }
 </style>
 
