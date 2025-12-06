@@ -285,6 +285,7 @@
               {{ t('cta.btn_download') }}
             </nuxt-link>
             <button
+               @click="openContactModal"
               class="btn btn-outline btn-lg rounded-full px-12 min-w-[200px] border-base-content/20 hover:bg-base-content hover:text-base-100"
               style="border-image: linear-gradient(to right, var(--primary), var(--secondary)) 1;">
               {{ t('cta.btn_contact') }}
@@ -296,15 +297,69 @@
         </div>
       </div>
     </section>
+    <!-- 联系商务合作弹窗 -->
+    <Teleport to="body">
+      <div v-if="showContactModal" class="fixed inset-0 z-50 flex items-center justify-center">
+        <div 
+          class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          @click="closeContactModal"
+        ></div>
+
+        <div class="relative z-10 bg-base-100 rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+          <div class="p-8 text-center border-b border-base-content/10">
+            <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <Icon name="heroicons:chat-bubble-left-right" size="32" class="text-primary" />
+            </div>
+            <h3 class="text-2xl font-bold mb-2">{{ t('contact_modal.title') }}</h3>
+            <p class="text-base-content/60">{{ t('contact_modal.description') }}</p>
+          </div>
+
+          <div class="p-8">
+            <div class="flex items-center justify-center gap-4 mb-6">
+              <div class="w-12 h-12 rounded-xl bg-base-200 flex items-center justify-center">
+                <Icon name="cib:qq" size="24" class="text-blue-500" />
+              </div>
+              <div class="text-center">
+                <p class="text-sm text-base-content/50 mb-1">{{ t('contact_modal.qq_label') }}</p>
+                <p class="text-2xl font-bold tracking-wider">{{ qqNumber }}</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <button
+                @click="copyQQNumber"
+                class="btn btn-primary rounded-xl py-4 flex items-center justify-center gap-2"
+              >
+                <Icon name="heroicons:clipboard-document" size="20" />
+                {{ t('contact_modal.copy_btn') }}
+              </button>
+              <button
+                @click="closeContactModal"
+                class="btn btn-ghost rounded-xl py-4 border border-base-content/20"
+              >
+                {{ t('contact_modal.close_btn') }}
+              </button>
+            </div>
+          </div>
+          <div class="px-8 pb-8 text-center">
+            <p class="text-sm text-base-content/50">{{ t('contact_modal.hint') }}</p>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
 import { type StatsResponse } from '~/api/system'
-import { computed } from 'vue';
+import { computed , ref} from 'vue';
 const { t , locale } = useAppI18n();
 const isEn = computed(() => locale.value === 'en');
 const statsData = ref<StatsResponse>()
+
+const showContactModal = ref(false)
+const qqNumber = ref('1759942536') 
+
 onMounted(() => {
   initData();
 })
@@ -338,6 +393,23 @@ const faqs = computed(() => [
   { question: t('faq.list.q2'), answer: t('faq.list.a2') },
   { question: t('faq.list.q3'), answer: t('faq.list.a3') },
 ])
+
+function openContactModal() {
+  showContactModal.value = true
+}
+
+function closeContactModal() {
+  showContactModal.value = false
+}
+
+function copyQQNumber() {
+  navigator.clipboard.writeText(qqNumber.value).then(() => {
+    alert('QQ号已复制到剪贴板')
+  }).catch(err => {
+    console.error('复制失败:', err)
+  })
+}
+
 </script>
 
 <i18n lang="json">{
@@ -441,6 +513,14 @@ const faqs = computed(() => [
       "btn_download": "下载客户端",
       "btn_contact": "联系商务合作",
       "disclaimer": "* LIFE 严格遵守当地法律法规，仅提供技术服务，不涉及非法金融活动。"
+    },
+    "contact_modal": {
+      "title": "商务合作",
+      "description": "请通过以下QQ号联系我们",
+      "qq_label": "商务合作QQ",
+      "copy_btn": "复制QQ号",
+      "close_btn": "关闭",
+      "hint": "添加时请备注\"商务合作\""
     }
   },
   "zh-TW": {
@@ -543,6 +623,14 @@ const faqs = computed(() => [
       "btn_download": "下載客戶端",
       "btn_contact": "聯繫商務合作",
       "disclaimer": "* LIFE 嚴格遵守當地法律法規，僅提供技術服務，不涉及非法金融活動。"
+    },
+    "contact_modal": {
+      "title": "商務合作",
+      "description": "請通過以下QQ號聯繫我們",
+      "qq_label": "商務合作QQ",
+      "copy_btn": "複製QQ號",
+      "close_btn": "關閉",
+      "hint": "添加時請備註\"商務合作\""
     }
   },
   "en": {
@@ -645,6 +733,14 @@ const faqs = computed(() => [
       "btn_download": "Download Client",
       "btn_contact": "Contact Business",
       "disclaimer": "* LIFE strictly complies with local laws and regulations, providing only technical services and not involving illegal financial activities."
+    },
+    "contact_modal": {
+      "title": "Business Cooperation",
+      "description": "Please contact us via the following QQ number",
+      "qq_label": "Business QQ",
+      "copy_btn": "Copy QQ Number",
+      "close_btn": "Close",
+      "hint": "Please note \"Business Cooperation\" when adding"
     }
   }
 }</i18n>
