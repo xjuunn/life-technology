@@ -16,6 +16,10 @@ interface StepConfig {
   title: string;
 }
 
+definePageMeta({
+  scrollToTop: true
+});
+
 const openStepModal = (step: number) => {
   const stepConfig: Record<number, StepConfig> = {
     1: {
@@ -114,6 +118,9 @@ const scrollToTutorial = () => {
 };
 
 onMounted(() => {
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 50);
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && showModal.value) {
       closeModal();
