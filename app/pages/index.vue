@@ -1,20 +1,21 @@
 <template>
-  <div class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300 relative">
+  <div ref="mainContainer"
+    class="min-h-screen bg-base-100 text-base-content font-sans transition-colors duration-300 relative overflow-x-hidden">
     <title>life-首页</title>
     <div class="absolute w-screen h-[calc(100vh-0px)] z-1 top-20 md:top-0">
       <ClientOnly>
         <EffectGlobalMap class="relative"></EffectGlobalMap>
       </ClientOnly>
     </div>
-    <section class="relative pt-8 pb-4 md:pt-40 md:pb-32 px-4 z-2">
+    <section class="hero-section relative pt-8 pb-4 md:pt-40 md:pb-32 px-4 z-2">
       <div class="container mx-auto text-center max-w-5xl">
         <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-base-content/10 bg-base-content/5 mb-4 md:mb-8 backdrop-blur-sm">
+          class="hero-anim inline-flex items-center gap-2 px-3 py-1 rounded-full border border-base-content/10 bg-base-content/5 mb-4 md:mb-8 backdrop-blur-sm invisible">
           <div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
           <span class="text-xs font-bold tracking-widest uppercase opacity-80">{{ t('hero.subtitle') }}</span>
         </div>
         <h1 :class="[
-          'font-black tracking-tight leading-none mb-4 md:mb-8',
+          'hero-anim font-black tracking-tight leading-none mb-4 md:mb-8 invisible',
           isEn ? 'text-4xl md:text-7xl lg:text-8xl' : 'text-5xl md:text-7xl lg:text-8xl'
         ]">
           {{ t('hero.title_prefix') }}<span
@@ -23,7 +24,8 @@
           <br />
           {{ t('hero.title_suffix') }}
         </h1>
-        <p class="text-lg md:text-xl text-base-content/60 max-w-3xl mx-auto mb-6 md:mb-10 leading-relaxed font-medium">
+        <p
+          class="hero-anim text-lg md:text-xl text-base-content/60 max-w-3xl mx-auto mb-6 md:mb-10 leading-relaxed font-medium invisible">
           {{ t('hero.description') }}
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md mx-auto">
@@ -38,10 +40,10 @@
         </div>
       </div>
     </section>
-    <div class="relative border-y border-base-content/5 bg-base-content/2 z-2">
+    <div class="stats-section relative border-y border-base-content/5 bg-base-content/2 z-2">
       <div class="container mx-auto px-4 py-12">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div v-for="(stat, index) in stats" :key="index" class="text-center group cursor-default">
+          <div v-for="(stat, index) in stats" :key="index" class="stat-item text-center group cursor-default invisible">
             <div class="text-4xl font-black mb-1 tracking-tight group-hover:text-primary transition-colors">
               <effect-decrypted-text :text="stat.value + ''" animate-on="view" characters="1234567890" />
             </div>
@@ -50,9 +52,10 @@
         </div>
       </div>
     </div>
-    <section class="relative py-32 px-4 z-2">
+    <section class="trends-section relative py-32 px-4 z-2">
       <div class="container mx-auto max-w-6xl">
-        <div class="flex flex-col md:flex-row justify-between items-center items-end mb-16 gap-6 text-center md:text-left">
+        <div
+          class="trends-header flex flex-col md:flex-row justify-between items-center items-end mb-16 gap-6 text-center md:text-left invisible">
           <div class="max-w-xl w-full">
             <h2 class="text-xs font-bold text-primary uppercase tracking-widest mb-3">{{ t('trends.subtitle') }}</h2>
             <h3 class="text-4xl md:text-5xl font-bold tracking-tight">{{ t('trends.title') }}</h3>
@@ -60,10 +63,11 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:auto-rows-[400px]">
           <div
-            class="md:col-span-2 rounded-[2.5rem] bg-base-200 p-10 relative overflow-hidden group border border-base-content/5 hover:border-primary/30 transition-all duration-500 min-h-[450px] md:min-h-0">
+            class="trend-card md:col-span-2 rounded-[2.5rem] bg-base-200 p-10 relative overflow-hidden group border border-base-content/5 hover:border-primary/30 transition-all duration-500 min-h-[450px] md:min-h-0 invisible">
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
-              <div class="w-20 h-20 rounded-2xl bg-base-100 flex items-center justify-center shadow-sm text-primary mb-6">
+              <div
+                class="w-20 h-20 rounded-2xl bg-base-100 flex items-center justify-center shadow-sm text-primary mb-6">
                 <Icon name="heroicons:circle-stack" size="40" />
               </div>
               <div>
@@ -81,7 +85,7 @@
             </div>
           </div>
           <div
-            class="rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-secondary/30 transition-all duration-500 shadow-sm min-h-[380px] md:min-h-0">
+            class="trend-card rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-secondary/30 transition-all duration-500 shadow-sm min-h-[380px] md:min-h-0 invisible">
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-secondary mb-6">
@@ -96,7 +100,7 @@
             </div>
           </div>
           <div
-            class="rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-all duration-500 shadow-sm min-h-[380px] md:min-h-0">
+            class="trend-card rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-all duration-500 shadow-sm min-h-[380px] md:min-h-0 invisible">
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-accent mb-6">
@@ -111,12 +115,13 @@
             </div>
           </div>
           <div
-            class="md:col-span-2 rounded-[2.5rem] bg-neutral text-neutral-content p-10 relative overflow-hidden group min-h-[450px] md:min-h-0">
+            class="trend-card md:col-span-2 rounded-[2.5rem] bg-neutral text-neutral-content p-10 relative overflow-hidden group min-h-[450px] md:min-h-0 invisible">
             <div class="absolute -right-10 -top-10 opacity-10 rotate-12">
               <Icon name="heroicons:finger-print" size="300" />
             </div>
             <div class="relative z-10 h-full flex flex-col justify-between">
-              <div class="w-20 h-20 rounded-2xl bg-base-200/80 flex items-center justify-center text-accent shadow-lg mb-6">
+              <div
+                class="w-20 h-20 rounded-2xl bg-base-200/80 flex items-center justify-center text-accent shadow-lg mb-6">
                 <Icon name="heroicons:shield-check" size="40" />
               </div>
               <div>
@@ -130,9 +135,9 @@
         </div>
       </div>
     </section>
-    <section class="py-32 px-4 bg-base-200/50">
+    <section class="features-section py-32 px-4 bg-base-200/50">
       <div class="container mx-auto max-w-6xl">
-        <div class="text-center mb-20 max-w-2xl mx-auto">
+        <div class="features-header text-center mb-20 max-w-2xl mx-auto invisible">
           <h2 class="text-4xl font-bold mb-6">{{ t('features.title') }}</h2>
           <p class="text-base-content/60 text-lg">
             {{ t('features.subtitle') }}
@@ -140,7 +145,7 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div v-for="(feature, i) in features" :key="i"
-            class="group p-8 rounded-3xl bg-base-100 border border-base-content/5 hover:border-primary/20 hover:shadow-xl transition-all duration-300">
+            class="feature-card group p-8 rounded-3xl bg-base-100 border border-base-content/5 hover:border-primary/20 hover:shadow-xl transition-all duration-300 invisible">
             <div
               class="w-16 h-16 rounded-2xl bg-base-200 group-hover:bg-primary group-hover:text-primary-content flex items-center justify-center mb-6 text-primary transition-colors">
               <Icon :name="feature.icon" size="32" />
@@ -151,16 +156,15 @@
         </div>
       </div>
     </section>
-    <section class="py-32 px-4 overflow-hidden bg-base-100 relative z-10">
+    <section class="app-section py-32 px-4 overflow-hidden bg-base-100 relative z-10">
       <div class="container mx-auto max-w-6xl">
         <div class="flex flex-col lg:flex-row items-center gap-24">
           <div class="lg:w-1/2 w-full flex justify-center perspective-container">
-            <div class="hover-3d mx-auto w-full max-w-[380px] aspect-3/4">
+            <div class="app-card hover-3d mx-auto w-full max-w-[380px] aspect-3/4 invisible">
               <div
                 class="relative h-full w-full rounded-2xl bg-base-100 border border-base-content/10 shadow-2xl p-8 flex flex-col justify-between overflow-hidden">
                 <div class="absolute inset-0 bg-linear-to-br from-base-content/5 to-transparent pointer-events-none">
                 </div>
-
                 <div class="relative z-10 flex justify-between items-center">
                   <div class="flex items-center gap-3">
                     <div
@@ -215,7 +219,7 @@
               </div>
             </div>
           </div>
-          <div class="lg:w-1/2">
+          <div class="app-content lg:w-1/2 invisible">
             <h2 class="text-4xl md:text-6xl font-black mb-8 leading-tight">
               {{ t('app.title_prefix') }}
               <br />
@@ -226,7 +230,7 @@
               {{ t('app.description') }}
             </p>
             <div class="space-y-8">
-              <div class="flex gap-6 group">
+              <div class="app-feature flex gap-6 group">
                 <div
                   class="shrink-0 w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors duration-300 shadow-sm">
                   <Icon name="heroicons:server-stack" size="26" />
@@ -236,7 +240,7 @@
                   <p class="text-base-content/60 text-sm leading-relaxed">{{ t('app.feature_control_desc') }}</p>
                 </div>
               </div>
-              <div class="flex gap-6 group">
+              <div class="app-feature flex gap-6 group">
                 <div
                   class="shrink-0 w-14 h-14 rounded-2xl bg-base-200 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors duration-300 shadow-sm">
                   <Icon name="heroicons:check-badge" size="26" />
@@ -251,15 +255,16 @@
         </div>
       </div>
     </section>
-    <section class="py-32 px-4 bg-base-200/30">
+    <section class="faq-section py-32 px-4 bg-base-200/30">
       <div class="container mx-auto max-w-3xl">
-        <div class="text-center mb-16">
+        <div class="faq-header text-center mb-16 invisible">
           <h2 class="text-3xl font-bold mb-4">{{ t('faq.title') }}</h2>
           <p class="text-base-content/60">{{ t('faq.subtitle') }}</p>
         </div>
-        <div class="join join-vertical w-full bg-base-100 border border-base-content/10 rounded-2xl overflow-hidden">
+        <div
+          class="faq-list join join-vertical w-full bg-base-100 border border-base-content/10 rounded-2xl overflow-hidden invisible">
           <div v-for="(faq, idx) in faqs" :key="idx"
-            class="collapse collapse-arrow join-item border-b border-base-content/5 last:border-none">
+            class="faq-item collapse collapse-arrow join-item border-b border-base-content/5 last:border-none">
             <input type="radio" name="faq-accordion" :checked="idx === 0" />
             <div class="collapse-title text-lg font-bold py-6 px-6 hover:bg-base-content/5 transition-colors">
               {{ faq.question }}
@@ -271,13 +276,14 @@
         </div>
       </div>
     </section>
-    <section class="py-40 px-4 text-center overflow-hidden relative">
+    <section class="cta-section py-40 px-4 text-center overflow-hidden relative">
       <div class="absolute inset-0 bg-linear-to-t from-base-content/5 to-transparent pointer-events-none"></div>
       <div class="container mx-auto relative z-10">
-        <h2 class="text-6xl md:text-9xl font-black mb-8 tracking-tighter opacity-5 select-none text-base-content">
+        <h2
+          class="cta-bg-text text-6xl md:text-9xl font-black mb-8 tracking-tighter invisible select-none text-base-content">
           DIGITAL
         </h2>
-        <div class="-mt-12 relative z-10">
+        <div class="cta-content -mt-12 relative z-10 invisible">
           <h3 class="text-3xl md:text-5xl font-bold mb-10">{{ t('cta.title') }}</h3>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <nuxt-link to="/apps"
@@ -352,17 +358,154 @@
 
 <script setup lang="ts">
 import { type StatsResponse } from '~/api/system'
-import { computed , ref} from 'vue';
-const { t , locale } = useAppI18n();
+import { computed, ref, onMounted, onUnmounted } from 'vue';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const { t, locale } = useAppI18n();
 const isEn = computed(() => locale.value === 'en');
 const statsData = ref<StatsResponse>()
-
+const mainContainer = ref<HTMLElement | null>(null);
+let ctx: gsap.Context;
 const showContactModal = ref(false)
 const qqNumber = ref('1759942536') 
 
 onMounted(() => {
   initData();
+
+  if (mainContainer.value)
+    ctx = gsap.context(() => {
+      const heroTl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+      heroTl.fromTo('.hero-anim',
+        { autoAlpha: 0, y: 100, scale: 0.95, filter: 'blur(10px)' },
+        { autoAlpha: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 1.5, stagger: 0.15 }
+      )
+        .fromTo('.stat-item',
+          { autoAlpha: 0, scale: 0.8, y: 50, filter: 'blur(5px)' },
+          { autoAlpha: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: 1, stagger: 0.1, ease: 'back.out(1.7)' },
+          '-=1'
+        );
+
+      gsap.fromTo('.trends-header',
+        { autoAlpha: 0, x: -30, filter: 'blur(8px)' },
+        {
+          autoAlpha: 1, x: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.trends-section',
+            start: 'top 92%',
+            toggleActions: 'play reverse play reverse'
+          }
+        }
+      );
+
+      ScrollTrigger.batch('.trend-card', {
+        start: 'top 92%',
+        onEnter: batch => gsap.fromTo(batch,
+          { autoAlpha: 0, y: 80, rotationX: 10, scale: 0.9, filter: 'blur(5px)' },
+          { autoAlpha: 1, y: 0, rotationX: 0, scale: 1, filter: 'blur(0px)', duration: 1.2, stagger: 0.15, ease: 'expo.out' }
+        ),
+        onLeave: batch => gsap.to(batch, { autoAlpha: 0, y: -50, scale: 0.9, filter: 'blur(5px)', duration: 0.8, ease: 'power2.in' }),
+        onEnterBack: batch => gsap.to(batch, { autoAlpha: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' }),
+        onLeaveBack: batch => gsap.to(batch, { autoAlpha: 0, y: 80, scale: 0.9, filter: 'blur(5px)', duration: 0.8, ease: 'power2.in' })
+      });
+
+      gsap.fromTo('.features-header',
+        { autoAlpha: 0, y: 40, scale: 0.95, filter: 'blur(8px)' },
+        {
+          autoAlpha: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 1, ease: 'back.out(1.2)',
+          scrollTrigger: {
+            trigger: '.features-section',
+            start: 'top 92%',
+            toggleActions: 'play reverse play reverse'
+          }
+        }
+      );
+
+      ScrollTrigger.batch('.feature-card', {
+        start: 'top 92%',
+        onEnter: batch => gsap.fromTo(batch,
+          { autoAlpha: 0, scale: 0.8, y: 60, filter: 'blur(5px)' },
+          { autoAlpha: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: 0.8, stagger: 0.1, ease: 'back.out(1.5)' }
+        ),
+        onLeave: batch => gsap.to(batch, { autoAlpha: 0, scale: 0.9, filter: 'blur(5px)', duration: 0.5 }),
+        onEnterBack: batch => gsap.to(batch, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 0.5 }),
+        onLeaveBack: batch => gsap.to(batch, { autoAlpha: 0, scale: 0.8, y: 60, filter: 'blur(5px)', duration: 0.5 })
+      });
+
+      const appTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.app-section',
+          start: 'top 90%',
+          toggleActions: 'play reverse play reverse'
+        }
+      });
+
+      appTl.fromTo('.app-card',
+        { autoAlpha: 0, x: -80, rotation: -5, filter: 'blur(10px)' },
+        { autoAlpha: 1, x: 0, rotation: 0, filter: 'blur(0px)', duration: 1.5, ease: 'elastic.out(1, 0.75)' }
+      )
+        .fromTo('.app-content',
+          { autoAlpha: 0, x: 80, filter: 'blur(10px)' },
+          { autoAlpha: 1, x: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power4.out' },
+          '<'
+        );
+
+      gsap.to('.app-card', {
+        y: -20,
+        rotation: 2,
+        duration: 4,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: 1.5
+      });
+
+      gsap.fromTo('.faq-header',
+        { autoAlpha: 0, y: 40, filter: 'blur(8px)' },
+        {
+          autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: '.faq-section', start: 'top 92%', toggleActions: 'play reverse play reverse' }
+        }
+      );
+
+      ScrollTrigger.batch('.faq-list', {
+        start: 'top 92%',
+        onEnter: batch => gsap.fromTo(batch,
+          { autoAlpha: 0, y: 50, filter: 'blur(5px)' },
+          { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power3.out' }
+        ),
+        onLeave: batch => gsap.to(batch, { autoAlpha: 0, y: -30, filter: 'blur(5px)', duration: 0.5 }),
+        onEnterBack: batch => gsap.to(batch, { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 0.5 }),
+        onLeaveBack: batch => gsap.to(batch, { autoAlpha: 0, y: 50, filter: 'blur(5px)', duration: 0.5 })
+      });
+
+      const ctaTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.cta-section',
+          start: 'top 90%',
+          toggleActions: 'play reverse play reverse'
+        }
+      });
+
+      ctaTl.fromTo('.cta-bg-text',
+        { autoAlpha: 0, scale: 0.5, y: 100, filter: 'blur(20px)' },
+        { autoAlpha: 0.05, scale: 1, y: 0, filter: 'blur(0px)', duration: 2, ease: 'power2.out' }
+      )
+        .fromTo('.cta-content',
+          { autoAlpha: 0, scale: 0.9, y: 50, filter: 'blur(10px)' },
+          { autoAlpha: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'elastic.out(1, 0.9)' },
+          '-=1.5'
+        );
+
+    }, mainContainer.value);
 })
+
+onUnmounted(() => {
+  ctx?.revert();
+})
+
 async function initData() {
   try {
     const { data, success } = await ApiList.system.stats();
@@ -411,6 +554,7 @@ function copyQQNumber() {
 }
 
 </script>
+
 
 <i18n lang="json">{
   "zh-CN": {
@@ -503,7 +647,7 @@ function copyQQNumber() {
         "q1": "什么是 LIFE 平台？",
         "a1": "LIFE 是一个基于区块链技术的去中心化数字生态系统，旨在为用户提供安全、隐私、自主的数据管理体验。它不是传统意义上的金融工具，而是您的个人数据资产管家。",
         "q2": "LIFE 积分有什么用？",
-        "a2": "LIFE 积分是生态内的权益凭证，用于奖励用户对生态的数据贡献（如健康数据上传）。积分可用于兑换生态内的服务、参与社区治理投票，不可用于非法买卖。",
+        "a2": "LIFE 积分是生态内的权益凭证，用于奖励用户对生态的數據贡献（如健康数据上传）。积分可用于兑换生态内的服务、参与社区治理投票，不可用于非法买卖。",
         "q3": "如何保障我的数据安全？",
         "a3": "我们采用军工级 AES-256 加密技术，您的核心数据和私钥仅存储在您的本地设备上。未经您授权，任何人（包括平台方）都无法查看或调用您的数据。"
       }
