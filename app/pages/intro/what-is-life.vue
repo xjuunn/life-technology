@@ -33,11 +33,6 @@ const features = computed(() => [
     desc: t('what_is_life.app.features.audit.desc'),
     icon: 'mingcute:safe-shield-fill'
   },
-  // {
-  //   title: t('what_is_life.app.features.opensource.title'),
-  //   desc: t('what_is_life.app.features.opensource.desc'),
-  //   icon: 'mingcute:github-fill'
-  // }
 ]);
 
 const highlights = computed(() => [
@@ -189,9 +184,9 @@ const highlights = computed(() => [
           {{ t('what_is_life.future.desc') }}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button class="btn btn-primary btn-lg rounded-full px-8 shadow-lg shadow-primary/20">
+          <nuxt-link to="/apps" class="btn btn-primary btn-lg rounded-full px-8 shadow-lg shadow-primary/20">
             {{ t('what_is_life.future.join_btn') }}
-          </button>
+          </nuxt-link>
         </div>
       </div>
     </section>

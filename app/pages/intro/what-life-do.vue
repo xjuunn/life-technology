@@ -333,13 +333,13 @@ const useCases = [
           {{ t('about_page.benefits.future.desc') }}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button class="btn btn-primary btn-lg rounded-full px-8 text-white">
+          <nuxt-link to="/apps" class="btn btn-primary btn-lg rounded-full px-8 text-white">
             {{ t('hero.btn_start') }}
-          </button>
-           <button class="btn btn-primary btn-lg rounded-full px-8 text-white hover:bg-blue-600">
+          </nuxt-link>
+          <nuxt-link to="/apps" class="btn btn-primary btn-lg rounded-full px-8 text-white hover:bg-blue-600">
             {{ t('about_page.benefits.future.btn') }}
             <Icon name="mingcute:book-2-fill" size="20" />
-          </button>
+          </nuxt-link>
         </div>
       </div>
     </section>

@@ -27,10 +27,10 @@
           {{ t('hero.description') }}
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md mx-auto">
-          <button
+          <nuxt-link to="/apps"
             class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-8 py-4 w-full sm:w-auto sm:min-w-[220px] text-white border-none shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
             {{ t('hero.btn_start') }}
-          </button>
+          </nuxt-link>
           <nuxt-link to="/intro/white-book"
             class="btn btn-ghost btn-lg rounded-full px-8 py-4 w-full sm:w-auto sm:min-w-[220px] border border-base-content/30 hover:bg-base-content hover:text-base-100">
             {{ t('hero.btn_whitepaper') }}
@@ -71,11 +71,12 @@
                 <p class="text-base-content/60 leading-relaxed max-w-lg">
                   {{ t('trends.assets.desc') }}
                 </p>
-                <div
+                <nuxt-link 
+                  to="/intro/what-life-do" 
                   class="mt-6 flex items-center gap-2 text-primary font-bold text-sm cursor-pointer group-hover:translate-x-2 transition-transform">
                   {{ t('trends.read_more') }}
                   <Icon name="heroicons:arrow-long-right" />
-                </div>
+                </nuxt-link>
               </div>
             </div>
           </div>
@@ -279,10 +280,10 @@
         <div class="-mt-12 relative z-10">
           <h3 class="text-3xl md:text-5xl font-bold mb-10">{{ t('cta.title') }}</h3>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
+            <nuxt-link to="/apps"
               class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-12 min-w-[200px] text-primary-content shadow-lg shadow-primary/20">
               {{ t('cta.btn_download') }}
-            </button>
+            </nuxt-link>
             <button
               class="btn btn-outline btn-lg rounded-full px-12 min-w-[200px] border-base-content/20 hover:bg-base-content hover:text-base-100"
               style="border-image: linear-gradient(to right, var(--primary), var(--secondary)) 1;">
