@@ -23,7 +23,8 @@ const pagination = ref<Pagination>({
 
 const filter = reactive({
   search: '',
-  status: -1
+  status: -1,
+  verified: '' as '' | 'verified' | 'unverified'
 })
 
 const selectedIds = ref<Set<string>>(new Set())
@@ -43,11 +44,14 @@ const loadData = async () => {
   loading.value = true
   try {
     const statusParam = filter.status === -1 ? undefined : filter.status as UserStatus
+    const verifiedParam = filter.verified === '' ? undefined : filter.verified as 'verified' | 'unverified'
+    
     const res = await ApiList.admin.user.listUser({
       page: pagination.value.currentPage,
       limit: pagination.value.limit,
       search: filter.search,
-      status: statusParam as any
+      status: statusParam as any,
+      verified: verifiedParam
     })
 
     users.value = res.data.users
@@ -55,6 +59,7 @@ const loadData = async () => {
     selectedIds.value.clear()
   } catch (error) {
     console.error(error)
+    toast.error(t('common.error'))
   } finally {
     loading.value = false
   }
@@ -67,6 +72,10 @@ const debouncedSearch = useDebounceFn(() => {
 
 watch(() => filter.search, debouncedSearch)
 watch(() => filter.status, () => {
+  pagination.value.currentPage = 1
+  loadData()
+})
+watch(() => filter.verified, () => {
   pagination.value.currentPage = 1
   loadData()
 })
@@ -179,6 +188,30 @@ const savePwd = async () => {
   }
 }
 
+// 获取实名认证状态的显示文本
+const getVerifiedStatusText = (user: AdminUserListItem) => {
+  if (user.idVerified) {
+    return t('user.verified')
+  }
+  return t('user.unverified')
+}
+
+// 获取实名认证状态的图标
+const getVerifiedStatusIcon = (user: AdminUserListItem) => {
+  if (user.idVerified) {
+    return 'mingcute:check-fill'
+  }
+  return 'mingcute:close-fill'
+}
+
+// 获取实名认证状态的样式
+const getVerifiedStatusClass = (user: AdminUserListItem) => {
+  if (user.idVerified) {
+    return 'text-success'
+  }
+  return 'text-error'
+}
+
 onMounted(() => {
   loadData()
 })
@@ -197,7 +230,16 @@ onMounted(() => {
         </label>
       </div>
 
-      <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+      <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+        <!-- 实名认证状态筛选 -->
+        <select
+          class="select select-bordered bg-base-100/80 backdrop-blur shadow-sm w-full md:w-40 rounded-lg h-11 min-h-[2.75rem]"
+          v-model="filter.verified">
+          <option value="">{{ t('common.all_verified') }}</option>
+          <option value="verified">{{ t('user.verified') }}</option>
+          <option value="unverified">{{ t('user.unverified') }}</option>
+        </select>
+
         <select
           class="select select-bordered bg-base-100/80 backdrop-blur shadow-sm w-full md:w-40 rounded-lg h-11 min-h-[2.75rem]"
           v-model="filter.status">
@@ -246,6 +288,7 @@ onMounted(() => {
               <th class="py-4 text-sm font-semibold min-w-[200px]">{{ t('user.info') }}</th>
               <th class="py-4 text-sm font-semibold min-w-[120px]">{{ t('user.role') }}</th>
               <th class="py-4 text-sm font-semibold min-w-[120px]">{{ t('user.status') }}</th>
+              <th class="py-4 text-sm font-semibold min-w-[100px]">{{ t('user.verified_status') }}</th>
               <th class="py-4 text-sm font-semibold min-w-[150px]">{{ t('user.stats') }}</th>
               <th class="py-4 text-sm font-semibold min-w-[120px]">{{ t('common.created_at') }}</th>
               <th
@@ -255,13 +298,13 @@ onMounted(() => {
           </thead>
           <tbody>
             <tr v-if="loading">
-              <td colspan="7" class="h-64 text-center">
+              <td colspan="8" class="h-64 text-center">
                 <span class="loading loading-spinner loading-lg text-primary/50"></span>
               </td>
             </tr>
 
             <tr v-else-if="users.length === 0">
-              <td colspan="7" class="h-64 text-center text-base-content/40">
+              <td colspan="8" class="h-64 text-center text-base-content/40">
                 <div class="flex flex-col items-center gap-3">
                   <div class="bg-base-200 p-6 rounded-full">
                     <Icon name="mingcute:ghost-line" class="text-5xl" />
@@ -313,14 +356,18 @@ onMounted(() => {
                 </div>
               </td>
               <td class="py-4">
+                <div class="flex items-center gap-2">
+                  <Icon :name="getVerifiedStatusIcon(user)" size="16" :class="getVerifiedStatusClass(user)" />
+                  <span class="text-sm">{{ getVerifiedStatusText(user) }}</span>
+                </div>
+              </td>
+              <td class="py-4">
                 <div class="flex gap-4 text-sm text-base-content/70">
                   <span class="flex items-center gap-1.5" :title="t('stats.blogs')">
-                    <Icon name="mingcute:document-line" class="text-base-content/40" size="16" /> {{
-                      user.blogCount }}
+                    <Icon name="mingcute:document-line" class="text-base-content/40" size="16" /> {{ user.blogCount }}
                   </span>
                   <span class="flex items-center gap-1.5" :title="t('stats.likes')">
-                    <Icon name="mingcute:thumb-up-line" class="text-base-content/40" size="16" /> {{
-                      user.totalLikes }}
+                    <Icon name="mingcute:thumb-up-line" class="text-base-content/40" size="16" /> {{ user.totalLikes }}
                   </span>
                 </div>
               </td>
@@ -457,7 +504,8 @@ onMounted(() => {
   </div>
 </template>
 
-<i18n lang="json">{
+<i18n lang="json">
+{
   "zh-CN": {
     "admin.batch_confirm_title": "确认批量操作",
     "admin.batch_confirm_content": "即将对 {count} 位用户执行此操作，是否继续？",
@@ -470,9 +518,12 @@ onMounted(() => {
     "user.info": "用户信息",
     "user.role": "角色权限",
     "user.status": "账号状态",
+    "user.verified_status": "实名认证",
     "user.stats": "统计数据",
     "user.reset_password": "重置密码",
     "user.new_password": "新密码",
+    "user.verified": "已实名",
+    "user.unverified": "未实名",
     "role.admin": "管理员",
     "role.user": "普通用户",
     "role.admin_desc": "拥有系统最高管理权限",
@@ -488,6 +539,7 @@ onMounted(() => {
     "action.deactivate": "冻结账号",
     "common.search": "搜索用户...",
     "common.all_status": "全部状态",
+    "common.all_verified": "全部认证状态",
     "common.batch": "批量",
     "common.created_at": "注册日期",
     "common.action": "操作",
@@ -515,9 +567,12 @@ onMounted(() => {
     "user.info": "User",
     "user.role": "Role",
     "user.status": "Status",
+    "user.verified_status": "Verified",
     "user.stats": "Stats",
     "user.reset_password": "Reset Password",
     "user.new_password": "New Password",
+    "user.verified": "Verified",
+    "user.unverified": "Unverified",
     "role.admin": "Admin",
     "role.user": "User",
     "role.admin_desc": "Full system access",
@@ -533,6 +588,7 @@ onMounted(() => {
     "action.deactivate": "Suspend",
     "common.search": "Search users...",
     "common.all_status": "All Status",
+    "common.all_verified": "All Verified Status",
     "common.batch": "Batch",
     "common.created_at": "Joined",
     "common.action": "Actions",
@@ -560,9 +616,12 @@ onMounted(() => {
     "user.info": "用戶信息",
     "user.role": "角色權限",
     "user.status": "賬號狀態",
+    "user.verified_status": "實名認證",
     "user.stats": "統計數據",
     "user.reset_password": "重置密碼",
     "user.new_password": "新密碼",
+    "user.verified": "已實名",
+    "user.unverified": "未實名",
     "role.admin": "管理員",
     "role.user": "普通用戶",
     "role.admin_desc": "擁有系統最高管理權限",
@@ -578,6 +637,7 @@ onMounted(() => {
     "action.deactivate": "凍結賬號",
     "common.search": "搜索用戶...",
     "common.all_status": "全部狀態",
+    "common.all_verified": "全部認證狀態",
     "common.batch": "批量",
     "common.created_at": "註冊日期",
     "common.action": "操作",

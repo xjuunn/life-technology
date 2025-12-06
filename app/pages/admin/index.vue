@@ -206,91 +206,49 @@
       </div>
     </div>
 
-    <!-- 快速操作和作者排行 -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
-      <div class="lg:col-span-2">
-        <div class="bg-base-100 rounded-xl shadow p-4 border border-base-300">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-bold text-base-content">{{ t('quickActions.title') }}</h2>
-            <span class="text-xs text-base-content/70 bg-base-200 px-3 py-1 rounded-lg">{{ t('quickActions.desc') }}</span>
+    <!-- 顶级作者排行 -->
+    <div class="bg-base-100 rounded-xl shadow p-4 border border-base-300 mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-base-content">{{ t('topAuthors.title') }}</h2>
+        <div class="flex items-center text-xs text-base-content/70">
+          <Icon name="mingcute:medal-line" class="mr-1" />
+          {{ t('topAuthors.desc') }}
+        </div>
+      </div>
+      <div class="space-y-3">
+        <div v-for="(author, index) in topAuthors" :key="author.authorId" class="flex items-center p-2 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors">
+          <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-2 font-bold text-primary text-sm">
+            {{ index + 1 }}
           </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <ActionButton 
-              to="/admin/users"
-              icon="mingcute:user-2-line"
-              :label="t('quickActions.userManagement')"
-              :description="t('quickActions.userManagementDesc')"
-              color="primary"
-            />
-            <ActionButton 
-              to="/admin/blogs"
-              icon="mingcute:file-line"
-              :label="t('quickActions.blogManagement')"
-              :description="t('quickActions.blogManagementDesc')"
-              color="secondary"
-            />
-            <ActionButton
-              to="/admin/comments"
-              icon="mingcute:message-1-line"
-              :label="t('quickActions.commentReview')"
-              :description="t('quickActions.commentReviewDesc')"
-              color="accent"
-            />
-            <ActionButton
-              to="/admin/reports"
-              icon="mingcute:flag-2-line"
-              :label="t('quickActions.reportManagement')"
-              :description="t('quickActions.reportManagementDesc')"
-              color="warning"
-            />
+          <div class="flex-1">
+            <div class="flex items-center">
+              <div class="w-6 h-6 rounded-full bg-base-300 mr-2 overflow-hidden">
+                <img v-if="author.author.avatar" :src="author.author.avatar" :alt="author.author.username" class="w-full h-full object-cover">
+                <div v-else class="w-full h-full flex items-center justify-center bg-base-300 text-base-content/70 text-xs">
+                  {{ author.author.username.charAt(0).toUpperCase() }}
+                </div>
+              </div>
+              <div>
+                <p class="font-medium text-base-content text-sm">{{ author.author.username }}</p>
+                <p class="text-xs text-base-content/60">{{ author.totalViews }} {{ t('topAuthors.views') }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-base-content">{{ author.blogCount }}</p>
+            <p class="text-xs text-base-content/60">{{ t('topAuthors.blogs') }}</p>
           </div>
         </div>
       </div>
-
-      <!-- 顶级作者排行 -->
-      <div class="bg-base-100 rounded-xl shadow p-4 border border-base-300">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-lg font-bold text-base-content">{{ t('topAuthors.title') }}</h2>
-          <div class="flex items-center text-xs text-base-content/70">
-            <Icon name="mingcute:medal-line" class="mr-1" />
-            {{ t('topAuthors.desc') }}
+      <div class="mt-4 pt-4 border-t border-base-300">
+        <div class="grid grid-cols-2 gap-3 text-center">
+          <div>
+            <p class="text-xl font-bold text-primary">{{ stats.publishedBlogs }}</p>
+            <p class="text-xs text-base-content/70">{{ t('topAuthors.published') }}</p>
           </div>
-        </div>
-        <div class="space-y-3">
-          <div v-for="(author, index) in topAuthors" :key="author.authorId" class="flex items-center p-2 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors">
-            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-2 font-bold text-primary text-sm">
-              {{ index + 1 }}
-            </div>
-            <div class="flex-1">
-              <div class="flex items-center">
-                <div class="w-6 h-6 rounded-full bg-base-300 mr-2 overflow-hidden">
-                  <img v-if="author.author.avatar" :src="author.author.avatar" :alt="author.author.username" class="w-full h-full object-cover">
-                  <div v-else class="w-full h-full flex items-center justify-center bg-base-300 text-base-content/70 text-xs">
-                    {{ author.author.username.charAt(0).toUpperCase() }}
-                  </div>
-                </div>
-                <div>
-                  <p class="font-medium text-base-content text-sm">{{ author.author.username }}</p>
-                  <p class="text-xs text-base-content/60">{{ author.totalViews }} {{ t('topAuthors.views') }}</p>
-                </div>
-              </div>
-            </div>
-            <div class="text-right">
-              <p class="font-bold text-base-content">{{ author.blogCount }}</p>
-              <p class="text-xs text-base-content/60">{{ t('topAuthors.blogs') }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="mt-4 pt-4 border-t border-base-300">
-          <div class="grid grid-cols-2 gap-3 text-center">
-            <div>
-              <p class="text-xl font-bold text-primary">{{ stats.publishedBlogs }}</p>
-              <p class="text-xs text-base-content/70">{{ t('topAuthors.published') }}</p>
-            </div>
-            <div>
-              <p class="text-xl font-bold text-secondary">{{ stats.totalLikes }}</p>
-              <p class="text-xs text-base-content/70">{{ t('topAuthors.totalLikes') }}</p>
-            </div>
+          <div>
+            <p class="text-xl font-bold text-secondary">{{ stats.totalLikes }}</p>
+            <p class="text-xs text-base-content/70">{{ t('topAuthors.totalLikes') }}</p>
           </div>
         </div>
       </div>
@@ -401,7 +359,6 @@ import { ref, computed, watch, onMounted, onUnmounted, onActivated, onDeactivate
 import { useRoute } from 'vue-router';
 import DashboardCard from '~/components/admin/DashboardCard.vue'
 import LineChart from '~/components/echarts/line-chart.vue'
-import ActionButton from '~/components/admin/ActionButton.vue'
 import ChartBase from '~/components/echarts/chart-base.vue'
 import { Stats as fetchStats } from '~/api/admin'
 import type { EChartsCoreOption } from 'echarts/core';
@@ -446,11 +403,11 @@ const route = useRoute();
 // 添加加载状态和错误处理
 const isLoading = ref(false);
 const error = ref<string | null>(null);
-const chartRange = ref('7days');
+const chartRange = ref('7days'); 
 
 // 数据刷新控制
 const autoRefreshEnabled = ref(true);
-const autoRefreshInterval = ref(30000); // 30秒
+const autoRefreshInterval = ref(30000); 
 let autoRefreshTimer: NodeJS.Timeout | null = null;
 const lastRefreshTime = ref<string>('');
 const chartDataVersion = ref(0); 
@@ -523,6 +480,7 @@ const refreshChartData = (chartType: string) => {
   }
 };
 
+// 处理图表数据 
 const processChartData = (range: string) => {
   console.log('处理图表数据，范围:', range);
   
@@ -581,7 +539,6 @@ const processChartData = (range: string) => {
         } else if (currentLang === 'zh-TW') {
           return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;
         } else {
-
           return `${month}月${day}日`;
         }
       } catch (e) {
@@ -597,13 +554,6 @@ const processChartData = (range: string) => {
   processedComments = validComments;
   
   console.log('处理后的图表数据:', {
-    dates: processedDates,
-    users: processedUsers,
-    blogs: processedBlogs,
-    comments: processedComments
-  });
-  
-   console.log('处理后的图表数据:', {
     dates: processedDates,
     users: processedUsers,
     blogs: processedBlogs,
@@ -641,7 +591,8 @@ const generateDefaultDailyData = (range: string) => {
   for (let i = dayCount - 1; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(date.getDate() - i);
-
+    
+    // 格式化日期
     const month = date.getMonth() + 1;
     const day = date.getDate();
     const currentLang = locale.value || 'zh-CN';
@@ -1159,18 +1110,6 @@ onUnmounted(() => {
       "blogs": "博客发布",
       "comments": "评论数量"
     },
-    "quickActions": {
-      "title": "快速操作",
-      "desc": "常用管理功能",
-      "userManagement": "用户管理",
-      "userManagementDesc": "管理用户账户",
-      "blogManagement": "博客管理",
-      "blogManagementDesc": "编辑博客文章",
-      "commentReview": "评论审核",
-      "commentReviewDesc": "审核用户评论",
-      "reportManagement": "举报管理",
-      "reportManagementDesc": "处理用户举报"
-    },
     "topAuthors": {
       "title": "顶级作者",
       "desc": "博客发布排行榜",
@@ -1258,18 +1197,6 @@ onUnmounted(() => {
       "blogs": "Blogs Published",
       "comments": "Comments"
     },
-    "quickActions": {
-      "title": "Quick Actions",
-      "desc": "Common management functions",
-      "userManagement": "User Management",
-      "userManagementDesc": "Manage user accounts",
-      "blogManagement": "Blog Management",
-      "blogManagementDesc": "Edit blog articles",
-      "commentReview": "Comment Review",
-      "commentReviewDesc": "Review user comments",
-      "reportManagement": "Report Management",
-      "reportManagementDesc": "Handle user reports"
-    },
     "topAuthors": {
       "title": "Top Authors",
       "desc": "Blog Publishing Ranking",
@@ -1356,18 +1283,6 @@ onUnmounted(() => {
     "dailyStats": {
       "blogs": "博客發布",
       "comments": "評論數量"
-    },
-    "quickActions": {
-      "title": "快速操作",
-      "desc": "常用管理功能",
-      "userManagement": "用戶管理",
-      "userManagementDesc": "管理用戶賬戶",
-      "blogManagement": "博客管理",
-      "blogManagementDesc": "編輯博客文章",
-      "commentReview": "評論審核",
-      "commentReviewDesc": "審核用戶評論",
-      "reportManagement": "舉報管理",
-      "reportManagementDesc": "處理用戶舉報"
     },
     "topAuthors": {
       "title": "頂級作者",
