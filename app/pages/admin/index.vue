@@ -102,15 +102,15 @@
         <div class="flex justify-between items-center mb-6">
           <div>
             <h2 class="text-xl font-bold text-base-content">{{ t('charts.userGrowth') }}</h2>
-            <p class="text-sm text-base-content/70 mt-1">{{ t('charts.userGrowthDesc') }}</p>
+            <p class="text-sm text-base-content/70 mt-1">{{ t('charts.userGrowthDailyDesc') }}</p>
           </div>
           <div class="flex items-center space-x-2">
             <div class="flex space-x-2 mr-4">
-              <button @click="setChartRange('month')" :class="['px-3 py-1 rounded-lg text-sm', chartRange === 'month' ? 'bg-primary text-primary-content' : 'text-base-content/70 hover:bg-base-200']">
-                {{ t('charts.monthly') }}
+              <button @click="setChartRange('7days')" :class="['px-3 py-1 rounded-lg text-sm', chartRange === '7days' ? 'bg-primary text-primary-content' : 'text-base-content/70 hover:bg-base-200']">
+                {{ t('charts.last7Days') }}
               </button>
-              <button @click="setChartRange('quarter')" :class="['px-3 py-1 rounded-lg text-sm', chartRange === 'quarter' ? 'bg-primary text-primary-content' : 'text-base-content/70 hover:bg-base-200']">
-                {{ t('charts.quarterly') }}
+              <button @click="setChartRange('30days')" :class="['px-3 py-1 rounded-lg text-sm', chartRange === '30days' ? 'bg-primary text-primary-content' : 'text-base-content/70 hover:bg-base-200']">
+                {{ t('charts.last30Days') }}
               </button>
             </div>
             <button @click="refreshChartData('userGrowth')" class="btn btn-xs btn-ghost" :title="t('charts.refreshChart')">
@@ -147,6 +147,8 @@
             color="#3b82f6"
             :line-width="3"
             :show-legend="false"
+            :x-axis-rotate="userGrowth.xAxis.length > 10 ? 45 : 0"
+            :x-axis-interval="userGrowth.xAxis.length > 15 ? Math.floor(userGrowth.xAxis.length / 8) : 0"
             :key="'userGrowth-' + chartDataVersion"
           />
         </div>
@@ -157,7 +159,7 @@
         <div class="flex justify-between items-center mb-4">
           <div>
             <h2 class="text-lg font-bold text-base-content">{{ t('charts.blogGrowth') }}</h2>
-            <p class="text-sm text-base-content/70 mt-1">{{ t('charts.blogGrowthDesc') }}</p>
+            <p class="text-sm text-base-content/70 mt-1">{{ t('charts.blogGrowthDailyDesc') }}</p>
           </div>
           <div class="flex items-center">
             <div class="text-sm text-base-content/70 mr-4">
@@ -196,6 +198,8 @@
             color="#10b981"
             :line-width="2"
             :show-legend="false"
+            :x-axis-rotate="blogGrowth.xAxis.length > 10 ? 45 : 0"
+            :x-axis-interval="blogGrowth.xAxis.length > 15 ? Math.floor(blogGrowth.xAxis.length / 8) : 0"
             :key="'blogGrowth-' + chartDataVersion"
           />
        </div>
@@ -442,7 +446,7 @@ const route = useRoute();
 // 添加加载状态和错误处理
 const isLoading = ref(false);
 const error = ref<string | null>(null);
-const chartRange = ref('month');
+const chartRange = ref('7days');
 
 // 数据刷新控制
 const autoRefreshEnabled = ref(true);
@@ -514,29 +518,20 @@ const refreshChartData = (chartType: string) => {
   if (chartType === 'userGrowth' || chartType === 'blogGrowth') {
     processChartData(chartRange.value);
   } else if (chartType === 'monthlyStats') {
-    generateMonthlyStats(
-      userGrowth.value.xAxis,
-      blogGrowth.value.seriesData,
-      trendData.value.comments.slice(-userGrowth.value.xAxis.length)
-    );
+    // 生成每日统计数据
+    generateDailyStats();
   }
 };
 
-// 处理图表数据
 const processChartData = (range: string) => {
   console.log('处理图表数据，范围:', range);
   
   if (!trendData.value || trendData.value.dates.length === 0) {
     console.warn('没有趋势数据可用');
-    userGrowth.value = {
-      xAxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
-      seriesData: [0, 0, 0, 0, 0, 0]
-    };
-    blogGrowth.value = {
-      xAxis: ['1月', '2月', '3月', '4月', '5月', '6月'],
-      seriesData: [0, 0, 0, 0, 0, 0]
-    };
-    generateMonthlyStats();
+    const defaultData = generateDefaultDailyData(range);
+    userGrowth.value = defaultData.userGrowth;
+    blogGrowth.value = defaultData.blogGrowth;
+    generateDailyStats();
     return;
   }
 
@@ -548,89 +543,67 @@ const processChartData = (range: string) => {
   let processedBlogs: number[] = [];
   let processedComments: number[] = [];
   
-  if (range === 'quarter') {
-    const quarterData = new Map<string, { users: number, blogs: number, comments: number }>();
-    
-    dates.forEach((date, index) => {
-      if (!date) return; 
-      
-      const dateStr = String(date);
-      if (dateStr.includes('-')) {
-
-        const [yearStr, monthStr] = dateStr.split('-');
-        const year = Number(yearStr);
-        const month = Number(monthStr);
-
-        if (isNaN(year) || isNaN(month) || month < 1 || month > 12) {
-          console.warn('无效的日期格式:', dateStr);
-          return;
-        }
-        
-        const quarter = Math.floor((month - 1) / 3) + 1;
-        const currentLang = locale.value || 'zh-CN';
-        let quarterKey = '';
-        if (currentLang === 'en') {
-          quarterKey = `Q${quarter} ${year}`;
-        } else if (currentLang === 'zh-TW') {
-          quarterKey = `${year}年第${quarter}季度`;
-        } else {
-          quarterKey = `${year}年Q${quarter}`;
-        }
-        
-        const data = quarterData.get(quarterKey) || { users: 0, blogs: 0, comments: 0 };
-        data.users += (users[index] || 0);
-        data.blogs += (blogs[index] || 0);
-        data.comments += (comments[index] || 0);
-        quarterData.set(quarterKey, data);
-      } else {
-        const quarterKey = dateStr;
-        const data = quarterData.get(quarterKey) || { users: 0, blogs: 0, comments: 0 };
-        data.users += (users[index] || 0);
-        data.blogs += (blogs[index] || 0);
-        data.comments += (comments[index] || 0);
-        quarterData.set(quarterKey, data);
-      }
-    });
-    
-    processedDates = Array.from(quarterData.keys());
-    processedUsers = Array.from(quarterData.values()).map(d => d.users);
-    processedBlogs = Array.from(quarterData.values()).map(d => d.blogs);
-    processedComments = Array.from(quarterData.values()).map(d => d.comments);
-  } else {
-    const recentCount = Math.min(dates.length, 12);
-    
-    const validDates = dates.slice(-recentCount).filter(date => date != null);
-    const validUsers = users.slice(-recentCount);
-    const validBlogs = blogs.slice(-recentCount);
-    const validComments = comments.slice(-recentCount);
-    
-    processedDates = validDates.map(date => {
-      if (date && typeof date === 'string' && date.includes('-')) {
-        const [year, month] = date.split('-');
-        const monthNum = parseInt(month);
-        const currentLang = locale.value || 'zh-CN';
-
-        if (isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
-          return t('charts.unknownMonth');
-        }
-
-        const monthNames = {
-          'zh-CN': ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-          'zh-TW': ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-          'en': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        };
-        
-        return monthNames[currentLang as keyof typeof monthNames]?.[monthNum - 1] || `${monthNum}月`;
-      }
-      return date || t('charts.unknownMonth');
-    });
-    
-    processedUsers = validUsers;
-    processedBlogs = validBlogs;
-    processedComments = validComments;
+  // 根据选择的范围筛选数据
+  let dayCount = 7;
+  if (range === '30days') {
+    dayCount = 30;
   }
+
+  const recentCount = Math.min(dates.length, dayCount);
+  
+  // 过滤出有效的日期数据
+  const validDates = dates.slice(-recentCount).filter(date => date != null);
+  const validUsers = users.slice(-recentCount);
+  const validBlogs = blogs.slice(-recentCount);
+  const validComments = comments.slice(-recentCount);
+
+  processedDates = validDates.map(date => {
+    if (date && typeof date === 'string') {
+      try {
+        const dateObj = new Date(date);
+        if (isNaN(dateObj.getTime())) {
+          if (date.includes('-')) {
+            const [yearStr, monthStr] = date.split('-');
+            const year = yearStr || '';
+            const month = monthStr || '';
+            return `${month}/${year.slice(-2)}`;
+          }
+          return date;
+        }
+        
+        // 根据语言环境格式化日期
+        const currentLang = locale.value || 'zh-CN';
+        const day = dateObj.getDate();
+        const month = dateObj.getMonth() + 1;
+        
+        if (currentLang === 'en') {
+          return `${month}/${day}`;
+        } else if (currentLang === 'zh-TW') {
+          return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;
+        } else {
+
+          return `${month}月${day}日`;
+        }
+      } catch (e) {
+        console.warn('日期解析失败:', date, e);
+        return date;
+      }
+    }
+    return date || t('charts.unknownDate');
+  });
+  
+  processedUsers = validUsers;
+  processedBlogs = validBlogs;
+  processedComments = validComments;
   
   console.log('处理后的图表数据:', {
+    dates: processedDates,
+    users: processedUsers,
+    blogs: processedBlogs,
+    comments: processedComments
+  });
+  
+   console.log('处理后的图表数据:', {
     dates: processedDates,
     users: processedUsers,
     blogs: processedBlogs,
@@ -643,6 +616,7 @@ const processChartData = (range: string) => {
     processedBlogs.length, 
     processedComments.length
   );
+  
   userGrowth.value = {
     xAxis: processedDates.slice(0, minLength),
     seriesData: processedUsers.slice(0, minLength)
@@ -653,120 +627,93 @@ const processChartData = (range: string) => {
     seriesData: processedBlogs.slice(0, minLength)
   };
   
-  generateMonthlyStats(
-    processedDates.slice(0, minLength), 
-    processedBlogs.slice(0, minLength), 
-    processedComments.slice(0, minLength)
-  );
+  // 生成每日统计数据
+  generateDailyStats();
 };
 
-watch(locale, () => {
-  if (trendData.value.dates.length > 0) {
-    processChartData(chartRange.value);
-  }
-});
+const generateDefaultDailyData = (range: string) => {
+  const dayCount = range === '30days' ? 30 : 7;
+  const today = new Date();
+  const dates: string[] = [];
+  const users: number[] = [];
+  const blogs: number[] = [];
+  
+  for (let i = dayCount - 1; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
 
-// 生成月度统计图表
-const generateMonthlyStats = (dates: string[] = [], blogs: number[] = [], comments: number[] = []) => {
-  if (dates.length === 0) {
-    const monthNames = {
-      'zh-CN': ['1月', '2月', '3月', '4月', '5月', '6月'],
-      'zh-TW': ['1月', '2月', '3月', '4月', '5月', '6月'],
-      'en': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
-    };
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
     const currentLang = locale.value || 'zh-CN';
-    const defaultMonths = monthNames[currentLang as keyof typeof monthNames] || monthNames['zh-CN'];
     
-    monthlyStats.value.options = {
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'
-        }
-      },
-      legend: {
-        data: [t('monthlyStats.blogs'), t('monthlyStats.comments')],
-        bottom: 10,
-        textStyle: {
-          color: '#6b7280'
-        }
-      },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '15%',
-        top: '3%',
-        containLabel: true
-      },
-      xAxis: {
-        type: 'category',
-        data: dates.length > 0 ? dates : defaultMonths,
-        axisLine: {
-          lineStyle: {
-            color: '#e5e7eb'
-          }
-        },
-        axisLabel: {
-          color: '#6b7280'
-        }
-      },
-      yAxis: {
-        type: 'value',
-        axisLine: {
-          lineStyle: {
-            color: '#e5e7eb'
-          }
-        },
-        axisLabel: {
-          color: '#6b7280'
-        },
-        splitLine: {
-          lineStyle: {
-            color: '#f3f4f6'
-          }
-        }
-      },
-      series: [
-        {
-          name: t('monthlyStats.blogs'),
-          type: 'bar',
-          data: blogs.length > 0 ? blogs : [12, 15, 18, 10, 14, 20],
-          itemStyle: {
-            color: '#3b82f6'
-          },
-          emphasis: {
-            itemStyle: {
-              color: '#2563eb'
-            }
-          }
-        },
-        {
-          name: t('monthlyStats.comments'),
-          type: 'bar',
-          data: comments.length > 0 ? comments : [32, 40, 28, 35, 42, 48],
-          itemStyle: {
-            color: '#10b981'
-          },
-          emphasis: {
-            itemStyle: {
-              color: '#059669'
-            }
-          }
-        }
-      ]
-    } as EChartsCoreOption;
+    if (currentLang === 'en') {
+      dates.push(`${month}/${day}`);
+    } else if (currentLang === 'zh-TW') {
+      dates.push(`${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`);
+    } else {
+      dates.push(`${month}月${day}日`);
+    }
+
+    const baseUsers = 40;
+    users.push(baseUsers + Math.floor(Math.random() * 10));
+
+    const baseBlogs = 110;
+    blogs.push(baseBlogs + Math.floor(Math.random() * 15));
+  }
+  
+  return {
+    userGrowth: {
+      xAxis: dates,
+      seriesData: users
+    },
+    blogGrowth: {
+      xAxis: dates,
+      seriesData: blogs
+    }
+  };
+};
+
+// 生成每日统计数据图表
+const generateDailyStats = () => {
+  const dates = userGrowth.value.xAxis || [];
+  const blogs = blogGrowth.value.seriesData || [];
+  const comments = trendData.value.comments?.slice(-dates.length) || [];
+
+  if (dates.length === 0) {
+    const defaultData = generateDefaultDailyData(chartRange.value);
+    monthlyStats.value.options = createDailyChartOptions(
+      defaultData.userGrowth.xAxis,
+      defaultData.blogGrowth.seriesData,
+      Array(dates.length || 7).fill(0).map(() => Math.floor(Math.random() * 50))
+    );
     return;
   }
   
-  monthlyStats.value.options = {
+  monthlyStats.value.options = createDailyChartOptions(dates, blogs, comments);
+};
+
+const createDailyChartOptions = (dates: string[], blogs: number[], comments: number[]) => {
+  const currentLang = locale.value || 'zh-CN';
+  
+  return {
     tooltip: {
       trigger: 'axis',
       axisPointer: {
         type: 'shadow'
+      },
+      formatter: (params: any) => {
+        let result = '';
+        if (params && params.length > 0) {
+          result = `${params[0].axisValue}<br/>`;
+          params.forEach((item: any) => {
+            result += `${item.marker} ${item.seriesName}: ${item.value}<br/>`;
+          });
+        }
+        return result;
       }
     },
     legend: {
-      data: [t('monthlyStats.blogs'), t('monthlyStats.comments')],
+      data: [t('dailyStats.blogs'), t('dailyStats.comments')],
       bottom: 10,
       textStyle: {
         color: '#6b7280'
@@ -788,7 +735,9 @@ const generateMonthlyStats = (dates: string[] = [], blogs: number[] = [], commen
         }
       },
       axisLabel: {
-        color: '#6b7280'
+        color: '#6b7280',
+        rotate: dates.length > 10 ? 45 : 0,
+        interval: dates.length > 15 ? Math.floor(dates.length / 8) : 0
       }
     },
     yAxis: {
@@ -809,7 +758,7 @@ const generateMonthlyStats = (dates: string[] = [], blogs: number[] = [], commen
     },
     series: [
       {
-        name: t('monthlyStats.blogs'),
+        name: t('dailyStats.blogs'),
         type: 'bar',
         data: blogs,
         itemStyle: {
@@ -822,7 +771,7 @@ const generateMonthlyStats = (dates: string[] = [], blogs: number[] = [], commen
         }
       },
       {
-        name: t('monthlyStats.comments'),
+        name: t('dailyStats.comments'),
         type: 'bar',
         data: comments,
         itemStyle: {
@@ -837,6 +786,12 @@ const generateMonthlyStats = (dates: string[] = [], blogs: number[] = [], commen
     ]
   } as EChartsCoreOption;
 };
+
+watch(locale, () => {
+  if (trendData.value.dates.length > 0) {
+    processChartData(chartRange.value);
+  }
+});
 
 // 获取仪表盘数据
 const fetchDashboardData = async () => {
@@ -896,8 +851,7 @@ const fetchDashboardData = async () => {
       
       // 更新刷新时间
       updateLastRefreshTime();
-      
-      // 增加图表数据版本
+
       chartDataVersion.value++;
     } else {
       console.warn('API返回空响应或没有data字段');
@@ -919,12 +873,36 @@ const fetchDashboardData = async () => {
       recentBlogs: 12
     };
 
+    const today = new Date();
+    const dates: string[] = [];
+    const users: number[] = [];
+    const blogs: number[] = [];
+    const comments: number[] = [];
+    
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      dates.push(`${year}-${month}-${day}`);
+      
+      const baseUsers = 25 + Math.floor(i / 2);
+      users.push(baseUsers + Math.floor(Math.random() * 5));
+      
+      const baseBlogs = 85 + i;
+      blogs.push(baseBlogs + Math.floor(Math.random() * 10));
+      
+      const baseComments = 650 + i * 8;
+      comments.push(baseComments + Math.floor(Math.random() * 30));
+    }
+    
     trendData.value = {
-      dates: ['2024-01', '2024-02', '2024-03', '2024-04', '2024-05', '2024-06', 
-              '2024-07', '2024-08', '2024-09', '2024-10', '2024-11', '2024-12'],
-      users: [25, 28, 30, 32, 35, 38, 40, 42, 43, 44, 45, 45],
-      blogs: [85, 88, 92, 95, 100, 105, 108, 112, 115, 118, 120, 120],
-      comments: [650, 680, 700, 720, 750, 780, 800, 830, 850, 870, 890, 890]
+      dates: dates,
+      users: users,
+      blogs: blogs,
+      comments: comments
     };
     
     topAuthors.value = [
@@ -1166,14 +1144,20 @@ onUnmounted(() => {
     },
     "charts": {
       "userGrowth": "用户增长趋势",
+      "userGrowthDailyDesc": "最近30天用户增长情况",
       "userGrowthDesc": "近12个月用户增长情况",
-      "monthly": "月度",
-      "quarterly": "季度",
       "blogGrowth": "博客增长趋势",
+      "blogGrowthDailyDesc": "最近30天博客发布情况",
       "blogGrowthDesc": "近12个月博客发布情况",
+      "last7Days": "最近7天",
+      "last30Days": "最近30天",
       "totalArticles": "总计 {total} 篇",
-      "unknownMonth": "未知月份",
+      "unknownDate": "未知日期",
       "refreshChart": "刷新图表数据"
+    },
+    "dailyStats": {
+      "blogs": "博客发布",
+      "comments": "评论数量"
     },
     "quickActions": {
       "title": "快速操作",
@@ -1220,8 +1204,8 @@ onUnmounted(() => {
       "detailedReport": "详细报告"
     },
     "monthlyStats": {
-      "title": "月度统计",
-      "desc": "博客和评论月度统计",
+      "title": "每日统计",
+      "desc": "博客和评论每日统计",
       "currentMonth": "当前月份: {month}",
       "blogs": "博客发布",
       "comments": "评论数量"
@@ -1229,11 +1213,7 @@ onUnmounted(() => {
     "footer": {
       "lastUpdate": "最后更新: {time}",
       "contactSupport": "如有问题请联系技术支持"
-    },
-    "months": [
-      "一月", "二月", "三月", "四月", "五月", "六月", 
-      "七月", "八月", "九月", "十月", "十一月", "十二月"
-    ]
+    }
   },
   "en": {
     "dashboard": "Admin Dashboard",
@@ -1263,14 +1243,20 @@ onUnmounted(() => {
     },
     "charts": {
       "userGrowth": "User Growth Trend",
+      "userGrowthDailyDesc": "User growth over the past 30 days",
       "userGrowthDesc": "User growth over the past 12 months",
-      "monthly": "Monthly",
-      "quarterly": "Quarterly",
       "blogGrowth": "Blog Growth Trend",
+      "blogGrowthDailyDesc": "Blog publishing over the past 30 days",
       "blogGrowthDesc": "Blog publishing over the past 12 months",
+      "last7Days": "Last 7 Days",
+      "last30Days": "Last 30 Days",
       "totalArticles": "Total {total} articles",
-      "unknownMonth": "Unknown month",
+      "unknownDate": "Unknown date",
       "refreshChart": "Refresh chart data"
+    },
+    "dailyStats": {
+      "blogs": "Blogs Published",
+      "comments": "Comments"
     },
     "quickActions": {
       "title": "Quick Actions",
@@ -1317,8 +1303,8 @@ onUnmounted(() => {
       "detailedReport": "Detailed Report"
     },
     "monthlyStats": {
-      "title": "Monthly Statistics",
-      "desc": "Monthly blog and comment statistics",
+      "title": "Daily Statistics",
+      "desc": "Daily blog and comment statistics",
       "currentMonth": "Current month: {month}",
       "blogs": "Blogs Published",
       "comments": "Comments"
@@ -1326,11 +1312,7 @@ onUnmounted(() => {
     "footer": {
       "lastUpdate": "Last update: {time}",
       "contactSupport": "Contact technical support if you have any problems"
-    },
-    "months": [
-      "January", "February", "March", "April", "May", "June", 
-      "July", "August", "September", "October", "November", "December"
-    ]
+    }
   },
   "zh-TW": {
     "dashboard": "管理儀表板",
@@ -1360,14 +1342,20 @@ onUnmounted(() => {
     },
     "charts": {
       "userGrowth": "用戶增長趨勢",
+      "userGrowthDailyDesc": "最近30天用戶增長情況",
       "userGrowthDesc": "近12個月用戶增長情況",
-      "monthly": "月度",
-      "quarterly": "季度",
       "blogGrowth": "博客增長趨勢",
+      "blogGrowthDailyDesc": "最近30天博客發布情況",
       "blogGrowthDesc": "近12個月博客發布情況",
+      "last7Days": "最近7天",
+      "last30Days": "最近30天",
       "totalArticles": "總計 {total} 篇",
-      "unknownMonth": "未知月份",
+      "unknownDate": "未知日期",
       "refreshChart": "刷新圖表數據"
+    },
+    "dailyStats": {
+      "blogs": "博客發布",
+      "comments": "評論數量"
     },
     "quickActions": {
       "title": "快速操作",
@@ -1414,8 +1402,8 @@ onUnmounted(() => {
       "detailedReport": "詳細報告"
     },
     "monthlyStats": {
-      "title": "月度統計",
-      "desc": "博客和評論月度統計",
+      "title": "每日統計",
+      "desc": "博客和評論每日統計",
       "currentMonth": "當前月份: {month}",
       "blogs": "博客發布",
       "comments": "評論數量"
@@ -1423,11 +1411,7 @@ onUnmounted(() => {
     "footer": {
       "lastUpdate": "最後更新: {time}",
       "contactSupport": "如有問題請聯繫技術支援"
-    },
-    "months": [
-      "一月", "二月", "三月", "四月", "五月", "六月", 
-      "七月", "八月", "九月", "十月", "十一月", "十二月"
-    ]
+    }
   }
 }
 </i18n>
