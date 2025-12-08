@@ -377,8 +377,8 @@ onMounted(() => {
                 <div
                   class="absolute inset-0 bg-gradient-to-tr from-primary/30 via-secondary/20 to-primary/10 rounded-full blur-[80px] transform scale-90 group-hover:scale-100 transition-transform duration-1000">
                 </div>
-                <img src="/imgs/phone.png" alt="App Preview"
-                  class="hero-phone-img relative z-10 w-full h-auto drop-shadow-2xl transform transition-all duration-700 group-hover:-translate-y-6 group-hover:rotate-y-12 will-change-transform">
+                <NuxtImg src="/imgs/phone.png" alt="App Preview"
+                  class="hero-phone-img relative z-10 w-full h-auto drop-shadow-2xl transform transition-all duration-700 group-hover:-translate-y-6 group-hover:rotate-y-12 will-change-transform" />
               </div>
             </div>
 
