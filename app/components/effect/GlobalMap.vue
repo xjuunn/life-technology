@@ -24,7 +24,7 @@
         </g>
 
         <g v-for="(route, i) in calculatedRoutes" :key="`points-group-${i}`" class="point-group"
-          :style="{ '--delay': `${i * 2.2}s` }">
+          :style="{ '--delay': `${i * 0.5}s` }">
           <g>
             <circle :cx="route.start.x" :cy="route.start.y" r="2" :fill="themeColors.line" />
             <circle :cx="route.start.x" :cy="route.start.y" r="2" :fill="themeColors.line" opacity="0.5"
