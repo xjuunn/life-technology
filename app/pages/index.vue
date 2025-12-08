@@ -75,8 +75,7 @@
                 <p class="text-base-content/60 leading-relaxed max-w-lg">
                   {{ t('trends.assets.desc') }}
                 </p>
-                <nuxt-link 
-                  to="/intro/what-life-do" 
+                <nuxt-link to="/intro/what-life-do"
                   class="mt-6 flex items-center gap-2 text-primary font-bold text-sm cursor-pointer group-hover:translate-x-2 transition-transform">
                   {{ t('trends.read_more') }}
                   <Icon name="heroicons:arrow-long-right" />
@@ -276,6 +275,13 @@
         </div>
       </div>
     </section>
+    <section class="cta-section px-4 text-center overflow-hidden relative flex items-center justify-center">
+      <div class="w-full md:w-8/12 lg:w-6/12 flex items-center justify-center">
+        <video src="https://blog.lifetv.chat/videos/lv_0_20251208110401.mp4" controls></video>
+
+      </div>
+    </section>
+
     <section class="cta-section py-40 px-4 text-center overflow-hidden relative">
       <div class="absolute inset-0 bg-linear-to-t from-base-content/5 to-transparent pointer-events-none"></div>
       <div class="container mx-auto relative z-10">
@@ -290,8 +296,7 @@
               class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-12 min-w-[200px] text-primary-content shadow-lg shadow-primary/20">
               {{ t('cta.btn_download') }}
             </nuxt-link>
-            <button
-               @click="openContactModal"
+            <button @click="openContactModal"
               class="btn btn-outline btn-lg rounded-full px-12 min-w-[200px] border-base-content/20 hover:bg-base-content hover:text-base-100"
               style="border-image: linear-gradient(to right, var(--primary), var(--secondary)) 1;">
               {{ t('cta.btn_contact') }}
@@ -306,10 +311,7 @@
     <!-- 联系商务合作弹窗 -->
     <Teleport to="body">
       <div v-if="showContactModal" class="fixed inset-0 z-50 flex items-center justify-center">
-        <div 
-          class="absolute inset-0 bg-black/50 backdrop-blur-sm"
-          @click="closeContactModal"
-        ></div>
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="closeContactModal"></div>
 
         <div class="relative z-10 bg-base-100 rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
           <div class="p-8 text-center border-b border-base-content/10">
@@ -332,17 +334,12 @@
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-              <button
-                @click="copyQQNumber"
-                class="btn btn-primary rounded-xl py-4 flex items-center justify-center gap-2"
-              >
+              <button @click="copyQQNumber"
+                class="btn btn-primary rounded-xl py-4 flex items-center justify-center gap-2">
                 <Icon name="heroicons:clipboard-document" size="20" />
                 {{ t('contact_modal.copy_btn') }}
               </button>
-              <button
-                @click="closeContactModal"
-                class="btn btn-ghost rounded-xl py-4 border border-base-content/20"
-              >
+              <button @click="closeContactModal" class="btn btn-ghost rounded-xl py-4 border border-base-content/20">
                 {{ t('contact_modal.close_btn') }}
               </button>
             </div>
@@ -370,7 +367,7 @@ const statsData = ref<StatsResponse>()
 const mainContainer = ref<HTMLElement | null>(null);
 let ctx: gsap.Context;
 const showContactModal = ref(false)
-const qqNumber = ref('1759942536') 
+const qqNumber = ref('1759942536')
 
 onMounted(() => {
   initData();
