@@ -24,8 +24,8 @@ onMounted(async () => {
     content: contentRef.value,
     smooth: 1,
     effects: true,
-    normalizeScroll: true,
-    smoothTouch: 0.1
+    normalizeScroll: false,
+    smoothTouch: 0
   })
 
   ScrollTrigger.create({
@@ -57,7 +57,7 @@ onUnmounted(() => {
     <div class="fixed top-0 left-0 w-full z-50">
       <common-nav />
     </div>
-    <div ref="wrapperRef" class="fixed inset-0 w-full h-full overflow-hidden z-0">
+    <div ref="wrapperRef" class="z-0">
       <div ref="contentRef" class="w-full min-h-screen flex flex-col will-change-transform">
         <main class="grow pt-22">
           <slot />

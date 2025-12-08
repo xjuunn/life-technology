@@ -1,5 +1,6 @@
 <template>
-  <div class="drawer lg:drawer-open h-screen w-full bg-base-100 text-base-content overflow-hidden font-sans">
+  <div
+    class="drawer lg:drawer-open min-h-screen lg:h-screen w-full bg-base-100 text-base-content lg:overflow-hidden font-sans">
     <input id="admin-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-side z-50 lg:z-0">
       <label for="admin-drawer" aria-label="close sidebar"
@@ -24,12 +25,13 @@
       <div class="sticky top-0 z-40 w-full">
         <admin-header />
       </div>
-      <div class="h-[calc(100vh-4rem)] min-h-0 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 scroll-smooth custom-scrollbar">
+      <div
+        class="lg:h-[calc(100vh-4rem)] lg:min-h-0 lg:overflow-y-auto lg:overflow-x-hidden p-4 md:p-6 lg:p-8 scroll-smooth custom-scrollbar">
         <div class="container mx-auto max-w-7xl min-h-[calc(100vh-8rem)] animate-fade-in-up">
           <slot />
         </div>
         <div class="mt-10 py-6 text-center text-xs opacity-40">
-          
+
         </div>
       </div>
     </div>
