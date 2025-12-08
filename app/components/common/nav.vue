@@ -1,11 +1,11 @@
 <template>
   <nav class="fixed top-0 w-full z-50 transition-all duration-500 border-b" :class="[
     isScrolled
-      ? 'bg-base-100/85 backdrop-blur-xl border-base-content/10 py-5'
-      : ' backdrop-blur-none border-transparent py-5 bg-base-100'
+      ? 'bg-base-100/85 backdrop-blur-xl border-base-content/10 md:py-3'
+      : ' backdrop-blur-none border-transparent md:py-3 bg-base-100'
   ]">
     <div class="container mx-auto px-4">
-      <div class="navbar min-h-12 p-0 justify-between">
+      <div class="navbar h-2 p-0 justify-between">
         <div class="flex items-center gap-4 z-60">
           <button class="btn btn-circle btn-ghost md:hidden text-base-content" @click="toggleMobileMenu">
             <Icon :name="isMobileMenuOpen ? 'mingcute:close-fill' : 'mingcute:menu-fill'" size="24"
