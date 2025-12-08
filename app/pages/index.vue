@@ -52,6 +52,58 @@
         </div>
       </div>
     </div>
+    <section class="video-intro-section py-24 px-4 relative z-10 overflow-hidden">
+      <div class="container mx-auto max-w-7xl">
+        <div class="flex flex-col lg:flex-row items-center gap-16">
+          <div class="w-full lg:w-1/2 video-side invisible relative">
+            <div
+              class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-primary/20 blur-[120px] opacity-30 rounded-full pointer-events-none">
+            </div>
+            <div
+              class="relative rounded-sm overflow-hidden shadow-2xl border border-base-content/5 bg-black group aspect-video">
+              <div
+                class="absolute inset-0 bg-linear-to-tr from-primary/10 to-transparent group-hover:opacity-0 transition-opacity duration-500 z-10 pointer-events-none">
+              </div>
+              <video src="https://blog.lifetv.chat/videos/lv_0_20251208110401.mp4"
+                class="w-full h-full object-cover transform transition-transform duration-1000"
+                controls playsinline>
+              </video>
+            </div>
+          </div>
+
+          <div class="w-full lg:w-1/2 video-text-side invisible">
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-bold uppercase tracking-widest mb-6 border border-secondary/10">
+              <div class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></div>
+              {{ t('video_section.badge') }}
+            </div>
+            <h2 class="text-3xl md:text-5xl font-black mb-6 leading-tight">
+              {{ t('video_section.title') }}
+            </h2>
+            <p class="text-lg text-base-content/60 mb-8 leading-relaxed">
+              {{ t('video_section.desc') }}
+            </p>
+            <div class="space-y-4">
+              <div v-for="(item, idx) in 3" :key="idx"
+                class="flex items-start gap-4 p-4 rounded-2xl hover:bg-base-content/5 transition-colors duration-300 border border-transparent hover:border-base-content/5">
+                <div
+                  class="w-12 h-12 rounded-xl bg-gradient-to-br from-base-200 to-base-100 flex items-center justify-center shrink-0 text-primary shadow-sm">
+                  <Icon
+                    :name="idx === 0 ? 'heroicons:sparkles' : idx === 1 ? 'heroicons:globe-alt' : 'heroicons:device-phone-mobile'"
+                    size="24" />
+                </div>
+                <div>
+                  <h4 class="font-bold text-lg mb-1">{{ t(`video_section.points.${idx}.title`) }}</h4>
+                  <p class="text-sm text-base-content/60 leading-relaxed">{{ t(`video_section.points.${idx}.desc`) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="trends-section relative py-32 px-4 z-2">
       <div class="container mx-auto max-w-6xl">
         <div
@@ -275,11 +327,6 @@
         </div>
       </div>
     </section>
-    <div class="w-full flex justify-center">
-      <div class="w-full md:w-8/12 lg:w-6/12 flex items-center justify-center">
-        <video src="https://blog.lifetv.chat/videos/lv_0_20251208110401.mp4" controls></video>
-      </div>
-    </div>
     <section class="cta-section py-40 px-4 text-center overflow-hidden relative">
       <div class="absolute inset-0 bg-linear-to-t from-base-content/5 to-transparent pointer-events-none"></div>
       <div class="container mx-auto relative z-10">
@@ -306,7 +353,6 @@
         </div>
       </div>
     </section>
-    <!-- 联系商务合作弹窗 -->
     <Teleport to="body">
       <div v-if="showContactModal" class="fixed inset-0 z-50 flex items-center justify-center">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="closeContactModal"></div>
@@ -382,6 +428,23 @@ onMounted(() => {
           { autoAlpha: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: 1, stagger: 0.1, ease: 'back.out(1.7)' },
           '-=1'
         );
+
+      const videoTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.video-intro-section',
+          start: 'top 80%',
+          toggleActions: 'play reverse play reverse'
+        }
+      });
+
+      videoTl.fromTo('.video-side',
+        { autoAlpha: 0, x: -50, rotationY: 10 },
+        { autoAlpha: 1, x: 0, rotationY: 0, duration: 1.2, ease: 'power3.out' }
+      ).fromTo('.video-text-side',
+        { autoAlpha: 0, x: 50 },
+        { autoAlpha: 1, x: 0, duration: 1.2, ease: 'power3.out' },
+        "-=1"
+      );
 
       gsap.fromTo('.trends-header',
         { autoAlpha: 0, x: -30, filter: 'blur(8px)' },
@@ -568,6 +631,25 @@ function copyQQNumber() {
       "autonomy": "数据自主权",
       "accidents": "安全事故"
     },
+    "video_section": {
+      "badge": "生态演示",
+      "title": "可视化您的数字未来",
+      "desc": "不仅仅是冷冰冰的数据，LIFE 为您构建了一个直观、可交互的数字世界。从资产管理到社交互动，每一个操作都清晰可见，安全可控。",
+      "points": [
+        {
+          "title": "直观交互",
+          "desc": "所见即所得的资产管理界面，零门槛上手 Web3。"
+        },
+        {
+          "title": "全球互联",
+          "desc": "打破地域限制，实时连接全球数字生态应用。"
+        },
+        {
+          "title": "移动优先",
+          "desc": "专为移动端优化的操作体验，随时随地掌控您的数字生活。"
+        }
+      ]
+    },
     "trends": {
       "subtitle": "Industry Trends",
       "title": "赋予生命更深意义",
@@ -659,7 +741,7 @@ function copyQQNumber() {
       "qq_label": "商务合作QQ",
       "copy_btn": "复制QQ号",
       "close_btn": "关闭",
-      "hint": "添加时请备注\"商务合作\""
+      "hint": "添加时请备注'商务合作'"
     }
   },
   "zh-TW": {
@@ -677,6 +759,25 @@ function copyQQNumber() {
       "distributed_records": "分布式帳本記錄",
       "autonomy": "數據自主權",
       "accidents": "安全事故"
+    },
+    "video_section": {
+      "badge": "生態演示",
+      "title": "可視化您的數字未來",
+      "desc": "不僅僅是冷冰冰的數據，LIFE 為您構建了一個直觀、可交互的數字世界。從資產管理到社交互動，每一個操作都清晰可見，安全可控。",
+      "points": [
+        {
+          "title": "直觀交互",
+          "desc": "所見即所得的資產管理界面，零門檻上手 Web3。"
+        },
+        {
+          "title": "全球互聯",
+          "desc": "打破地域限制，實時連接全球數字生態應用。"
+        },
+        {
+          "title": "移動優先",
+          "desc": "專為移動端優化的操作體驗，隨時隨地掌控您的數字生活。"
+        }
+      ]
     },
     "trends": {
       "subtitle": "Industry Trends",
@@ -769,7 +870,7 @@ function copyQQNumber() {
       "qq_label": "商務合作QQ",
       "copy_btn": "複製QQ號",
       "close_btn": "關閉",
-      "hint": "添加時請備註\"商務合作\""
+      "hint": "添加時請備註'商務合作'"
     }
   },
   "en": {
@@ -787,6 +888,25 @@ function copyQQNumber() {
       "distributed_records": "Distributed Ledger Records",
       "autonomy": "Data Autonomy",
       "accidents": "Security Accidents"
+    },
+    "video_section": {
+      "badge": "Ecosystem Demo",
+      "title": "Visualize Your Digital Future",
+      "desc": "More than just cold data, LIFE builds an intuitive and interactive digital world for you. From asset management to social interaction, every operation is clearly visible, secure, and controllable.",
+      "points": [
+        {
+          "title": "Intuitive Interaction",
+          "desc": "WYSIWYG asset management interface, zero threshold to start Web3."
+        },
+        {
+          "title": "Global Connectivity",
+          "desc": "Break geographical restrictions and connect to global digital ecosystem applications in real time."
+        },
+        {
+          "title": "Mobile First",
+          "desc": "Operation experience optimized for mobile terminals, control your digital life anytime, anywhere."
+        }
+      ]
     },
     "trends": {
       "subtitle": "Industry Trends",
@@ -879,7 +999,7 @@ function copyQQNumber() {
       "qq_label": "Business QQ",
       "copy_btn": "Copy QQ Number",
       "close_btn": "Close",
-      "hint": "Please note \"Business Cooperation\" when adding"
+      "hint": "Please note 'Business Cooperation' when adding"
     }
   }
 }</i18n>
