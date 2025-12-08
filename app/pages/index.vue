@@ -65,12 +65,10 @@
                 class="absolute inset-0 bg-linear-to-tr from-primary/10 to-transparent group-hover:opacity-0 transition-opacity duration-500 z-10 pointer-events-none">
               </div>
               <video src="https://blog.lifetv.chat/videos/lv_0_20251208110401.mp4"
-                class="w-full h-full object-cover transform transition-transform duration-1000"
-                controls playsinline>
+                class="w-full h-full object-cover transform transition-transform duration-1000" controls playsinline>
               </video>
             </div>
           </div>
-
           <div class="w-full lg:w-1/2 video-text-side invisible">
             <div
               class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-bold uppercase tracking-widest mb-6 border border-secondary/10">
@@ -115,7 +113,7 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:auto-rows-[400px]">
           <div
-            class="trend-card md:col-span-2 rounded-[2.5rem] bg-base-200 p-10 relative overflow-hidden group border border-base-content/5 hover:border-primary/30 transition-all duration-500 min-h-[450px] md:min-h-0 invisible">
+            class="trend-card md:col-span-2 rounded-[2.5rem] bg-base-200 p-10 relative overflow-hidden group border border-base-content/5 hover:border-primary/30 transition-colors duration-300 min-h-[450px] md:min-h-0 invisible">
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div
@@ -136,7 +134,7 @@
             </div>
           </div>
           <div
-            class="trend-card rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-secondary/30 transition-all duration-500 shadow-sm min-h-[380px] md:min-h-0 invisible">
+            class="trend-card rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-secondary/30 transition-colors duration-300 shadow-sm min-h-[380px] md:min-h-0 invisible">
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-secondary mb-6">
@@ -151,7 +149,7 @@
             </div>
           </div>
           <div
-            class="trend-card rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-all duration-500 shadow-sm min-h-[380px] md:min-h-0 invisible">
+            class="trend-card rounded-[2.5rem] bg-base-100 p-10 relative overflow-hidden group border border-base-content/5 hover:border-accent/30 transition-colors duration-300 shadow-sm min-h-[380px] md:min-h-0 invisible">
             <div class="absolute inset-0 bg-linear-to-br from-base-content/6 to-base-content/2"></div>
             <div class="relative z-10 h-full flex flex-col justify-between">
               <div class="w-20 h-20 rounded-2xl bg-base-200 flex items-center justify-center text-accent mb-6">
@@ -196,7 +194,7 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div v-for="(feature, i) in features" :key="i"
-            class="feature-card group p-8 rounded-3xl bg-base-100 border border-base-content/5 hover:border-primary/20 hover:shadow-xl transition-all duration-300 invisible">
+            class="feature-card group p-8 rounded-3xl bg-base-100 border border-base-content/5 hover:border-primary/20 hover:shadow-xl transition-[border-color,box-shadow,background-color] duration-300 invisible">
             <div
               class="w-16 h-16 rounded-2xl bg-base-200 group-hover:bg-primary group-hover:text-primary-content flex items-center justify-center mb-6 text-primary transition-colors">
               <Icon :name="feature.icon" size="32" />
@@ -418,15 +416,15 @@ onMounted(() => {
 
   if (mainContainer.value)
     ctx = gsap.context(() => {
-      const heroTl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+      const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
       heroTl.fromTo('.hero-anim',
         { autoAlpha: 0, y: 100, scale: 0.95, filter: 'blur(10px)' },
-        { autoAlpha: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 1.5, stagger: 0.15 }
+        { autoAlpha: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 1.2, stagger: 0.1 }
       )
         .fromTo('.stat-item',
           { autoAlpha: 0, scale: 0.8, y: 50, filter: 'blur(5px)' },
           { autoAlpha: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: 1, stagger: 0.1, ease: 'back.out(1.7)' },
-          '-=1'
+          '-=0.5'
         );
 
       const videoTl = gsap.timeline({
@@ -462,7 +460,7 @@ onMounted(() => {
         start: 'top 92%',
         onEnter: batch => gsap.fromTo(batch,
           { autoAlpha: 0, y: 80, rotationX: 10, scale: 0.9, filter: 'blur(5px)' },
-          { autoAlpha: 1, y: 0, rotationX: 0, scale: 1, filter: 'blur(0px)', duration: 1.2, stagger: 0.15, ease: 'expo.out' }
+          { autoAlpha: 1, y: 0, rotationX: 0, scale: 1, filter: 'blur(0px)', duration: 1.2, stagger: 0.15, ease: 'power3.out' }
         ),
         onLeave: batch => gsap.to(batch, { autoAlpha: 0, y: -50, scale: 0.9, filter: 'blur(5px)', duration: 0.8, ease: 'power2.in' }),
         onEnterBack: batch => gsap.to(batch, { autoAlpha: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' }),
