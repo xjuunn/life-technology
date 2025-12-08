@@ -47,7 +47,6 @@
                   class="btn btn-ghost text-base-content/70 hover:text-base-content transition-colors py-2 px-5 group overflow-hidden">
                   {{ t('nav.intro') }}
                 </div>
-
                 <ul tabindex="-1"
                   class="dropdown-content bg-base-200 menu border border-base-content/10 rounded-box z-1 w-52 p-2 shadow-sm">
                   <li>
@@ -225,11 +224,11 @@
         </div>
         <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-base-content/5 to-transparent"></div>
         <div class="flex flex-col h-full pt-24 pb-10 px-8 overflow-y-auto overscroll-contain">
-          <ul class="flex flex-col gap-6 w-full max-w-sm mx-auto">
+          <ul class="flex flex-col gap-6 w-full mx-auto">
             <li v-for="(item, index) in menuItems" :key="index" class="mobile-menu-item opacity-0 translate-y-8">
               <div v-if="item.children" class="group">
                 <button @click="toggleSubmenu(index)"
-                  class="w-full flex items-center justify-between text-3xl font-black tracking-tighter text-base-content transition-all duration-300"
+                  class="w-full flex items-center justify-between py-2 text-3xl font-black tracking-tighter text-base-content transition-all duration-300"
                   :class="expandedSubmenu === index ? 'text-primary' : ''">
                   <span class="relative">
                     {{ item.label }}
@@ -247,9 +246,9 @@
                   <ul class="flex flex-col gap-3 pt-6 pb-2 pl-2">
                     <li v-for="(child, cIndex) in item.children" :key="cIndex">
                       <nuxt-link :to="child.link"
-                        class="flex items-center gap-3 text-lg font-bold text-base-content/50 hover:text-base-content hover:translate-x-2 transition-all duration-300 py-1"
+                        class="flex w-full items-center gap-3 text-lg font-bold text-base-content/50 hover:text-base-content hover:bg-base-content/5 hover:translate-x-2 rounded-xl transition-all duration-300 py-3 px-4"
                         @click="isMobileMenuOpen = false">
-                        <span class="w-1.5 h-1.5 rounded-full bg-primary/40"></span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary/40 shrink-0"></span>
                         {{ child.label }}
                       </nuxt-link>
                     </li>
@@ -258,11 +257,13 @@
               </div>
 
               <nuxt-link v-else :to="item.link"
-                class="block text-3xl font-black tracking-tighter text-base-content hover:text-primary transition-colors group relative w-fit"
+                class="group block w-full py-2 text-3xl font-black tracking-tighter text-base-content hover:text-primary transition-colors"
                 active-class="text-primary" @click="isMobileMenuOpen = false">
-                {{ item.label }}
-                <span
-                  class="absolute -bottom-2 left-0 h-1 bg-primary w-0 transition-all duration-300 group-hover:w-full"></span>
+                <span class="relative">
+                  {{ item.label }}
+                  <span
+                    class="absolute -bottom-2 left-0 h-1 bg-primary w-0 transition-all duration-300 group-hover:w-full"></span>
+                </span>
               </nuxt-link>
             </li>
           </ul>
@@ -408,6 +409,7 @@ const handleLogout = async () => {
   background-image: radial-gradient(var(--tw-gradient-stops));
 }
 </style>
+
 
 
 <i18n lang="json">{
