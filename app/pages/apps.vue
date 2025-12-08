@@ -72,8 +72,7 @@ const handleImageError = (event: Event) => {
   target.style.display = 'none';
 };
 
-const closeModal = () => {
-  showModal.value = false;
+const handleModalClose = () => {
   setTimeout(() => {
     modalImages.value = [];
     modalTitle.value = '';
@@ -128,14 +127,8 @@ onMounted(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 50);
 
-  const handleKeydown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape' && showModal.value) {
-      closeModal();
-    }
-  };
-
   initData();
-  window.addEventListener('keydown', handleKeydown);
+
   if (mainContainer.value)
     ctx = gsap.context(() => {
       const heroTl = gsap.timeline();
@@ -204,7 +197,6 @@ onMounted(() => {
     }, mainContainer.value);
 
   onUnmounted(() => {
-    window.removeEventListener('keydown', handleKeydown);
     ctx.revert();
   });
 });
@@ -212,33 +204,27 @@ onMounted(() => {
 
 <template>
   <div ref="mainContainer">
-    <div class="modal backdrop-blur-md bg-black/40 transition-all duration-300 z-[999]"
-      :class="{ 'modal-open': showModal, 'opacity-0 pointer-events-none': !showModal, 'opacity-100 pointer-events-auto': showModal }">
-      <div
-        class="modal-box max-w-6xl w-11/12 h-[90vh] bg-base-100/95 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2rem] p-0 overflow-hidden flex flex-col">
-        <div class="flex justify-between items-center p-6 border-b border-base-content/5 bg-base-100/50">
-          <div class="flex flex-col">
-            <h3 class="text-xl font-black tracking-tight flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-              {{ modalTitle }}
-            </h3>
-            <p v-if="modalImages.length > 1" class="text-xs font-mono text-base-content/50 mt-1 pl-4">
-              STEP {{ currentImageIndex + 1 }} / {{ modalImages.length }}
-            </p>
-          </div>
-          <button class="btn btn-sm btn-circle btn-ghost hover:bg-base-content/10 transition-colors"
-            @click="closeModal">✕</button>
-        </div>
-        <div class="relative flex-1 bg-base-200/30 flex items-center justify-center p-4 sm:p-8 overflow-hidden">
+    <common-modal v-model="showModal" :title="modalTitle" max-width="max-w-6xl" @close="handleModalClose">
+      <template #title-prefix>
+        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+      </template>
+      <div class="flex flex-col h-[70vh] sm:h-[70vh]">
+        <p v-if="modalImages.length > 1" class="text-xs font-mono text-base-content/50 mb-2 pl-1">
+          STEP {{ currentImageIndex + 1 }} / {{ modalImages.length }}
+        </p>
+
+        <div
+          class="relative flex-1 bg-base-200/30 rounded-xl flex items-center justify-center p-4 sm:p-8 overflow-hidden border border-base-content/5">
           <button v-if="modalImages.length > 1" :disabled="currentImageIndex === 0"
             class="absolute left-4 z-20 btn btn-circle btn-lg bg-base-100 border border-base-content/5 shadow-xl hover:scale-105 hover:bg-primary hover:text-primary-content hover:border-primary disabled:opacity-0 transition-all duration-300"
             @click="prevImage">
             <Icon name="heroicons:chevron-left" class="w-8 h-8" />
           </button>
+
           <Transition name="slide-fade" mode="out-in">
             <div :key="currentImageIndex" class="w-full h-full flex items-center justify-center">
               <img v-if="modalImages.length > 0" :src="modalImages[currentImageIndex]"
-                class="max-h-[65vh] w-auto object-contain shadow-2xl rounded-2xl ring-1 ring-base-content/5"
+                class="max-h-full w-auto object-contain shadow-2xl rounded-2xl ring-1 ring-base-content/5"
                 @error="handleImageError" />
             </div>
           </Transition>
@@ -250,8 +236,7 @@ onMounted(() => {
           </button>
         </div>
 
-        <div v-if="modalImages.length > 1"
-          class="p-6 bg-base-100 border-t border-base-content/5 flex justify-center gap-3 overflow-x-auto">
+        <div v-if="modalImages.length > 1" class="pt-4 flex justify-center gap-3 overflow-x-auto shrink-0">
           <button v-for="(_, index) in modalImages" :key="index"
             class="h-2 rounded-full transition-all duration-500 ease-out"
             :class="currentImageIndex === index ? 'bg-primary w-12' : 'bg-base-content/10 w-2 hover:bg-base-content/30'"
@@ -259,10 +244,7 @@ onMounted(() => {
           </button>
         </div>
       </div>
-      <form method="dialog" class="modal-backdrop" @click="closeModal">
-        <button>close</button>
-      </form>
-    </div>
+    </common-modal>
 
     <div
       class="bg-base-100 text-base-content font-sans relative overflow-x-hidden selection:bg-primary selection:text-primary-content flex flex-col">
