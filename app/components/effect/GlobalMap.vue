@@ -1,24 +1,14 @@
 <template>
   <div
     class="z-0 flex w-full h-full justify-center items-start overflow-hidden bg-base-100 transition-colors duration-300">
-
     <div
       class="relative w-full aspect-1056/495 mask-[linear-gradient(to_bottom,transparent,white_30%,white_70%,transparent)]"
       :style="{ color: themeColors.mapDots }">
-
       <div v-html="svgContent"
-        class="pointer-events-none absolute inset-0 block size-full select-none [&>svg]:w-full [&>svg]:h-full transition-opacity duration-1000 ease-in-out"
+        class="pointer-events-none absolute inset-0 block size-full select-none [&>svg]:w-full [&>svg]:h-full transition-opacity duration-1000 ease-in-out will-change-opacity"
         :class="isMapReady ? 'opacity-100' : 'opacity-0'"></div>
 
       <svg v-if="isMapReady" viewBox="0 0 1056 495" class="pointer-events-none absolute inset-0 size-full select-none">
-        <g v-for="(route, i) in calculatedRoutes" :key="`path-group-${i}`">
-          <Motion as="path" :d="route.path" fill="none" stroke="url(#path-gradient)" stroke-width="1"
-            :initial="{ pathLength: 0 }" :animate="{ pathLength: 1 }" :transition="{
-              duration: 1.5,
-              delay: 0.2 * i,
-              ease: 'easeOut',
-            }"></Motion>
-        </g>
         <defs>
           <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="white" stop-opacity="0" />
@@ -27,20 +17,23 @@
             <stop offset="100%" stop-color="white" stop-opacity="0" />
           </linearGradient>
         </defs>
-        <g v-for="(route, i) in calculatedRoutes" :key="`points-group-${i}`">
+
+        <g v-for="(route, i) in calculatedRoutes" :key="`path-group-${i}`">
+          <path :d="route.path" fill="none" stroke="url(#path-gradient)" stroke-width="1" class="route-path"
+            pathLength="1" :style="{ '--delay': `${i * 0.5}s` }" />
+        </g>
+
+        <g v-for="(route, i) in calculatedRoutes" :key="`points-group-${i}`" class="point-group"
+          :style="{ '--delay': `${i * 2.2}s` }">
           <g>
             <circle :cx="route.start.x" :cy="route.start.y" r="2" :fill="themeColors.line" />
-            <circle :cx="route.start.x" :cy="route.start.y" r="2" :fill="themeColors.line" opacity="0.5">
-              <animate attribute-name="r" from="2" to="8" dur="1.5s" begin="0s" repeat-count="indefinite" />
-              <animate attribute-name="opacity" from="0.5" to="0" dur="1.5s" begin="0s" repeat-count="indefinite" />
-            </circle>
+            <circle :cx="route.start.x" :cy="route.start.y" r="2" :fill="themeColors.line" opacity="0.5"
+              class="pulse-circle" />
           </g>
           <g>
             <circle :cx="route.end.x" :cy="route.end.y" r="2" :fill="themeColors.line" />
-            <circle :cx="route.end.x" :cy="route.end.y" r="2" :fill="themeColors.line" opacity="0.5">
-              <animate attribute-name="r" from="2" to="8" dur="1.5s" begin="0s" repeat-count="indefinite" />
-              <animate attribute-name="opacity" from="0.5" to="0" dur="1.5s" begin="0s" repeat-count="indefinite" />
-            </circle>
+            <circle :cx="route.end.x" :cy="route.end.y" r="2" :fill="themeColors.line" opacity="0.5"
+              class="pulse-circle" />
           </g>
         </g>
       </svg>
@@ -49,7 +42,6 @@
 </template>
 
 <script setup lang="ts">
-import { Motion } from "motion-v";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useThemeStore } from "@/stores/theme";
 
@@ -91,7 +83,9 @@ onMounted(() => {
   mapWorker.onmessage = (e: MessageEvent) => {
     svgContent.value = e.data.mapSvg;
     calculatedRoutes.value = e.data.routes;
-    isMapReady.value = true;
+    requestAnimationFrame(() => {
+      isMapReady.value = true;
+    });
     mapWorker?.terminate();
     mapWorker = null;
   };
@@ -122,3 +116,68 @@ const themeColors = computed(() => {
   }
 });
 </script>
+
+<style scoped>
+.route-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: draw 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--delay);
+  will-change: stroke-dashoffset, opacity;
+}
+
+.point-group {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+  animation-delay: var(--delay);
+  will-change: opacity;
+}
+
+.pulse-circle {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes draw {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+</style>
