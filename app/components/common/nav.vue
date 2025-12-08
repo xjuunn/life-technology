@@ -7,11 +7,17 @@
     <div class="container mx-auto px-4">
       <div class="navbar h-2 p-0 justify-between">
         <div class="flex items-center gap-4 z-60">
-          <button class="btn btn-circle btn-ghost md:hidden text-base-content" @click="toggleMobileMenu">
-            <Icon :name="isMobileMenuOpen ? 'mingcute:close-fill' : 'mingcute:menu-fill'" size="24"
-              class="transition-transform duration-300" :class="isMobileMenuOpen ? 'rotate-90' : 'rotate-0'" />
+          <button class="btn btn-circle btn-ghost md:hidden text-base-content z-50 relative" @click="toggleMobileMenu">
+            <div class="w-6 h-6 flex flex-col justify-center items-center gap-1.5 overflow-hidden">
+              <span class="w-full h-0.5 bg-current transition-all duration-300 origin-center"
+                :class="isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''"></span>
+              <span class="w-full h-0.5 bg-current transition-all duration-300"
+                :class="isMobileMenuOpen ? '-translate-x-full opacity-0' : ''"></span>
+              <span class="w-full h-0.5 bg-current transition-all duration-300 origin-center"
+                :class="isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''"></span>
+            </div>
           </button>
-          <NuxtLink to="/" class="group flex items-center gap-2 cursor-pointer select-none"
+          <NuxtLink to="/" class="group flex items-center gap-2 cursor-pointer select-none z-50"
             @click="isMobileMenuOpen = false">
             <div class="relative w-9 h-9 flex items-center justify-center">
               <div
@@ -121,20 +127,17 @@
             </div>
           </button>
 
-          <!-- 连接资产 (独立显示) -->
           <button
             class="btn bg-linear-to-r from-primary to-secondary btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 hidden sm:flex">
             <span>{{ t('nav.connect_wallet') }}</span>
             <Icon name="mingcute:wallet-3-fill" class="w-4 h-4" />
           </button>
 
-          <!-- 未登录状态 -->
           <nuxt-link v-if="!userStore.user" to="/auth/login"
             class="btn bg-linear-to-r from-primary to-secondary btn-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
             <span>{{ t('nav.login') }}</span>
           </nuxt-link>
 
-          <!-- 已登录状态 (用户头像菜单) -->
           <div v-else class="dropdown dropdown-end ml-1">
             <div tabindex="0" role="button"
               class="btn btn-ghost btn-circle avatar border border-base-content/10 hover:border-primary/50 transition-colors">
@@ -149,7 +152,6 @@
             </div>
             <ul tabindex="0"
               class="menu dropdown-content z-1 p-2 shadow-2xl bg-base-100/90 border border-base-content/5 rounded-2xl w-64 mt-4 backdrop-blur-xl">
-              <!-- 用户信息头部 -->
               <li class="pointer-events-none px-2 pb-2 pt-1">
                 <div class="flex items-center gap-3">
                   <div class="avatar">
@@ -176,7 +178,6 @@
               </li>
               <li class="divider p-0 h-0.5"></li>
 
-              <!-- 菜单项 -->
               <li v-if="userStore.user?.isAdmin">
                 <nuxt-link to="/admin" class="py-3 font-medium hover:bg-primary/10 hover:text-primary">
                   <Icon name="mingcute:safe-lock-fill" class="w-5 h-5" />
@@ -204,7 +205,6 @@
 
               <li class="divider h-0.5"></li>
 
-              <!-- 登出 -->
               <li>
                 <button @click="handleLogout" class="py-3 text-error hover:bg-error/10 font-medium">
                   <Icon name="mingcute:exit-fill" class="w-5 h-5" />
@@ -216,26 +216,77 @@
         </div>
       </div>
     </div>
-    <div v-show="isMobileMenuOpen"
-      class="fixed inset-0 z-49 bg-base-100/95 backdrop-blur-2xl md:hidden flex flex-col pt-28 px-6 h-screen w-screen overscroll-contain">
-      <ul class="flex flex-col gap-6 text-center cursor-pointer">
-        <li v-for="(item, index) in menuItems" :key="index" class="mobile-menu-item opacity-0 translate-y-4">
-          <nuxt-link :to="item.link"
-            class="text-3xl font-black text-base-content hover:text-primary transition-colors block py-2"
-            @click="isMobileMenuOpen = false">
-            {{ item.label }}
-          </nuxt-link>
-        </li>
-      </ul>
-      <div class="mt-auto mb-10 text-center opacity-50 text-sm">
-        <p>{{ t('nav.brand') }}</p>
+  </nav>
+
+  <Teleport to="body">
+    <div v-show="isMobileMenuOpen" class="fixed inset-0 z-[100] md:hidden">
+      <div class="absolute inset-0 bg-base-100" ref="menuBg">
+        <div class="absolute top-0 right-0 w-full h-full bg-gradient-radial from-primary/5 to-transparent opacity-50">
+        </div>
+        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-base-content/5 to-transparent"></div>
+        <div class="flex flex-col h-full pt-24 pb-10 px-8 overflow-y-auto overscroll-contain">
+          <ul class="flex flex-col gap-6 w-full max-w-sm mx-auto">
+            <li v-for="(item, index) in menuItems" :key="index" class="mobile-menu-item opacity-0 translate-y-8">
+              <div v-if="item.children" class="group">
+                <button @click="toggleSubmenu(index)"
+                  class="w-full flex items-center justify-between text-3xl font-black tracking-tighter text-base-content transition-all duration-300"
+                  :class="expandedSubmenu === index ? 'text-primary' : ''">
+                  <span class="relative">
+                    {{ item.label }}
+                    <span
+                      class="absolute -bottom-2 left-0 h-1 bg-primary w-0 transition-all duration-300 group-hover:w-full"
+                      :class="expandedSubmenu === index ? 'w-full' : ''"></span>
+                  </span>
+                  <div
+                    class="w-10 h-10 rounded-full border border-base-content/10 flex items-center justify-center transition-all duration-300"
+                    :class="expandedSubmenu === index ? 'border-primary bg-primary text-primary-content rotate-180' : ''">
+                    <Icon name="mingcute:down-line" size="20" />
+                  </div>
+                </button>
+                <div ref="submenus" class="overflow-hidden h-0 opacity-0">
+                  <ul class="flex flex-col gap-3 pt-6 pb-2 pl-2">
+                    <li v-for="(child, cIndex) in item.children" :key="cIndex">
+                      <nuxt-link :to="child.link"
+                        class="flex items-center gap-3 text-lg font-bold text-base-content/50 hover:text-base-content hover:translate-x-2 transition-all duration-300 py-1"
+                        @click="isMobileMenuOpen = false">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary/40"></span>
+                        {{ child.label }}
+                      </nuxt-link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <nuxt-link v-else :to="item.link"
+                class="block text-3xl font-black tracking-tighter text-base-content hover:text-primary transition-colors group relative w-fit"
+                active-class="text-primary" @click="isMobileMenuOpen = false">
+                {{ item.label }}
+                <span
+                  class="absolute -bottom-2 left-0 h-1 bg-primary w-0 transition-all duration-300 group-hover:w-full"></span>
+              </nuxt-link>
+            </li>
+          </ul>
+
+          <div class="mt-auto pt-10 w-full text-center mobile-menu-footer opacity-0">
+            <div class="text-[10px] font-bold tracking-[0.3em] uppercase text-base-content/30">{{ t('nav.brand') }}
+            </div>
+            <div class="flex justify-center gap-8 mt-6 text-base-content/40">
+              <Icon name="mingcute:social-x-line"
+                class="hover:text-base-content hover:scale-110 transition-all cursor-pointer" size="24" />
+              <Icon name="mingcute:github-line"
+                class="hover:text-base-content hover:scale-110 transition-all cursor-pointer" size="24" />
+              <Icon name="mingcute:discord-line"
+                class="hover:text-base-content hover:scale-110 transition-all cursor-pointer" size="24" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </nav>
+  </Teleport>
 </template>
 
 <script setup>
-import { animate, stagger } from 'animejs'
+import { gsap } from 'gsap'
 
 const themeStore = useThemeStore()
 const userStore = useUserStore()
@@ -246,6 +297,9 @@ const isScrolled = computed(() => y.value > 20)
 
 const isMobileMenuOpen = ref(false)
 const themeBtnRef = ref(null);
+const expandedSubmenu = ref(null)
+const submenus = ref([])
+const menuBg = ref(null)
 
 const closeDropdown = () => {
   if (document.activeElement) {
@@ -253,15 +307,22 @@ const closeDropdown = () => {
   }
 }
 
-// 动态菜单
 const menuItems = computed(() => [
   { label: t('nav.home'), link: '/' },
-  { label: t('nav.intro'), link: '/intro' },
+  {
+    label: t('nav.intro'),
+    children: [
+      { label: t('nav.whatIsLife'), link: '/intro/what-is-life' },
+      { label: t('nav.whatLifeCanDo'), link: '/intro/what-life-do' },
+      { label: t('nav.howToUseLife'), link: '/intro/how-to-use-life' },
+      { label: t('nav.thingsYouNeedToKnow'), link: '/intro/need-know' },
+      { label: t('nav.whitepaper'), link: '/intro/white-book' }
+    ]
+  },
   { label: t('nav.apps'), link: '/apps' },
   { label: t('nav.blog'), link: '/blog' },
 ])
 
-// 主题初始化（使用 themeStore 的逻辑）
 onMounted(() => {
   themeStore.initTheme()
 })
@@ -270,24 +331,63 @@ const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
 }
 
+const toggleSubmenu = (index) => {
+  const el = submenus.value[0]
+
+  if (expandedSubmenu.value === index) {
+    gsap.to(el, {
+      height: 0,
+      opacity: 0,
+      duration: 0.4,
+      ease: 'power3.inOut'
+    })
+    expandedSubmenu.value = null
+  } else {
+    expandedSubmenu.value = index
+    nextTick(() => {
+      gsap.fromTo(el,
+        { height: 0, opacity: 0 },
+        { height: 'auto', opacity: 1, duration: 0.5, ease: 'power3.out' }
+      )
+    })
+  }
+}
+
 watch(isMobileMenuOpen, (isOpen) => {
   if (isOpen) {
-    setTimeout(() => {
-      animate('.mobile-menu-item', {
-        translateY: [20, 0],
-        opacity: [0, 1],
-        delay: stagger(100),
-        duration: 800,
-        easing: 'easeOutExpo'
-      })
-    }, 50)
     document.body.style.overflow = 'hidden'
+    nextTick(() => {
+      const tl = gsap.timeline()
+
+      tl.fromTo(menuBg.value,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3 }
+      )
+
+      tl.fromTo('.mobile-menu-item',
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power4.out'
+        },
+        "-=0.1"
+      )
+
+      tl.fromTo('.mobile-menu-footer',
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
+        "-=0.6"
+      )
+    })
   } else {
     document.body.style.overflow = ''
+    expandedSubmenu.value = null
   }
 })
 
-// 登出
 const handleLogout = async () => {
   await userStore.logout()
   navigateTo('/auth/login')
@@ -302,6 +402,10 @@ const handleLogout = async () => {
 .backdrop-blur-xl {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+}
+
+.bg-gradient-radial {
+  background-image: radial-gradient(var(--tw-gradient-stops));
 }
 </style>
 
