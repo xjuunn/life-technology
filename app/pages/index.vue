@@ -275,13 +275,11 @@
         </div>
       </div>
     </section>
-    <section class="cta-section px-4 text-center overflow-hidden relative flex items-center justify-center">
+    <div class="w-full flex justify-center">
       <div class="w-full md:w-8/12 lg:w-6/12 flex items-center justify-center">
         <video src="https://blog.lifetv.chat/videos/lv_0_20251208110401.mp4" controls></video>
-
       </div>
-    </section>
-
+    </div>
     <section class="cta-section py-40 px-4 text-center overflow-hidden relative">
       <div class="absolute inset-0 bg-linear-to-t from-base-content/5 to-transparent pointer-events-none"></div>
       <div class="container mx-auto relative z-10">
