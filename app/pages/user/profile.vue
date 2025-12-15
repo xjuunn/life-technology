@@ -7,7 +7,10 @@ import {
   del as deleteBlog,
   type Blog,
   type UserBlogRequest,
-  type Status
+  type Status,
+  getMyReviewStatus,
+  type MyReviewStatusResponse,
+  type ReviewStatus
 } from '~/api/blog'
 import {
   listUserComments,
@@ -23,7 +26,7 @@ const userStore = useUserStore()
 // --- 状态定义 ---
 const user = computed(() => userStore.user)
 const isLoading = ref(false)
-const activeTab = ref<'blogs' | 'comments'>('blogs')
+const activeTab = ref<'blogs' | 'review' | 'comments'>('blogs')
 
 // --- 博客相关 ---
 const blogs = ref<Blog[]>([])
@@ -35,6 +38,23 @@ const blogPagination = ref({
 })
 const blogLoading = ref(false)
 const blogStatusFilter = ref<Status | undefined>(undefined)
+
+// --- 审核相关 ---
+const reviewBlogs = ref<Blog[]>([])
+const reviewStats = ref({
+  pendingCount: 0,
+  rejectedCount: 0
+})
+const reviewPagination = ref({
+  currentPage: 1,
+  totalPages: 1,
+  totalBlogs: 0,
+  hasNextPage: false,
+  hasPrevPage: false,
+  limit: 10
+})
+const reviewLoading = ref(false)
+const reviewStatusFilter = ref<ReviewStatus | undefined>(undefined)
 
 // --- 评论相关 ---
 const comments = ref<ListUserCommentsResponse['comments']>([])
@@ -100,6 +120,26 @@ const fetchBlogs = async (page = 1) => {
   }
 }
 
+// 获取审核状态
+const fetchReviewStatus = async (page = 1) => {
+  if (!user.value) return
+  reviewLoading.value = true
+  try {
+    const { data } = await getMyReviewStatus({
+      page,
+      limit: 10,
+      status: reviewStatusFilter.value
+    })
+    reviewBlogs.value = data.blogs
+    reviewStats.value = data.stats
+    reviewPagination.value = data.pagination
+  } catch (error) {
+    console.error(error)
+  } finally {
+    reviewLoading.value = false
+  }
+}
+
 // 获取评论
 const fetchComments = async (page = 1) => {
   if (!user.value) return
@@ -153,9 +193,10 @@ const handleDeleteBlog = async () => {
 
 // --- 交互处理 ---
 
-const handleTabChange = async (tab: 'blogs' | 'comments') => {
+const handleTabChange = async (tab: 'blogs' | 'review' | 'comments') => {
   activeTab.value = tab
   if (tab === 'blogs' && blogs.value.length === 0) await fetchBlogs()
+  if (tab === 'review' && reviewBlogs.value.length === 0) await fetchReviewStatus()
   if (tab === 'comments' && comments.value.length === 0) await fetchComments()
 }
 
@@ -171,7 +212,7 @@ const goToSettings = () => {
 </script>
 
 <template>
-   <div
+  <div
     class="min-h-screen bg-base-100 relative overflow-hidden text-base-content selection:bg-primary selection:text-primary-content pb-20">
     <title>life-个人资料</title>
 
@@ -348,13 +389,25 @@ const goToSettings = () => {
             <!-- 移动端 Tabs -->
             <div class="lg:hidden flex overflow-x-auto gap-2 pb-4 scrollbar-none">
               <button 
-                v-for="tab in ['blogs', 'comments']" 
-                :key="tab" 
-                @click="handleTabChange(tab as any)"
+                @click="handleTabChange('blogs')"
                 class="btn btn-sm rounded-full transition-all flex-nowrap whitespace-nowrap"
-                :class="activeTab === tab ? 'btn-neutral text-white shadow-lg' : 'btn-ghost bg-base-100/50'"
+                :class="activeTab === 'blogs' ? 'btn-neutral text-white shadow-lg' : 'btn-ghost bg-base-100/50'"
               >
-                {{ t(`profile.tabs.${tab}`) }}
+                {{ t('profile.tabs.blogs') }}
+              </button>
+              <button 
+                @click="handleTabChange('review')"
+                class="btn btn-sm rounded-full transition-all flex-nowrap whitespace-nowrap"
+                :class="activeTab === 'review' ? 'btn-neutral text-white shadow-lg' : 'btn-ghost bg-base-100/50'"
+              >
+                {{ t('profile.tabs.review') }}
+              </button>
+              <button 
+                @click="handleTabChange('comments')"
+                class="btn btn-sm rounded-full transition-all flex-nowrap whitespace-nowrap"
+                :class="activeTab === 'comments' ? 'btn-neutral text-white shadow-lg' : 'btn-ghost bg-base-100/50'"
+              >
+                {{ t('profile.tabs.comments') }}
               </button>
             </div>
 
@@ -366,6 +419,13 @@ const goToSettings = () => {
                   @click="handleTabChange('blogs')">
                   <Icon name="mingcute:document-3-line" class="text-xl" />
                   {{ t('profile.tabs.blogs') }}
+                </a>
+              </li>
+              <li>
+                <a :class="{ 'active bg-primary/10! text-primary!': activeTab === 'review' }"
+                  @click="handleTabChange('review')">
+                  <Icon name="mingcute:file-check-line" class="text-xl" />
+                  {{ t('profile.tabs.review') }}
                 </a>
               </li>
               <li>
@@ -413,8 +473,7 @@ const goToSettings = () => {
                               <NuxtLink :to="`/blog/${blog.id}`" class="hover:text-primary">{{ blog.title }}</NuxtLink>
                             </h3>
                             <span class="badge badge-sm self-start"
-                              :class="blog.status === 'published' ? 'badge-success badge-soft' : 'badge-warning badge-soft'">{{
-                                blog.status }}</span>
+                              :class="blog.status === 'published' ? 'badge-success badge-soft' : 'badge-warning badge-soft'">{{ blog.status }}</span>
                           </div>
                           <p class="text-sm text-base-content/60 line-clamp-2 mt-2">{{ blog.summary }}</p>
                         </div>
@@ -462,7 +521,104 @@ const goToSettings = () => {
                 </div>
               </div>
 
-              <!-- Tab 2: 我的评论 -->
+              <!-- Tab 2: 文章审核 -->
+              <div v-else-if="activeTab === 'review'" key="review" class="space-y-6">
+                <div
+                  class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-base-100/40 backdrop-blur-sm p-3 rounded-xl border border-base-content/5">
+                  <h2 class="text-lg font-bold flex items-center gap-2">
+                    <span class="w-1.5 h-6 bg-warning rounded-full"></span>
+                    {{ t('profile.tabs.review') }}
+                  </h2>
+                  
+                  <!-- 统计信息 -->
+                  <div class="flex gap-4 text-sm">
+                    <div class="flex items-center gap-1">
+                      <span class="badge badge-sm badge-warning badge-soft">
+                        {{ t('profile.review.pending') }}
+                      </span>
+                      <span class="font-medium">{{ reviewStats.pendingCount }}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                      <span class="badge badge-sm badge-error badge-soft">
+                        {{ t('profile.review.rejected') }}
+                      </span>
+                      <span class="font-medium">{{ reviewStats.rejectedCount }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 过滤选项 -->
+                <div class="flex justify-end">
+                  <select v-model="reviewStatusFilter" class="select select-sm select-bordered w-full sm:w-auto max-w-xs" @change="fetchReviewStatus(1)">
+                    <option :value="undefined">{{ t('profile.review.filter.all') }}</option>
+                    <option value="pending">{{ t('profile.review.filter.pending') }}</option>
+                    <option value="rejected">{{ t('profile.review.filter.rejected') }}</option>
+                  </select>
+                </div>
+
+                <div v-if="reviewLoading" class="grid gap-4">
+                  <div v-for="i in 3" :key="i" class="skeleton h-32 w-full rounded-2xl"></div>
+                </div>
+                <div v-else-if="reviewBlogs.length > 0" class="grid gap-4">
+                  <div v-for="blog in reviewBlogs" :key="blog.id"
+                    class="card bg-base-100/60 backdrop-blur-md shadow-sm border border-base-content/5 p-4 hover:border-warning/20 transition-all group">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                      <figure class="w-full sm:w-40 rounded-lg overflow-hidden shrink-0">
+                        <NuxtImg :src="blog.coverImage || '/default-cover.jpg'" class="h-40 sm:h-full w-full object-cover" />
+                      </figure>
+                      <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                          <div class="flex flex-col sm:flex-row justify-between gap-2">
+                            <h3 class="font-bold text-lg line-clamp-1">
+                              <NuxtLink :to="`/blog/${blog.id}`" class="hover:text-warning">{{ blog.title }}</NuxtLink>
+                            </h3>
+                            <span class="badge badge-sm self-start"
+                              :class="blog.status === 'rejected' ? 'badge-error badge-soft' : 'badge-warning badge-soft'">
+                              {{ blog.status === 'rejected' ? t('profile.review.rejected') : t('profile.review.pending') }}
+                            </span>
+                          </div>
+                          <p class="text-sm text-base-content/60 line-clamp-2 mt-2">{{ blog.summary }}</p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 mt-4">
+                          <div class="flex gap-4 text-xs text-base-content/40">
+                            <span class="flex items-center gap-1">
+                              <Icon name="mingcute:calendar-line" /> 
+                              {{ new Date(blog.createdAt).toLocaleDateString() }}
+                            </span>
+                            <span class="flex items-center gap-1">
+                              <Icon name="mingcute:eye-line" /> {{ blog.viewCount }}
+                            </span>
+                            <span class="flex items-center gap-1">
+                              <Icon name="mingcute:thumb-up-line" /> {{ blog.likeCount }}
+                            </span>
+                          </div>
+                          <div class="flex gap-2 self-end">
+                            <button @click="handleEditBlog(blog.id)"
+                              class="btn btn-xs sm:btn-sm btn-ghost hover:bg-warning/10 hover:text-warning"
+                              :title="t('profile.edit_blog')">
+                              <Icon name="mingcute:edit-2-line" />
+                              <span class="hidden sm:inline ml-1">{{ t('profile.edit_blog') }}</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 分页 -->
+                  <div class="join grid grid-cols-2 max-w-xs mx-auto mt-4" v-if="reviewPagination.totalPages > 1">
+                    <button class="join-item btn btn-outline btn-sm" :disabled="!reviewPagination.hasPrevPage"
+                      @click="fetchReviewStatus(reviewPagination.currentPage - 1)">{{ t('profile.prev') }}</button>
+                    <button class="join-item btn btn-outline btn-sm" :disabled="!reviewPagination.hasNextPage"
+                      @click="fetchReviewStatus(reviewPagination.currentPage + 1)">{{ t('profile.next') }}</button>
+                  </div>
+                </div>
+                <div v-else class="text-center py-20 text-base-content/40">
+                  <Icon name="mingcute:file-check-line" class="text-4xl mb-2" />
+                  <p>{{ t('profile.review.no_review') }}</p>
+                </div>
+              </div>
+
+              <!-- Tab 3: 我的评论 -->
               <div v-else-if="activeTab === 'comments'" key="comments" class="space-y-4">
                 <h2 class="text-lg font-bold flex items-center gap-2 mb-4">
                   <span class="w-1.5 h-6 bg-secondary rounded-full"></span>
@@ -624,8 +780,19 @@ const goToSettings = () => {
         "all": "All",
         "published": "Published"
       },
+      "review": {
+        "pending": "Pending",
+        "rejected": "Rejected",
+        "no_review": "No articles pending review",
+        "filter": {
+          "all": "All Status",
+          "pending": "Pending Review",
+          "rejected": "Rejected"
+        }
+      },
       "tabs": {
         "blogs": "My Articles",
+        "review": "Article Review",
         "comments": "Comments"
       }
     }
@@ -661,8 +828,19 @@ const goToSettings = () => {
         "all": "全部",
         "published": "已发布"
       },
+      "review": {
+        "pending": "待审核",
+        "rejected": "已拒绝",
+        "no_review": "暂无待审核文章",
+        "filter": {
+          "all": "全部状态",
+          "pending": "待审核",
+          "rejected": "已拒绝"
+        }
+      },
       "tabs": {
         "blogs": "我的文章",
+        "review": "文章审核",
         "comments": "评论记录"
       }
     }
@@ -698,8 +876,19 @@ const goToSettings = () => {
         "all": "全部",
         "published": "已發布"
       },
+      "review": {
+        "pending": "待審核",
+        "rejected": "已拒絕",
+        "no_review": "暫無待審核文章",
+        "filter": {
+          "all": "全部狀態",
+          "pending": "待審核",
+          "rejected": "已拒絕"
+        }
+      },
       "tabs": {
         "blogs": "我的文章",
+        "review": "文章審核",
         "comments": "評論記錄"
       }
     }

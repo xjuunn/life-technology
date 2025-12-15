@@ -229,3 +229,44 @@ export function like(id: string) {
 export function share(id: string) {
   return api.post<{ message: string }>(base + `/${id}/share`);
 }
+
+export type ReviewStatus = 'pending' | 'rejected';
+
+export interface MyReviewStatusRequest {
+  // 每页数量，默认 10，最大 100
+  limit?: number;
+  // 页码，从 1 开始
+  page?: number;
+  // 审核状态筛选）
+  status?: ReviewStatus;
+  [property: string]: any;
+}
+
+export interface MyReviewStatusStats {
+  pendingCount: number;
+  rejectedCount: number;
+}
+
+export interface MyReviewStatusPagination {
+  currentPage: number;
+  totalPages: number;
+  totalBlogs: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  limit: number;
+}
+
+export interface MyReviewStatusResponse {
+  blogs: Blog[];
+  stats: MyReviewStatusStats;
+  pagination: MyReviewStatusPagination;
+}
+
+/**
+ * 获取我的博客审核状态列表
+ * @param data 查询参数
+ * @returns 审核状态数据
+ */
+export function getMyReviewStatus(data: MyReviewStatusRequest) {
+  return api.get<MyReviewStatusResponse>(base + '/my/review-status', data);
+}

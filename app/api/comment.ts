@@ -1,5 +1,13 @@
-
 const base = '/comments';
+
+// 统一响应格式
+export interface BaseResponse<T = any> {
+    success: boolean;
+    code: number;
+    message: string;
+    data: T;
+    error: any;
+}
 
 export interface Author {
     id: string;
@@ -8,17 +16,17 @@ export interface Author {
 }
 
 export interface Comment {
-    id: string,
-    content: string,
-    authorId: string,
-    blogId: string,
-    parentCommentId: null | string,
-    likeCount: number,
-    isDeleted: boolean,
-    deletedAt: null | string,
-    deletedContent: null | string,
-    createdAt: string,
-    updatedAt: string,
+    id: string;
+    content: string;
+    authorId: string;
+    blogId: string;
+    parentCommentId: null | string;
+    likeCount: number;
+    isDeleted: boolean;
+    deletedAt: null | string;
+    deletedContent: null | string;
+    createdAt: string;
+    updatedAt: string;
     author: Author;
 }
 
@@ -33,7 +41,7 @@ export interface CommentCreateRequest {
  * @param data 评论数据
  */
 export function create(data: CommentCreateRequest) {
-    return api.post<{ message: string, comment: Comment }>(base + '/', data);
+    return api.post<BaseResponse<{ message: string; comment: Comment }>>(base + '/', data);
 }
 
 export interface CommentListRequest {
@@ -47,8 +55,18 @@ export interface CommentListRequest {
     sortOrder?: SortOrder;
     [property: string]: any;
 }
+
 export type SortBy = "createdAt" | "likeCount";
 export type SortOrder = "asc" | "desc";
+
+export interface CommentWithReplies extends Comment {
+    replies: Comment[];
+}
+
+export interface BlogCommentsResponse {
+    pagination: Pagination;
+    comments: CommentWithReplies[];
+}
 
 /**
  * 获取博客评论
@@ -56,12 +74,7 @@ export type SortOrder = "asc" | "desc";
  * @param data 查询数据
  */
 export function listBlogComments(id: string, data: CommentListRequest) {
-    return api.get<{
-        pagination: Pagination, comments: Comment[] & {
-            author: Author;
-            replies: Comment[]
-        }
-    }>(base + '/blog/' + id, data);
+    return api.get<BaseResponse<BlogCommentsResponse>>(base + '/blog/' + id, data);
 }
 
 export interface ListUserCommentsRequest {
@@ -97,8 +110,8 @@ export interface GetCommentDetailResponse {
     blog: {
         id: string;
         title: string;
-    }
-    replies: Comment;
+    };
+    replies: Comment[];
     isLiked: boolean;
 }
 
@@ -107,7 +120,7 @@ export interface GetCommentDetailResponse {
  * @param id 评论ID
  */
 export function getCommentDetail(id: string) {
-    return api.get<GetCommentDetailResponse>(base + '/' + id);
+    return api.get<BaseResponse<GetCommentDetailResponse>>(base + '/' + id);
 }
 
 /**
@@ -116,7 +129,7 @@ export function getCommentDetail(id: string) {
  * @param content 更新的评论内容
  */
 export function updateComment(id: string, content: string) {
-    return api.put<{ message: string, comment: Comment }>(base + '/' + id, { content });
+    return api.put<BaseResponse<{ message: string; comment: Comment }>>(base + '/' + id, { content });
 }
 
 /**
@@ -124,7 +137,7 @@ export function updateComment(id: string, content: string) {
  * @param id 评论ID
  */
 export function del(id: string) {
-    return api.delete<{ message: string }>(base + "/" + id);
+    return api.delete<BaseResponse<{ message: string }>>(base + "/" + id);
 }
 
 /**
@@ -132,7 +145,7 @@ export function del(id: string) {
  * @param id 评论ID
  */
 export function restore(id: string) {
-    return api.post<{ message: string, comment: Comment }>(base + `/${id}/restore`);
+    return api.post<BaseResponse<{ message: string; comment: Comment }>>(base + `/${id}/restore`);
 }
 
 /**
@@ -140,5 +153,15 @@ export function restore(id: string) {
  * @param id 评论ID
  */
 export function like(id: string) {
-    return api.post<{ message: string, isLiked: string }>(base + `/${id}/like`);
+    return api.post<BaseResponse<{ message: string; isLiked: boolean }>>(base + `/${id}/like`);
+}
+
+// Pagination 接口定义（假设存在）
+export interface Pagination {
+    currentPage: number;
+    totalPages: number;
+    totalComments: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean; // 修正：图片中是 hasPreviewPage，但应该是 hasPrevPage
+    limit: number;
 }
