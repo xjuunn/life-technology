@@ -339,7 +339,7 @@
               class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-12 min-w-[200px] text-primary-content shadow-lg shadow-primary/20">
               {{ t('cta.btn_download') }}
             </nuxt-link>
-            <button @click="openContactModal"
+            <button @click="openEmailClient"
               class="btn btn-outline btn-lg rounded-full px-12 min-w-[200px] border-base-content/20 hover:bg-base-content hover:text-base-100"
               style="border-image: linear-gradient(to right, var(--primary), var(--secondary)) 1;">
               {{ t('cta.btn_contact') }}
@@ -607,6 +607,17 @@ function copyQQNumber() {
   }).catch(err => {
     console.error('复制失败:', err)
   })
+}
+
+function openEmailClient() {
+  useDialog().alert("请等待邮件客户端打开。\n如果出现问题，请邮件联系lifewallet@life.tires", "启动邮件客户端")
+  const to = 'lifewallet@life.tires'
+  const subject = encodeURIComponent('商务合作咨询')
+  const body = encodeURIComponent(
+    '您好，\n\n我们希望就商务合作事宜与您联系。\n\n公司 / 个人：\n联系方式：\n合作内容：\n'
+  )
+
+  window.location.href = `mailto:${to}?subject=${subject}&body=${body}`
 }
 
 </script>
