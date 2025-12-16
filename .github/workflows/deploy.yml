@@ -36,6 +36,8 @@ jobs:
 
           # 加载 BASE_URL
           export VITE_BACKBASE_URL=${{ secrets.API_BASE_URL }}
+          # 加载 LIFE_URL
+          export VITE_LIFE_URL=${{ secrets.API_LIFE_URL }}
 
           # Node22 构建
           nvm use 22 || nvm install 22

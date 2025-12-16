@@ -102,7 +102,12 @@ class Request {
   }
 }
 
+// 基础后端api
 export const api = new Request()
+// 移动后端api
+export const appApi = new Request({
+  baseURL: import.meta.dev ? "/bg.life.tires/" : (import.meta.env.VITE_LIFE_URL ?? "https://life.tires/api/"),
+})
 
 export default Request
 

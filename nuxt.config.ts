@@ -43,13 +43,17 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      base_url: process.env.VITE_BACKBASE_URL
+      base_url: process.env.VITE_BACKBASE_URL,
+      life_url: process.env.VITE_LIFE_URL
     }
   },
   nitro: {
     routeRules: {
       '/backendapi/**': {
         proxy: `${process.env.VITE_BACKBASE_URL}/**`
+      },
+      '/bg.life.tires/**': {
+        proxy: `${process.env.VITE_LIFE_URL}/**`
       }
     }
   },

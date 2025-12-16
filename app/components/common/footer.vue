@@ -11,7 +11,7 @@ const socialLinks: SocialItem[] = [
   { name: 'WeChat', icon: 'mingcute:wechat-fill', url: '#' },
   { name: 'Weibo', icon: 'mingcute:weibo-fill', url: '#' },
   { name: 'Email', icon: 'mingcute:mail-fill', url: '', click: openEmailClient },
-  { name: 'Twitter', icon: 'mingcute:social-x-line', url: '' }
+  { name: 'Twitter', icon: 'mingcute:social-x-line', url: 'https://x.com/DigiLifePro' }
 ]
 function onSocialClick(item: SocialItem) {
   if (item.click) item.click();
