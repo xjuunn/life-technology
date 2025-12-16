@@ -1,13 +1,38 @@
 <script setup lang="ts">
 const { t } = useAppI18n()
 const year = new Date().getFullYear()
-
-const socialLinks = [
+interface SocialItem {
+  name: string;
+  icon: string;
+  url?: string;
+  click?: Function
+}
+const socialLinks: SocialItem[] = [
   { name: 'WeChat', icon: 'mingcute:wechat-fill', url: '#' },
   { name: 'Weibo', icon: 'mingcute:weibo-fill', url: '#' },
-  { name: 'Email', icon: 'mingcute:mail-fill', url: 'mailto:contact@life.tech' },
-  { name: 'Twitter', icon: 'mingcute:social-x-line', url: '#' }
+  { name: 'Email', icon: 'mingcute:mail-fill', url: '', click: openEmailClient },
+  { name: 'Twitter', icon: 'mingcute:social-x-line', url: '' }
 ]
+function onSocialClick(item: SocialItem) {
+  if (item.click) item.click();
+  else navigateTo(item.url, {
+    open: {
+      target: '_blank'
+    }
+
+  });
+}
+function openEmailClient() {
+  useDialog().alert("请等待邮件客户端打开。\n如果出现问题，请邮件联系lifewallet@life.tires", "启动邮件客户端")
+  const to = 'lifewallet@life.tires'
+  const subject = encodeURIComponent('商务合作咨询')
+  const body = encodeURIComponent(
+    '您好，\n\n我们希望就商务合作事宜与您联系。\n\n公司 / 个人：\n联系方式：\n合作内容：\n'
+  )
+
+  window.location.href = `mailto:${to}?subject=${subject}&body=${body}`
+}
+
 </script>
 
 <template>
@@ -24,9 +49,9 @@ const socialLinks = [
           <p class="text-base-content/60 leading-relaxed text-sm max-w-xs">
             {{ t('footer.description') }}
           </p>
-          <!-- 社交图标 -->  
+          <!-- 社交图标 -->
           <div class="flex gap-2">
-            <a v-for="social in socialLinks" :key="social.name" :href="social.url"
+            <a v-for="social in socialLinks" :key="social.name" @click="onSocialClick(social)"
               class="btn btn-circle btn-sm btn-ghost hover:bg-primary/10 hover:text-primary transition-all"
               :aria-label="social.name">
               <Icon :name="social.icon" size="20" />
@@ -46,7 +71,8 @@ const socialLinks = [
               class="link link-hover text-base-content/60 hover:text-primary transition-colors text-sm">{{
                 t('footer.col1.pricing') }}</nuxt-link>
             <nuxt-link to="#"
-              class="link link-hover text-base-content/60 hover:text-primary transition-colors text-sm">Watch H</nuxt-link>
+              class="link link-hover text-base-content/60 hover:text-primary transition-colors text-sm">Watch
+              H</nuxt-link>
           </nav>
 
           <!-- Column 2: 资源 -->
