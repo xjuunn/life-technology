@@ -30,13 +30,17 @@
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md mx-auto">
           <nuxt-link to="/apps"
-            class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-8 py-4 w-full sm:w-auto sm:min-w-[220px] text-white border-none shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
+            class="btn bg-linear-to-r from-primary to-secondary btn-lg rounded-full px-8 py-4 w-full sm:w-auto sm:min-w-[200px] text-white border-none shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
             {{ t('hero.btn_start') }}
           </nuxt-link>
           <nuxt-link to="/intro/white-book"
-            class="btn btn-ghost btn-lg rounded-full px-8 py-4 w-full sm:w-auto sm:min-w-[220px] border border-base-content/30 hover:bg-base-content hover:text-base-100">
+            class="btn btn-ghost btn-lg rounded-full px-8 py-4 w-full sm:w-auto sm:min-w-[200px] border border-base-content/30 hover:bg-base-content hover:text-base-100">
             {{ t('hero.btn_whitepaper') }}
           </nuxt-link>
+          <a href="https://您的直播链接" target="_blank"
+            class="btn btn-ghost btn-lg rounded-full px-8 py-4 w-full sm:w-auto sm:min-w-[200px] border border-base-content/30 hover:bg-base-content hover:text-base-100">
+            {{ t('hero.btn_live') }}
+          </a>
         </div>
       </div>
     </section>
@@ -272,8 +276,7 @@
             <h2 class="text-4xl md:text-6xl font-black mb-8 leading-tight">
               {{ t('app.title_prefix') }}
               <br />
-              <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{{
-                t('app.title_highlight') }}</span>
+              <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{{ t('app.title_highlight') }}</span>
             </h2>
             <p class="text-lg text-base-content/60 mb-10 leading-relaxed max-w-md">
               {{ t('app.description') }}
@@ -632,7 +635,8 @@ function openEmailClient() {
       "title_suffix": "重塑数字生命",
       "description": "LIFE 致力于构建可信的数字未来。利用区块链分布式账本技术，将个人数据转化为可视化的数字资产，打造安全、合规的数字管理终端，提升个人数据的价值与意义。",
       "btn_start": "开启数字之旅",
-      "btn_whitepaper": "了解技术白皮书"
+      "btn_whitepaper": "了解技术白皮书",
+      "btn_live": "观看直播"
     },
     "stats": {
       "users": "用户数",
@@ -761,7 +765,8 @@ function openEmailClient() {
       "title_suffix": "重塑數字生命",
       "description": "LIFE 致力於構建可信的數字未來。利用區塊鏈分佈式賬本技術，將個人數據轉化為可視化的數字資產，打造安全、合規的數字管理終端，提升個人數據的價值與意義。",
       "btn_start": "開啟數字之旅",
-      "btn_whitepaper": "了解技術白皮書"
+      "btn_whitepaper": "了解技術白皮書",
+      "btn_live": "觀看直播"
     },
     "stats": {
       "users": "用户数",
@@ -890,7 +895,8 @@ function openEmailClient() {
       "title_suffix": "Reshape Digital Life",
       "description": "LIFE is committed to building a trusted digital future. Utilizing blockchain distributed ledger technology, we transform personal data into visual digital assets, creating a secure and compliant digital management terminal to enhance the value and significance of personal data.",
       "btn_start": "Start Digital Journey",
-      "btn_whitepaper": "Read Whitepaper"
+      "btn_whitepaper": "Read Whitepaper",
+      "btn_live": "Watch Live"
     },
     "stats": {
       "users": "User Count",
