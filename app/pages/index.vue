@@ -37,7 +37,7 @@
             class="btn btn-ghost btn-lg rounded-full px-8 py-4 w-full sm:w-auto sm:min-w-[200px] border border-base-content/30 hover:bg-base-content hover:text-base-100">
             {{ t('hero.btn_whitepaper') }}
           </nuxt-link>
-          <a href="https://您的直播链接" target="_blank"
+          <a href="https://live.lifetv.chat/live" target="_blank"
             class="btn btn-ghost btn-lg rounded-full px-8 py-4 w-full sm:w-auto sm:min-w-[200px] border border-base-content/30 hover:bg-base-content hover:text-base-100">
             {{ t('hero.btn_live') }}
           </a>
@@ -276,7 +276,8 @@
             <h2 class="text-4xl md:text-6xl font-black mb-8 leading-tight">
               {{ t('app.title_prefix') }}
               <br />
-              <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{{ t('app.title_highlight') }}</span>
+              <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{{
+                t('app.title_highlight') }}</span>
             </h2>
             <p class="text-lg text-base-content/60 mb-10 leading-relaxed max-w-md">
               {{ t('app.description') }}
